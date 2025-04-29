@@ -1,0 +1,89 @@
+/* === Contenedor principal del header === */
+.header {
+    background-color: #ffffff;
+    color: #003366;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  /* === Contenedor del logo + título === */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo {
+    width: 75px;
+    height: 75px;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #003366;
+  }
+  
+  /* === Navegación === */
+  .nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* === Enlaces del header === */
+  .nav a {
+    margin-left: 1.5rem;
+    color: #003366;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .nav a:hover {
+    color: #2EAD63;
+    text-decoration: underline;
+  }
+  
+  /* === Botón "Cerrar sesión" === */
+  .logout-btn {
+    margin-left: 1.5rem;
+    background: none;
+    color: #003366;
+    border: 1px solid #2EAD63;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #2EAD63;
+    color: white;
+  }
+  
+  /* === Botón "Sobre nosotros" === */
+  .about-link {
+    background: none;
+    border: none;
+    color: #003366;
+    font-size: 1rem;
+    font-weight: 500;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 1.5rem;
+    transition: color 0.3s ease;
+  }
+  
+  .about-link:hover {
+    color: #2EAD63;
+    text-decoration: underline;
+  }
