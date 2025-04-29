@@ -9,20 +9,15 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const tipoUsuario = e.target.tipo.value;
 
+    const tipoUsuario = 'cliente'; // forzado
     const mockUsuario = {
       tipo: tipoUsuario,
-      nombre: 'Juan Pérez'
+      nombre: 'Cliente Demo'
     };
 
     setUsuario(mockUsuario);
-
-    if (tipoUsuario === 'cliente') {
-      navigate('/cliente/locales');
-    } else {
-      navigate('/admin/comandas');
-    }
+    navigate('/cliente/locales');
   };
 
   return (
@@ -32,10 +27,7 @@ const Login = () => {
         <form onSubmit={handleLogin}>
           <input type="email" placeholder="Correo electrónico" required />
           <input type="password" placeholder="Contraseña" required />
-          <select name="tipo" required>
-            <option value="cliente">Cliente</option>
-            <option value="admin">Empleado</option>
-          </select>
+          <input type="hidden" name="tipo" value="cliente" />
           <button type="submit">Entrar</button>
         </form>
         <p>¿No tienes cuenta? <a href="/register">Regístrate</a></p>

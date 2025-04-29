@@ -3,10 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../views/Login';
 import Register from '../views/Register';
 import LocalesCliente from '../views/LocalesCliente';
-import ComandaCliente from '../views/ComandaCliente';
-import AlmacenAdmin from '../views/AlmacenAdmin';
-import ComandasAdmin from '../views/ComandasAdmin';
+import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
+import NotFound from '../views/NotFound';
+import PanelEmpleado from '../views/PanelEmpleado';
 
 const GlobalRouter = () => {
   return (
@@ -15,6 +15,8 @@ const GlobalRouter = () => {
       
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/login-empleado" element={<LoginEmpleado />} />
+      <Route path="*" element={<NotFound />} />
 
       {/* Cliente */}
       <Route path="/cliente/locales" element={
@@ -22,21 +24,11 @@ const GlobalRouter = () => {
           <LocalesCliente />
         </PrivateRoute>
       } />
-      <Route path="/cliente/comanda" element={
-        <PrivateRoute tipo="cliente">
-          <ComandaCliente />
-        </PrivateRoute>
-      } />
 
       {/* Admin */}
-      <Route path="/admin/almacen" element={
+      <Route path="/admin/panel" element={
         <PrivateRoute tipo="admin">
-          <AlmacenAdmin />
-        </PrivateRoute>
-      } />
-      <Route path="/admin/comandas" element={
-        <PrivateRoute tipo="admin">
-          <ComandasAdmin />
+          <PanelEmpleado />
         </PrivateRoute>
       } />
     </Routes>

@@ -1,0 +1,157 @@
+.panel-empleado {
+    padding: 20px;
+    background-color: #f5f9fc;
+    min-height: 100vh;
+  }
+  
+  /* Barra de botones de bares */
+  .barra-bares {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .bar-tab {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #ddd;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .bar-tab.activo {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  /* Zonas */
+  .zona-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .zona-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background-color: #ccc;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .zona-tab.activa {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  /* Contenedor de mesas */
+  .grid-mesas {
+    --n-columns: 6;
+    --card-min-width: 150px;
+    --grid-gap: 16px;
+  
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 
+      minmax(
+        max(var(--card-min-width), (100% - (var(--n-columns) - 1) * var(--grid-gap)) / var(--n-columns)), 
+        1fr
+      )
+    );
+    gap: var(--grid-gap);
+    padding: 8px;
+  }
+  
+  /* Tarjeta de mesa */
+  .mesa-box {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Tarjeta para añadir nueva mesa */
+  .mesa-box.mesa-add {
+    background-color: #f3f3f3;
+    border: 2px dashed #bbb;
+    cursor: pointer;
+  }
+  
+  .btn-add {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #28a745;
+    cursor: pointer;
+  }
+  
+  .input-nueva-mesa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input-nueva-mesa input {
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .input-nueva-mesa button {
+    padding: 6px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  /* Contenido de la mesa */
+  .mesa-numero {
+    font-weight: bold;
+    font-size: 1.1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  
+  .mesa-comensales,
+  .mesa-estado {
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  
+  .mesa-estado i,
+  .mesa-comensales i {
+    margin-right: 5px;
+  }
+
+  .icon-pedido-enviado {
+    color: #007bff; /* azul */
+    margin-right: 5px;
+  }
+  
+  .icon-en-espera {
+    color: orange;
+    margin-right: 5px;
+}  

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../hooks/useUser';
+import { useNotificaciones } from '../hooks/useNotificaciones';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import Bell from './Bell';
 import logo from '../img/CamareroIcon.png';
 import '../styles/header.css';
@@ -7,6 +9,7 @@ import InfoModal from './InfoModal';
 
 const Header = () => {
   const { usuario, setUsuario } = useUser();
+  const { notificaciones } = useNotificaciones();
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const handleLogout = () => {
@@ -20,27 +23,29 @@ const Header = () => {
         <img src={logo} alt="Logo Camarero App" className="logo" />
         <h1>CAMARERO APP</h1>
       </div>
+
       <nav className="nav">
         {!usuario && (
-          <button className="about-link" onClick={() => setMostrarModal(true)}>
-            Sobre nosotros
-          </button>
-        )}
-        {usuario?.tipo === 'admin' && (
           <>
-            <a href="/admin/comandas">Comandas</a>
-            <a href="/admin/almacen">Almacén</a>
-            <Bell notificaciones={3} />
-            <button className="logout-btn" onClick={handleLogout}>Cerrar sesión</button>
+            <a href="/login-empleado" className="empleado-icon" title="Login empleado">
+              <i className="fas fa-sign-in-alt"></i>
+            </a>
+            <button className="about-link" onClick={() => setMostrarModal(true)}>
+              Sobre nosotros
+            </button>
           </>
         )}
-        {usuario?.tipo === 'cliente' && (
+
+        {usuario?.tipo && (
           <>
-            <a href="/cliente/locales">Locales</a>
-            <button className="logout-btn" onClick={handleLogout}>Cerrar sesión</button>
+            <Bell notificaciones={notificaciones} />
+            <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
+              <i className="fas fa-sign-out-alt"></i>
+            </button>
           </>
         )}
       </nav>
+
       {mostrarModal && <InfoModal onClose={() => setMostrarModal(false)} />}
     </header>
   );
