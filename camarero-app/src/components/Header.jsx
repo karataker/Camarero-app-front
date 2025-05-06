@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '../hooks/useUser';
 import { useNotificaciones } from '../hooks/useNotificaciones';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import Bell from './Bell';
 import logo from '../img/CamareroIcon.png';
 import '../styles/header.css';
