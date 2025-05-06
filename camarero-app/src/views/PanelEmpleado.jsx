@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useBares } from '../hooks/useBares';
+import QRDownloader from '../components/QRDownloader';
 import '../styles/panelEmpleado.css';
 
 const zonas = ['Interior', 'Terraza', 'Barra', 'Cocina', 'Almacén'];
 
 const PanelEmpleado = () => {
-  const { bares, cargarBares, añadirMesa, getBarById } = useBares();
+  const {
+    bares,
+    cargarBares,
+    añadirMesa,
+    fusionarMesas,
+    desfusionarMesa,
+    getBarById
+  } = useBares();
+
   const [barSeleccionado, setBarSeleccionado] = useState(null);
   const [zonaActiva, setZonaActiva] = useState('Interior');
   const [mostrarInput, setMostrarInput] = useState(false);
   const [nuevoCodigo, setNuevoCodigo] = useState('');
+  const [ultimoQR, setUltimoQR] = useState(null);
+  const [mesaParaFusionar, setMesaParaFusionar] = useState(null);
 
   useEffect(() => {
     cargarBares();
@@ -17,24 +28,46 @@ const PanelEmpleado = () => {
 
   const barActual = getBarById(barSeleccionado);
 
-  const handleAñadirMesa = async () => {
-    if (!nuevoCodigo.trim() || !barSeleccionado) return;
+  // Filtrar mesas por zona y que no estén fusionadas con otra
+  const mesasFiltradas = barActual?.mesas.filter(
+    (m) => m.zona === zonaActiva && m.fusionadaCon === null
+  );
 
-    await añadirMesa(barSeleccionado, {
-      codigo: nuevoCodigo.trim(),
-      disponible: true,
-      comensales: 0,
-      pedidoEnviado: false
+  // Agrupar mesas fusionadas
+  const fusionadasPorMaestra = {};
+  barActual?.mesas
+    .filter((m) => m.fusionadaCon && m.zona === zonaActiva)
+    .forEach((m) => {
+      if (!fusionadasPorMaestra[m.fusionadaCon]) {
+        fusionadasPorMaestra[m.fusionadaCon] = [];
+      }
+      fusionadasPorMaestra[m.fusionadaCon].push(m.codigo);
     });
 
-    setNuevoCodigo('');
-    setMostrarInput(false);
+  const handleAñadirMesa = async () => {
+    const codigo = nuevoCodigo.trim();
+    if (!codigo || !barSeleccionado) return;
+
+    const nuevaMesa = {
+      codigo,
+      disponible: true,
+      comensales: 0,
+      pedidoEnviado: false,
+      zona: zonaActiva,
+      fusionadaCon: null 
+    };
+
+    const mesaCreada = await añadirMesa(barSeleccionado, nuevaMesa);
+    if (mesaCreada) {
+      setUltimoQR(mesaCreada);
+      setNuevoCodigo('');
+      setMostrarInput(false);
+    }
   };
 
   return (
     <div className="panel-empleado">
-
-      {/* Botones de selección de bares */}
+      {/* Selección de bares */}
       <div className="barra-bares">
         {bares.map((bar) => (
           <button
@@ -45,6 +78,8 @@ const PanelEmpleado = () => {
               setZonaActiva('Interior');
               setMostrarInput(false);
               setNuevoCodigo('');
+              setUltimoQR(null);
+              setMesaParaFusionar(null);
             }}
           >
             {bar.nombre}
@@ -52,15 +87,19 @@ const PanelEmpleado = () => {
         ))}
       </div>
 
-      {/* Zonas y contenido */}
       {barSeleccionado && (
         <>
+          {/* Selección de zonas */}
           <div className="zona-tabs">
             {zonas.map((zona) => (
               <button
                 key={zona}
                 className={`zona-tab ${zonaActiva === zona ? 'activa' : ''}`}
-                onClick={() => setZonaActiva(zona)}
+                onClick={() => {
+                  setZonaActiva(zona);
+                  setUltimoQR(null);
+                  setMesaParaFusionar(null);
+                }}
               >
                 {zona}
               </button>
@@ -71,44 +110,115 @@ const PanelEmpleado = () => {
             <h2>{zonaActiva} - {barActual?.nombre}</h2>
 
             <div className="grid-mesas">
-              {/* Mesas existentes */}
-              {barActual?.mesas.map((mesa, i) => (
+              {mesasFiltradas.map((mesa, i) => (
                 <div key={i} className={`mesa-box ${mesa.disponible ? 'disponible' : 'ocupada'}`}>
                   <span className="mesa-numero">{mesa.codigo}</span>
 
                   {mesa.disponible ? (
                     <span className="mesa-estado">
-                      <i className="fas fa-circle-check" style={{ color: 'green' }}></i>
+                      <i className="fas fa-circle-check icon-check"></i>
                       Disponible
                     </span>
                   ) : (
                     <>
                       <span className="mesa-comensales">
-                        <i className="fas fa-users"></i>
+                        <i className="fas fa-users icon-users"></i>
                         {mesa.comensales} comensales
                       </span>
                       <span className="mesa-estado">
-                      <i className={`fas ${mesa.pedidoEnviado ? 'fa-utensils icon-pedido-enviado' : 'fa-hourglass-half icon-en-espera'}`} ></i>
+                        <i
+                          className={`fas ${
+                            mesa.pedidoEnviado
+                              ? 'fa-utensils icon-pedido-enviado'
+                              : 'fa-hourglass-half icon-en-espera'
+                          }`}
+                        ></i>
                         {mesa.pedidoEnviado ? 'Pedido enviado' : 'En espera'}
                       </span>
                     </>
                   )}
+
+                  {/* QR */}
+                  {mesa.qrUrl && (
+                    <QRDownloader
+                      mesaCodigo={mesa.codigo}
+                      barId={barSeleccionado}
+                      qrUrl={mesa.qrUrl}
+                    />
+                  )}
+
+                  {/* Mesas fusionadas */}
+                  {fusionadasPorMaestra[mesa.codigo] && (
+                     <>
+                    <div className="mesa-fusionadas-list">
+                      <strong>Incluye:</strong> {fusionadasPorMaestra[mesa.codigo].join(', ')}
+                    </div>
+                      <button
+                        className="fusionar-con-btn desfusionar-btn"
+                        onClick={() => desfusionarMesa(barSeleccionado, mesa.codigo)}
+                      >
+                        Desfusionar
+                      </button>
+                      </>
+                  )}
+
+                  {/* Fusionar / Desfusionar */}
+                  {mesa.fusionadaCon ? (
+                      <div className="mesa-fusion-info">
+                        🔗 Fusionada con {mesa.fusionadaCon}
+                      </div>
+                    ) : (
+                      <>
+                        {mesa.disponible && (
+                          <button
+                            className="fusion-btn"
+                            onClick={() => setMesaParaFusionar(mesa.codigo)}
+                          >
+                            Fusionar mesa...
+                          </button>
+                        )}
+
+                      {mesaParaFusionar &&
+                        mesa.codigo !== mesaParaFusionar &&
+                        mesa.disponible &&
+                        barActual.mesas.find(m => m.codigo === mesaParaFusionar)?.disponible && (
+                          <button
+                            className="fusionar-con-btn"
+                            onClick={() => {
+                              fusionarMesas(barSeleccionado, mesaParaFusionar, mesa.codigo);
+                              setMesaParaFusionar(null);
+                            }}
+                          >
+                            🔗 Fusionar con {mesaParaFusionar}
+                          </button>
+                        )}
+                    </>
+                  )}
+
                 </div>
               ))}
 
-              {/* Tarjeta para añadir nueva mesa */}
+              {/* Añadir nueva mesa */}
               <div className="mesa-box mesa-add">
                 {!mostrarInput ? (
-                  <button className="btn-add" onClick={() => setMostrarInput(true)}>+</button>
+                  <button className="btn-add" onClick={() => {setMostrarInput(true); setUltimoQR(null);}}> + </button>
                 ) : (
                   <div className="input-nueva-mesa">
                     <input
                       type="text"
-                      placeholder="Código de mesa"
+                      placeholder="Código"
                       value={nuevoCodigo}
                       onChange={(e) => setNuevoCodigo(e.target.value)}
                     />
                     <button onClick={handleAñadirMesa}>Añadir</button>
+
+                    {ultimoQR && (
+                      <QRDownloader
+                        mesaCodigo={ultimoQR.codigo}
+                        barId={barSeleccionado}
+                        qrUrl={ultimoQR.qrUrl}
+                      />
+                    )}
                   </div>
                 )}
               </div>

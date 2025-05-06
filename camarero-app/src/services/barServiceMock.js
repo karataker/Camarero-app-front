@@ -1,20 +1,61 @@
+const BASE_URL = 'https://tubar.com/cliente';
+
 const baresMock = [
   {
     id: 1,
     nombre: 'Bar Central',
     mesas: [
-      { codigo: 'M01', disponible: true, comensales: 0, pedidoEnviado: false },
-      { codigo: 'M02', disponible: false, comensales: 4, pedidoEnviado: false },
-      { codigo: 'M03', disponible: false, comensales: 2, pedidoEnviado: true }
+      {
+        codigo: 'M01',
+        disponible: true,
+        comensales: 0,
+        pedidoEnviado: false,
+        zona: 'Interior',
+        qrUrl: `${BASE_URL}/bar/1/mesa/M01`,
+        fusionadaCon: null
+      },
+      {
+        codigo: 'M02',
+        disponible: false,
+        comensales: 4,
+        pedidoEnviado: false,
+        zona: 'Interior',
+        qrUrl: `${BASE_URL}/bar/1/mesa/M02`,
+        fusionadaCon: null
+      },
+      {
+        codigo: 'M03',
+        disponible: false,
+        comensales: 2,
+        pedidoEnviado: true,
+        zona: 'Interior',
+        qrUrl: `${BASE_URL}/bar/1/mesa/M03`,
+        fusionadaCon: null
+      },
+      {
+        codigo: 'M10',
+        disponible: false,
+        comensales: 6,
+        pedidoEnviado: true,
+        zona: 'Interior',
+        qrUrl: `${BASE_URL}/bar/1/mesa/M10`,
+        fusionadaCon: null
+      },
+      {
+        codigo: 'M11',
+        disponible: false,
+        comensales: 0,
+        pedidoEnviado: false,
+        zona: 'Interior',
+        qrUrl: `${BASE_URL}/bar/1/mesa/M11`,
+        fusionadaCon: 'M10'
+      }
     ]
   },
   {
     id: 2,
     nombre: 'Bar Pepe',
-    mesas: [
-      { codigo: 'P01', disponible: true, comensales: 0, pedidoEnviado: false },
-      { codigo: 'P02', disponible: false, comensales: 3, pedidoEnviado: true }
-    ]
+    mesas: []
   },
   {
     id: 3,
@@ -23,7 +64,6 @@ const baresMock = [
   }
 ];
 
-// Simula una pequeña demora para imitar llamadas al servidor
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const obtenerBares = async () => {
@@ -34,20 +74,26 @@ export const obtenerBares = async () => {
 export const crearMesa = async (barId, nuevaMesa) => {
   await delay(300);
   const bar = baresMock.find(bar => bar.id === barId);
-  if (bar) {
-    bar.mesas.push(nuevaMesa);
-    return nuevaMesa;
-  } else {
-    throw new Error('Bar no encontrado');
-  }
+  if (!bar) throw new Error('Bar no encontrado');
+
+  const mesaConQR = {
+    ...nuevaMesa,
+    qrUrl: `${BASE_URL}/bar/${barId}/mesa/${nuevaMesa.codigo}`
+  };
+
+  return mesaConQR;
 };
 
-export const obtenerMesas = async (barId) => {
-  await delay(300);
+export const desfusionarMesa = async (barId, codigoMaestra) => {
+  await delay(200);
   const bar = baresMock.find(bar => bar.id === barId);
-  if (bar) {
-    return bar.mesas;
-  } else {
-    throw new Error('Bar no encontrado');
-  }
+  if (!bar) throw new Error('Bar no encontrado');
+
+  bar.mesas.forEach(mesa => {
+    if (mesa.fusionadaCon === codigoMaestra) {
+      mesa.fusionadaCon = null;
+    }
+  });
+
+  return true;
 };
