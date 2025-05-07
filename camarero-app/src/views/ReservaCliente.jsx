@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/reservaCliente.css';
-import { obtenerBaresYzonas, enviarReserva } from '../services/reservaServiceMock';
+import { obtenerBaresYzonas, enviarReserva, descargarCartaPDF } from '../services/reservaServiceMock';
+import { useNavigate } from 'react-router-dom';
+import ReservaModal from '../components/ReservaModal';
 
 const ReservarCliente = () => {
   const [bares, setBares] = useState([]);
@@ -12,8 +14,10 @@ const ReservarCliente = () => {
   const [telefono, setTelefono] = useState('');
   const [comensales, setComensales] = useState(1);
   const [fechaHora, setFechaHora] = useState('');
-  const [enviado, setEnviado] = useState(false);
   const [error, setError] = useState('');
+  const [mostrarModal, setMostrarModal] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cargarBares = async () => {
@@ -34,7 +38,6 @@ const ReservarCliente = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setEnviado(false);
 
     if (!barSeleccionado || !zona || !nombre || !telefono || !email || comensales < 1 || !fechaHora) {
       setError('Por favor, completa todos los campos.');
@@ -53,16 +56,16 @@ const ReservarCliente = () => {
 
     try {
       await enviarReserva(reserva);
-      setEnviado(true);
-      setNombre('');
-      setEmail('');
-      setTelefono('');
-      setComensales(1);
-      setZona('');
-      setFechaHora('');
+      await descargarCartaPDF(barSeleccionado);
+      setMostrarModal(true);
     } catch (err) {
       setError('Error al procesar la reserva.');
     }
+  };
+
+  const handleCerrarModal = () => {
+    setMostrarModal(false);
+    navigate(-1); // volver atrás
   };
 
   return (
@@ -103,7 +106,14 @@ const ReservarCliente = () => {
         <input type="number" id="comensales" value={comensales} onChange={(e) => setComensales(parseInt(e.target.value))} min={1} max={20} required />
 
         <label htmlFor="fechaHora">Fecha y hora</label>
-        <input type="datetime-local" id="fechaHora" value={fechaHora} onChange={(e) => setFechaHora(e.target.value)} min={new Date().toISOString().slice(0, 16)} required />
+        <input
+          type="datetime-local"
+          id="fechaHora"
+          value={fechaHora}
+          onChange={(e) => setFechaHora(e.target.value)}
+          min={new Date().toISOString().slice(0, 16)}
+          required
+        />
 
         <button type="submit">
           <i className="fas fa-calendar-check" style={{ marginRight: '8px' }}></i>
@@ -111,12 +121,9 @@ const ReservarCliente = () => {
         </button>
       </form>
 
-      {enviado && (
-        <div className="reserva-success">
-          ¡Reserva enviada! Recibirás confirmación pronto.
-        </div>
-      )}
       {error && <div className="reserva-error">{error}</div>}
+
+      {mostrarModal && <ReservaModal onClose={handleCerrarModal} />}
     </div>
   );
 };
