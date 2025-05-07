@@ -114,12 +114,7 @@ const PanelEmpleado = () => {
                 <div key={i} className={`mesa-box ${mesa.disponible ? 'disponible' : 'ocupada'}`}>
                   <span className="mesa-numero">{mesa.codigo}</span>
 
-                  {mesa.disponible ? (
-                    <span className="mesa-estado">
-                      <i className="fas fa-circle-check icon-check"></i>
-                      Disponible
-                    </span>
-                  ) : (
+                  {mesa.disponible ? null : (
                     <>
                       <span className="mesa-comensales">
                         <i className="fas fa-users icon-users"></i>
@@ -137,6 +132,7 @@ const PanelEmpleado = () => {
                       </span>
                     </>
                   )}
+
 
                   {/* QR */}
                   {mesa.qrUrl && (
