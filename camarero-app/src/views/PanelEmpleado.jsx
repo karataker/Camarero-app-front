@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useBares } from '../hooks/useBares';
+import { useBar } from '../context/BarContext';
 import QRDownloader from '../components/QRDownloader';
 import '../styles/panelEmpleado.css';
 
@@ -15,7 +16,7 @@ const PanelEmpleado = () => {
     getBarById
   } = useBares();
 
-  const [barSeleccionado, setBarSeleccionado] = useState(null);
+  const { barSeleccionado } = useBar();
   const [zonaActiva, setZonaActiva] = useState('Interior');
   const [mostrarInput, setMostrarInput] = useState(false);
   const [nuevoCodigo, setNuevoCodigo] = useState('');
@@ -67,25 +68,6 @@ const PanelEmpleado = () => {
 
   return (
     <div className="panel-empleado">
-      {/* Selección de bares */}
-      <div className="barra-bares">
-        {bares.map((bar) => (
-          <button
-            key={bar.id}
-            className={`bar-tab ${barSeleccionado === bar.id ? 'activo' : ''}`}
-            onClick={() => {
-              setBarSeleccionado(bar.id);
-              setZonaActiva('Interior');
-              setMostrarInput(false);
-              setNuevoCodigo('');
-              setUltimoQR(null);
-              setMesaParaFusionar(null);
-            }}
-          >
-            {bar.nombre}
-          </button>
-        ))}
-      </div>
 
       {barSeleccionado && (
         <>

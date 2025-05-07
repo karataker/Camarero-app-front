@@ -5,28 +5,34 @@
 }
 
 /* Bares */
-.barra-bares {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
 
-.bar-tab {
-  padding: 10px 20px;
-  border-radius: 8px;
-  background-color: #ddd;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
 
 .bar-tab.activo {
   background-color: #28a745;
   color: white;
 }
+
+
+.barra-bares-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.barra-bares-select label {
+  font-weight: bold;
+  color: #003366;
+}
+
+.barra-bares-select select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
 
 /* Zonas */
 .zona-tabs {

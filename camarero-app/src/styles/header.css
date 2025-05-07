@@ -13,6 +13,37 @@
   z-index: 100;
 }
 
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bar-selector-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.bar-selector-header label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #003366;
+}
+
+.bar-selector-header select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background-color: #ffffff; /* Asegura que tenga un fondo visible */
+  color: #003366; /* Asegura que el texto sea visible */
+}
+
+
+
 /* === Logo + título === */
 .logo-container {
   display: flex;
@@ -83,8 +114,7 @@
   text-decoration: underline;
 }
 
-
-empleado-icon {
+.empleado-icon {
   font-size: 1.4rem;
   margin-right: 1rem;
   margin-left: 1rem;
