@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
 import QRDownloader from '../components/QRDownloader';
+import ComensalesIconos from '../components/ComensalesIconos';
 import '../styles/panelEmpleado.css';
 
 const zonas = ['Interior', 'Terraza', 'Barra', 'Cocina', 'Almacén'];
@@ -98,10 +99,7 @@ const PanelEmpleado = () => {
 
                   {mesa.disponible ? null : (
                     <>
-                      <span className="mesa-comensales">
-                        <i className="fas fa-users icon-users"></i>
-                        {mesa.comensales} comensales
-                      </span>
+                    <ComensalesIconos cantidad={mesa.comensales} />
                       <span className="mesa-estado">
                         <i
                           className={`fas ${
