@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { useNotificaciones } from '../hooks/useNotificaciones';
-import Bell from './Bell';
+import { useBares } from '../hooks/useBares';
+import { useBar } from '../context/BarContext';
+import { Link } from 'react-router-dom';
 import logo from '../img/CamareroIcon.png';
-import '../styles/header.css';
+import Bell from './Bell';
 import InfoModal from './InfoModal';
+import '../styles/header.css';
 
 const Header = () => {
   const { usuario, setUsuario } = useUser();
   const { notificaciones } = useNotificaciones();
+  const { bares, cargarBares } = useBares();
+  const { barSeleccionado, setBarSeleccionado } = useBar();
   const [mostrarModal, setMostrarModal] = useState(false);
+
+  useEffect(() => {
+    if (usuario?.tipo === 'empleado' || usuario?.tipo === 'admin') {
+      cargarBares();
+    }
+  }, [usuario, cargarBares]);
 
   const handleLogout = () => {
     setUsuario(null);
@@ -37,6 +48,32 @@ const Header = () => {
 
         {usuario?.tipo && (
           <>
+            {usuario.tipo === 'admin' && (
+              <div className="bar-selector-header">
+                <label htmlFor="barSelect">Bar:</label>
+                <select
+                  id="barSelect"
+                  value={barSeleccionado || ''}
+                  onChange={(e) => setBarSeleccionado(parseInt(e.target.value))}
+                >
+                  <option value="">-- Selecciona un bar --</option>
+                  {bares.map(bar => (
+                    <option key={bar.id} value={bar.id}>{bar.nombre}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {usuario.tipo === 'admin' && barSeleccionado && (
+              <Link 
+                to={`/admin/bar/${barSeleccionado}/carta`}
+                className="header-icon admin-carta-icon"
+                title="Administrar Carta Digital"
+              >
+                <i className="fas fa-utensils"></i>
+              </Link>
+            )}
+
             <Bell notificaciones={notificaciones} />
             <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
               <i className="fas fa-sign-out-alt"></i>

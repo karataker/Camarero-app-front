@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './hooks/useUser';
+import { BarProvider } from './context/BarContext';
 import App from './App';
 import './styles/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -11,9 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // Renderizamos la app dentro del root
 root.render(
-<BrowserRouter>
-    <UserProvider> 
-      <App />
+  <BrowserRouter>
+    <UserProvider>
+      <BarProvider>
+        <App />
+      </BarProvider>
     </UserProvider>
   </BrowserRouter>
 );
