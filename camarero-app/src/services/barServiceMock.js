@@ -1,4 +1,7 @@
-const BASE_URL = 'https://tubar.com/cliente';
+// Usar la URL base actual (localhost en desarrollo, dominio real en producción)
+const BASE_URL = typeof window !== 'undefined' 
+  ? `${window.location.origin}/cliente` 
+  : 'http://localhost:3000/cliente';
 
 const baresMock = [
   {
@@ -76,6 +79,7 @@ export const crearMesa = async (barId, nuevaMesa) => {
   const bar = baresMock.find(bar => bar.id === barId);
   if (!bar) throw new Error('Bar no encontrado');
 
+  // Aquí también generamos el QR dinámicamente con la URL base actual
   const mesaConQR = {
     ...nuevaMesa,
     qrUrl: `${BASE_URL}/bar/${barId}/mesa/${nuevaMesa.codigo}`
@@ -94,6 +98,6 @@ export const desfusionarMesa = async (barId, codigoMaestra) => {
       mesa.fusionadaCon = null;
     }
   });
-
+  
   return true;
 };

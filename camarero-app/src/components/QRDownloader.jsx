@@ -8,7 +8,7 @@ const QRDownloader = ({ mesaCodigo, barId, qrUrl }) => {
   const [abierto, setAbierto] = useState(false);
   const qrRef = useRef(null);
 
-  const enlace = qrUrl || `https://tubar.com/cliente/bar/${barId}/mesa/${mesaCodigo}`;
+  const enlace = qrUrl || `${window.location.origin}/cliente/bar/${barId}/mesa/${mesaCodigo}`;
 
   const handleDownloadPDF = async () => {
     const canvas = await html2canvas(qrRef.current);

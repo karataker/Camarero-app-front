@@ -11,13 +11,22 @@ import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import PanelEmpleado from '../views/PanelEmpleado';
+import ClienteCartaView from '../views/ClienteCartaView';
+import PedidoConfirmado from '../views/PedidoConfirmado';
 
 const GlobalRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomeCliente />} />
       <Route path="/reservar" element={<ReservaCliente />} />
+      
+      {/* Ruta existente */}
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
+      
+      {/* RUTAS NUEVAS para QR - mantienen el formato de la URL en QRDownloader */}
+      <Route path="/cliente/bar/:barId/mesa/:mesaId" element={<ClienteCartaView />} />
+      <Route path="/cliente/:barId/:mesaId/pedido-confirmado" element={<PedidoConfirmado />} />
+      
       <Route path="/escanear" element={<EscanearQR />} />
       {/* <Route path="/login" element={<Login />} /> */}
       {/* <Route path="/register" element={<Register />} /> */}
