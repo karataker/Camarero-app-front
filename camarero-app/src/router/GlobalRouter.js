@@ -13,6 +13,7 @@ import NotFound from '../views/NotFound';
 import PanelEmpleado from '../views/PanelEmpleado';
 import ClienteCartaView from '../views/ClienteCartaView';
 import PedidoConfirmado from '../views/PedidoConfirmado';
+import AdminCartaView from '../views/AdminCartaView';
 
 const GlobalRouter = () => {
   return (
@@ -44,6 +45,13 @@ const GlobalRouter = () => {
       <Route path="/admin/panel" element={
         <PrivateRoute tipo="admin">
           <PanelEmpleado />
+        </PrivateRoute>
+      } />
+
+      {/* Ruta para la gestión de carta (admin) */}
+      <Route path="/admin/bar/:barId/carta" element={
+        <PrivateRoute tipo="admin">
+          <AdminCartaView />
         </PrivateRoute>
       } />
     </Routes>

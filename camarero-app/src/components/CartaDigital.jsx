@@ -29,19 +29,19 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
         ];
         
         const productosEjemplo = [
-          { id: 101, nombre: 'Cerveza', descripcion: 'Caña de cerveza', precio: 2.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten'] },
-          { id: 102, nombre: 'Vino tinto', descripcion: 'Copa de vino tinto', precio: 3.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['sulfitos'] },
-          { id: 103, nombre: 'Refresco', descripcion: 'Coca-Cola, Fanta, etc.', precio: 2.20, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: [] },
+          { id: 101, nombre: 'Cerveza', descripcion: 'Caña de cerveza', precio: 2.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten'], disponible: true },
+          { id: 102, nombre: 'Vino tinto', descripcion: 'Copa de vino tinto', precio: 3.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['sulfitos'], disponible: true },
+          { id: 103, nombre: 'Refresco', descripcion: 'Coca-Cola, Fanta, etc.', precio: 2.20, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: false },
           
-          { id: 201, nombre: 'Patatas bravas', descripcion: 'Patatas fritas con salsa brava', precio: 5.00, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: [] },
-          { id: 202, nombre: 'Croquetas', descripcion: 'Croquetas caseras de jamón', precio: 6.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten', 'lacteos'] },
-          { id: 203, nombre: 'Tortilla', descripcion: 'Tortilla española de patata', precio: 4.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo'] },
+          { id: 201, nombre: 'Patatas bravas', descripcion: 'Patatas fritas con salsa brava', precio: 5.00, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: true },
+          { id: 202, nombre: 'Croquetas', descripcion: 'Croquetas caseras de jamón', precio: 6.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten', 'lacteos'], disponible: true },
+          { id: 203, nombre: 'Tortilla', descripcion: 'Tortilla española de patata', precio: 4.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo'], disponible: true },
           
-          { id: 301, nombre: 'Paella', descripcion: 'Paella valenciana', precio: 14.00, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: ['mariscos'] },
-          { id: 302, nombre: 'Entrecot', descripcion: 'Entrecot a la brasa', precio: 18.50, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: [] },
+          { id: 301, nombre: 'Paella', descripcion: 'Paella valenciana', precio: 14.00, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: ['mariscos'], disponible: true },
+          { id: 302, nombre: 'Entrecot', descripcion: 'Entrecot a la brasa', precio: 18.50, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: true },
           
-          { id: 401, nombre: 'Tarta de queso', descripcion: 'Tarta de queso casera', precio: 5.50, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['lacteos', 'huevo'] },
-          { id: 402, nombre: 'Flan', descripcion: 'Flan de huevo casero', precio: 4.00, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo', 'lacteos'] }
+          { id: 401, nombre: 'Tarta de queso', descripcion: 'Tarta de queso casera', precio: 5.50, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['lacteos', 'huevo'], disponible: true },
+          { id: 402, nombre: 'Flan', descripcion: 'Flan de huevo casero', precio: 4.00, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo', 'lacteos'], disponible: true }
         ];
         
         setCategorias(categoriasEjemplo);
@@ -143,6 +143,11 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
             <div key={producto.id} className="producto-card">
               <div className="producto-imagen">
                 <img src={producto.imagen} alt={producto.nombre} />
+                {!producto.disponible && (
+                  <div className="producto-no-disponible">
+                    <span>No disponible</span>
+                  </div>
+                )}
               </div>
               
               <div className="producto-info">
@@ -152,7 +157,7 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
                   <span className="producto-precio">{producto.precio.toFixed(2)} €</span>
                   {renderAlergenos(producto.alergenos)}
                   
-                  {!readOnly && (
+                  {producto.disponible && !readOnly && (
                     <button 
                       className="add-to-order"
                       onClick={() => onAddToOrder(producto)}

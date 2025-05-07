@@ -3,6 +3,7 @@ import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
 import QRDownloader from '../components/QRDownloader';
 import ComensalesIconos from '../components/ComensalesIconos';
+import { Link } from 'react-router-dom';
 import '../styles/panelEmpleado.css';
 
 const zonas = ['Interior', 'Terraza', 'Barra', 'Cocina', 'Almacén'];
@@ -17,12 +18,13 @@ const PanelEmpleado = () => {
     getBarById
   } = useBares();
 
-  const { barSeleccionado } = useBar();
+  const { barSeleccionado, setBarSeleccionado } = useBar();
   const [zonaActiva, setZonaActiva] = useState('Interior');
   const [mostrarInput, setMostrarInput] = useState(false);
   const [nuevoCodigo, setNuevoCodigo] = useState('');
   const [ultimoQR, setUltimoQR] = useState(null);
   const [mesaParaFusionar, setMesaParaFusionar] = useState(null);
+  const [notificaciones, setNotificaciones] = useState([]);
 
   useEffect(() => {
     cargarBares();
@@ -69,6 +71,18 @@ const PanelEmpleado = () => {
 
   return (
     <div className="panel-empleado">
+
+      {/*
+      <div className="panel-header">
+        <h1>CAMARERO APP</h1>
+        
+        <div className="panel-acciones">
+          <div className="bar-selector">...</div>
+          <Link to={`/admin/bar/${barSeleccionado}/carta`} className="icono-admin-carta">...</Link>
+          <div className="notificaciones">...</div>
+        </div>
+      </div>
+      */}
 
       {barSeleccionado && (
         <>

@@ -3,6 +3,7 @@ import { useUser } from '../hooks/useUser';
 import { useNotificaciones } from '../hooks/useNotificaciones';
 import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
+import { Link } from 'react-router-dom';
 import logo from '../img/CamareroIcon.png';
 import Bell from './Bell';
 import InfoModal from './InfoModal';
@@ -16,7 +17,7 @@ const Header = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   useEffect(() => {
-    if (usuario?.tipo === 'empleado'|| usuario?.tipo === 'admin') {
+    if (usuario?.tipo === 'empleado' || usuario?.tipo === 'admin') {
       cargarBares();
     }
   }, [usuario, cargarBares]);
@@ -63,13 +64,22 @@ const Header = () => {
               </div>
             )}
 
-          <Bell notificaciones={notificaciones} />
-          <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
-            <i className="fas fa-sign-out-alt"></i>
-          </button>
-        </>
-      )}
+            {usuario.tipo === 'admin' && barSeleccionado && (
+              <Link 
+                to={`/admin/bar/${barSeleccionado}/carta`}
+                className="header-icon admin-carta-icon"
+                title="Administrar Carta Digital"
+              >
+                <i className="fas fa-utensils"></i>
+              </Link>
+            )}
 
+            <Bell notificaciones={notificaciones} />
+            <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
+              <i className="fas fa-sign-out-alt"></i>
+            </button>
+          </>
+        )}
       </nav>
 
       {mostrarModal && <InfoModal onClose={() => setMostrarModal(false)} />}
