@@ -33,8 +33,15 @@ const HomeAdmin = () => {
       id: 'mesas',
       nombre: 'Mapa de Mesas',
       icono: 'fa-table',
-      ruta: '/admin/panel', // Changed to point to PanelEmpleado route
+      ruta: `/admin/bar/${barSeleccionado}/panel`,
       color: '#3498db'
+    },
+    {
+      id: 'pedidos',
+      nombre: 'Pedidos',
+      icono: 'fa-receipt',
+      ruta: `/admin/bar/${barSeleccionado}/pedidos`,
+      color: '#e84393'
     },
     {
       id: 'inventario',

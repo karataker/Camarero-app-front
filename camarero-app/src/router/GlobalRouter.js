@@ -14,7 +14,8 @@ import ClienteCartaView from '../views/ClienteCartaView';
 import PedidoConfirmado from '../views/PedidoConfirmado';
 import AdminCartaView from '../views/AdminCartaView';
 import HomeAdmin from '../views/HomeAdmin';
-import PanelEmpleado from '../views/PanelEmpleado'; // Importar el nuevo componente
+import PanelEmpleado from '../views/PanelEmpleado';
+import AdminPedidosView from '../views/AdminPedidosView';
 
 const GlobalRouter = () => {
   return (
@@ -60,6 +61,13 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/carta" element={
         <PrivateRoute tipo="admin">
           <AdminCartaView />
+        </PrivateRoute>
+      } />
+
+      {/* Ruta para la gestión de pedidos (admin) */}
+      <Route path="/admin/bar/:barId/pedidos" element={
+        <PrivateRoute tipo="admin">
+          <AdminPedidosView />
         </PrivateRoute>
       } />
     </Routes>
