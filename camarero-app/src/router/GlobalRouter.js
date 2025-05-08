@@ -11,7 +11,7 @@ import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import ClienteCartaView from '../views/ClienteCartaView';
-import PedidoConfirmado from '../views/PedidoConfirmado';
+import ClienteComandas from '../views/ClienteComandasView';
 import AdminCartaView from '../views/AdminCartaView';
 import HomeAdmin from '../views/HomeAdmin';
 import PanelEmpleado from '../views/PanelEmpleado';
@@ -27,8 +27,8 @@ const GlobalRouter = () => {
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
       
       {/* RUTAS NUEVAS para QR - mantienen el formato de la URL en QRDownloader */}
-      <Route path="/cliente/bar/:barId/mesa/:mesaId" element={<ClienteCartaView />} />
-      <Route path="/cliente/:barId/:mesaId/pedido-confirmado" element={<PedidoConfirmado />} />
+      <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaView />} />
+      <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
       
       <Route path="/escanear" element={<EscanearQR />} />
       {/* <Route path="/login" element={<Login />} /> */}

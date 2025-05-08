@@ -3,19 +3,20 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './hooks/useUser';
 import { BarProvider } from './context/BarContext';
+import { ComandaProvider } from './context/useComandas';
 import App from './App';
 import './styles/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-// Crear un root para la app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Renderizamos la app dentro del root
 root.render(
   <BrowserRouter>
     <UserProvider>
       <BarProvider>
-        <App />
+        <ComandaProvider>
+          <App />
+        </ComandaProvider>
       </BarProvider>
     </UserProvider>
   </BrowserRouter>

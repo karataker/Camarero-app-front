@@ -24,7 +24,7 @@ const Header = () => {
 
   const handleLogout = () => {
     setUsuario(null);
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   return (
