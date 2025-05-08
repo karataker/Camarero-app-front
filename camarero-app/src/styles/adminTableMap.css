@@ -1,0 +1,284 @@
+.admin-table-map {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-table-map h1 {
+  color: #003366;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Estilos para las secciones de zona */
+.zona-seccion {
+  margin-bottom: 2.5rem;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.zona-seccion h2 {
+  color: #003366;
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
+  border-left: 4px solid #2EAD63;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.zona-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.zona-stats {
+  font-size: 0.85rem;
+  background-color: #f8f9fa;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #666;
+}
+
+/* Grid de mesas */
+.grid-mesas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjetas de mesas */
+.mesa-box {
+  position: relative;
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 160px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mesa-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.mesa-box.disponible {
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+.mesa-box.ocupada {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+}
+
+.mesa-numero {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+/* Estado de mesas */
+.mesa-estado {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.mesa-estado i {
+  margin-right: 8px;
+}
+
+.icon-pedido-enviado {
+  color: #2EAD63;
+}
+
+.icon-en-espera {
+  color: #f39c12;
+}
+
+/* Botones de fusión */
+.fusion-btn, .fusionar-con-btn {
+  margin-top: auto;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.fusion-btn {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+.fusion-btn:hover {
+  background-color: #b2dfdb;
+}
+
+.fusionar-con-btn {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.fusionar-con-btn:hover {
+  background-color: #bbdefb;
+}
+
+.desfusionar-btn {
+  background-color: #ffecb3;
+  color: #ff8f00;
+}
+
+.desfusionar-btn:hover {
+  background-color: #ffe082;
+}
+
+.mesa-fusionadas-list {
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 5px 8px;
+  border-radius: 5px;
+  margin: 10px 0;
+  border-left: 3px solid #2196f3;
+}
+
+.mesa-fusion-info {
+  font-size: 0.85rem;
+  padding: 5px 0;
+  color: #1976d2;
+}
+
+/* Añadir nueva mesa */
+.mesa-add {
+  background-color: #f5f5f5 !important;
+  border: 2px dashed #ddd !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-add {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: #2EAD63;
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #218c4e;
+  transform: scale(1.1);
+}
+
+/* Formulario de nueva mesa */
+.input-nueva-mesa {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+
+.input-nueva-mesa input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+.input-nueva-mesa button {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #2EAD63;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.input-nueva-mesa button:hover {
+  background-color: #218c4e;
+}
+
+/* QR code */
+.qr-container {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-download {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #e9ecef;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #495057;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.qr-download:hover {
+  background-color: #e9ecef;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .grid-mesas {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+  }
+
+  .mesa-box {
+    padding: 12px;
+    min-height: 140px;
+  }
+
+  .mesa-numero {
+    font-size: 1.2rem;
+  }
+  
+  .zona-seccion {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .zona-seccion h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .grid-mesas {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  
+  .admin-table-map {
+    padding: 1rem;
+  }
+  
+  .zona-stats {
+    display: none;
+  }
+}

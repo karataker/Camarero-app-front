@@ -23,10 +23,17 @@ const HomeAdmin = () => {
       color: '#2EAD63'
     },
     {
+      id: 'reservas',
+      nombre: 'Reservas',
+      icono: 'fa-calendar-check',
+      ruta: `/admin/bar/${barSeleccionado}/reservas`,
+      color: '#e67e22'
+    },
+    {
       id: 'mesas',
       nombre: 'Mapa de Mesas',
       icono: 'fa-table',
-      ruta: `/admin/panel`,
+      ruta: '/admin/panel', // Changed to point to PanelEmpleado route
       color: '#3498db'
     },
     {
@@ -61,24 +68,33 @@ const HomeAdmin = () => {
       id: 'usuarios',
       nombre: 'Usuarios',
       icono: 'fa-users',
-      ruta: `/admin/usuarios`,
+      ruta: `/admin/bar/${barSeleccionado}/usuarios`,
       color: '#e74c3c'
     },
     {
       id: 'configuracion',
       nombre: 'Configuración',
       icono: 'fa-cog',
-      ruta: `/admin/configuracion`,
+      ruta: `/admin/bar/${barSeleccionado}/configuracion`,
       color: '#34495e'
     }
   ];
 
   const handleNavigation = (ruta) => {
-    if (!barSeleccionado && ruta.includes('/bar/undefined/')) {
+    if (!barSeleccionado) {
       alert('Por favor, selecciona un bar primero');
       return;
     }
-    navigate(ruta);
+    
+    // Special case for panel route since it doesn't need barId in the URL
+    if (ruta === '/admin/panel') {
+      navigate(ruta);
+      return;
+    }
+
+    // For all other routes that need barId
+    const path = typeof ruta === 'function' ? ruta() : ruta;
+    navigate(path);
   };
 
   return (

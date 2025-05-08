@@ -10,11 +10,11 @@ import LocalesCliente from '../views/LocalesCliente';
 import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
-import PanelEmpleado from '../views/PanelEmpleado';
 import ClienteCartaView from '../views/ClienteCartaView';
 import PedidoConfirmado from '../views/PedidoConfirmado';
 import AdminCartaView from '../views/AdminCartaView';
 import HomeAdmin from '../views/HomeAdmin';
+import PanelEmpleado from '../views/PanelEmpleado'; // Importar el nuevo componente
 
 const GlobalRouter = () => {
   return (
@@ -48,6 +48,8 @@ const GlobalRouter = () => {
           <HomeAdmin />
         </PrivateRoute>
       } />
+      
+      {/* Panel Empleado route */}
       <Route path="/admin/panel" element={
         <PrivateRoute tipo={['admin', 'camarero']}>
           <PanelEmpleado />
