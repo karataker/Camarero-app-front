@@ -51,8 +51,8 @@ const GlobalRouter = () => {
       } />
       
       {/* Panel Empleado route */}
-      <Route path="/admin/panel" element={
-        <PrivateRoute tipo={['admin', 'camarero']}>
+      <Route path="/admin/bar/:barId/panel" element={
+        <PrivateRoute tipo="admin">
           <PanelEmpleado />
         </PrivateRoute>
       } />
