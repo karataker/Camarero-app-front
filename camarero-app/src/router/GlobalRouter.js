@@ -14,6 +14,7 @@ import PanelEmpleado from '../views/PanelEmpleado';
 import ClienteCartaView from '../views/ClienteCartaView';
 import PedidoConfirmado from '../views/PedidoConfirmado';
 import AdminCartaView from '../views/AdminCartaView';
+import HomeAdmin from '../views/HomeAdmin';
 
 const GlobalRouter = () => {
   return (
@@ -42,8 +43,13 @@ const GlobalRouter = () => {
       } />
 
       {/* Admin */}
-      <Route path="/admin/panel" element={
+      <Route path="/admin/home" element={
         <PrivateRoute tipo="admin">
+          <HomeAdmin />
+        </PrivateRoute>
+      } />
+      <Route path="/admin/panel" element={
+        <PrivateRoute tipo={['admin', 'camarero']}>
           <PanelEmpleado />
         </PrivateRoute>
       } />

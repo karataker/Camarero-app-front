@@ -74,6 +74,12 @@ const Header = () => {
               </Link>
             )}
 
+            {usuario?.tipo === 'admin' && (
+              <Link to="/admin/home" className="header-link home-link">
+                <i className="fas fa-home"></i>
+              </Link>
+            )}
+
             <Bell notificaciones={notificaciones} />
             <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
               <i className="fas fa-sign-out-alt"></i>
