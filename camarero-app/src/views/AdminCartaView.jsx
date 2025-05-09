@@ -27,10 +27,6 @@ const AdminCartaView = () => {
           <span className="stat-title">Productos con bajo stock</span>
           <span className="stat-value">12</span>
         </div>
-        <div className="stat-card revenue">
-          <span className="stat-title">Ingresos del mes</span>
-          <span className="stat-value">2,450€</span>
-        </div>
       </div>
       
       <CartaDigitalAdmin barId={barId} />

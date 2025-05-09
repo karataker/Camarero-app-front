@@ -1,0 +1,145 @@
+/* === Cliente Comandas View === */
+.cliente-comandas-view {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .cliente-comandas-view h2 {
+    color: #003366;
+    margin-bottom: 24px;
+  }
+  
+  .comandas-listado {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .comanda-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: white;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comanda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .comanda-header h3 {
+    margin: 0;
+    color: #003366;
+  }
+  
+  .estado {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  
+  .estado.listo {
+    background-color: #e6f8ee;
+    color: #2EAD63;
+    border: 1px solid #2EAD63;
+  }
+  
+  .estado.en_preparacion {
+    background-color: #fff6e6;
+    color: #e69a00;
+    border: 1px solid #e69a00;
+  }
+  
+  .comanda-fecha {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 6px;
+  }
+  
+  .comanda-items {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+  }
+  
+  .comanda-items li {
+    font-size: 0.95rem;
+    padding: 2px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .estado-individual {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: 12px;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  
+  .estado-individual.pendiente {
+    color: #e69a00;
+    background-color: #fff6e6;
+  }
+  
+  .estado-individual.retirable {
+    color: #2EAD63;
+    background-color: #e6f8ee;
+  }
+  
+  .estado-individual.recogido {
+    color: #4a4a4a;
+    background-color: #f0f0f0;
+  }
+  
+  .comanda-estimado {
+    font-size: 0.9rem;
+    color: #003366;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+  
+  .acciones-comandas {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .btn-secundario {
+    background-color: #ccc;
+    color: #003366;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    flex: 1;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-secundario:hover {
+    background-color: #bbb;
+  }
+  
+  .btn-principal {
+    background-color: #2EAD63;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    flex: 1;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-principal:hover {
+    background-color: #239553;
+  }

@@ -9,41 +9,35 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
+  const [addedItemId, setAddedItemId] = useState(null);
   const { barId } = useParams();
 
   useEffect(() => {
     const cargarCarta = async () => {
       setCargando(true);
       try {
-        // En un entorno real, aquí harías una llamada a tu API
-        // Por ejemplo: const response = await fetch(`/api/bares/${barId}/carta`);
-        
-        // Simulo datos de ejemplo
-        await new Promise(resolve => setTimeout(resolve, 800)); // Simular carga
-        
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         const categoriasEjemplo = [
           { id: 1, nombre: 'Bebidas', icono: 'fa-glass-martini-alt' },
           { id: 2, nombre: 'Tapas', icono: 'fa-cheese' },
           { id: 3, nombre: 'Platos principales', icono: 'fa-utensils' },
           { id: 4, nombre: 'Postres', icono: 'fa-ice-cream' }
         ];
-        
+
         const productosEjemplo = [
           { id: 101, nombre: 'Cerveza', descripcion: 'Caña de cerveza', precio: 2.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten'], disponible: true },
           { id: 102, nombre: 'Vino tinto', descripcion: 'Copa de vino tinto', precio: 3.50, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: ['sulfitos'], disponible: true },
           { id: 103, nombre: 'Refresco', descripcion: 'Coca-Cola, Fanta, etc.', precio: 2.20, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: false },
-          
           { id: 201, nombre: 'Patatas bravas', descripcion: 'Patatas fritas con salsa brava', precio: 5.00, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: true },
           { id: 202, nombre: 'Croquetas', descripcion: 'Croquetas caseras de jamón', precio: 6.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['gluten', 'lacteos'], disponible: true },
           { id: 203, nombre: 'Tortilla', descripcion: 'Tortilla española de patata', precio: 4.50, categoria: 2, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo'], disponible: true },
-          
           { id: 301, nombre: 'Paella', descripcion: 'Paella valenciana', precio: 14.00, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: ['mariscos'], disponible: true },
           { id: 302, nombre: 'Entrecot', descripcion: 'Entrecot a la brasa', precio: 18.50, categoria: 3, imagen: 'https://via.placeholder.com/100', alergenos: [], disponible: true },
-          
           { id: 401, nombre: 'Tarta de queso', descripcion: 'Tarta de queso casera', precio: 5.50, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['lacteos', 'huevo'], disponible: true },
           { id: 402, nombre: 'Flan', descripcion: 'Flan de huevo casero', precio: 4.00, categoria: 4, imagen: 'https://via.placeholder.com/100', alergenos: ['huevo', 'lacteos'], disponible: true }
         ];
-        
+
         setCategorias(categoriasEjemplo);
         setProductos(productosEjemplo);
       } catch (err) {
@@ -53,22 +47,18 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
         setCargando(false);
       }
     };
-    
+
     cargarCarta();
   }, [barId]);
 
-  // Filtrar productos por categoría y búsqueda
   const productosFiltrados = productos.filter(producto => {
     const coincideCategoria = categoriaSeleccionada === 'all' || producto.categoria === parseInt(categoriaSeleccionada);
-    const coincideBusqueda = producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) || 
-                            producto.descripcion.toLowerCase().includes(busqueda.toLowerCase());
+    const coincideBusqueda = producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) || producto.descripcion.toLowerCase().includes(busqueda.toLowerCase());
     return coincideCategoria && coincideBusqueda;
   });
 
-  // Renderizar iconos de alérgenos
   const renderAlergenos = (alergenos) => {
     if (!alergenos || alergenos.length === 0) return null;
-    
     const iconosAlergenos = {
       'gluten': 'fa-bread-slice',
       'lacteos': 'fa-cheese',
@@ -77,7 +67,6 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
       'mariscos': 'fa-fish',
       'sulfitos': 'fa-wine-bottle'
     };
-    
     return (
       <div className="producto-alergenos">
         {alergenos.map(alergeno => (
@@ -89,19 +78,19 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
     );
   };
 
-  if (cargando) {
-    return <div className="carta-cargando"><i className="fas fa-spinner fa-spin"></i> Cargando carta...</div>;
-  }
+  const handleAddClick = (producto) => {
+    onAddToOrder(producto);
+    setAddedItemId(producto.id);
+    setTimeout(() => setAddedItemId(null), 1000);
+  };
 
-  if (error) {
-    return <div className="carta-error"><i className="fas fa-exclamation-triangle"></i> {error}</div>;
-  }
+  if (cargando) return <div className="carta-cargando"><i className="fas fa-spinner fa-spin"></i> Cargando carta...</div>;
+  if (error) return <div className="carta-error"><i className="fas fa-exclamation-triangle"></i> {error}</div>;
 
   return (
     <div className="carta-digital">
       <div className="carta-header">
         <h2>Carta Digital</h2>
-        
         <div className="carta-busqueda">
           <input
             type="text"
@@ -112,17 +101,13 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
           <i className="fas fa-search"></i>
         </div>
       </div>
-      
+
       <div className="categorias-tabs">
-        <button 
-          className={`categoria-tab ${categoriaSeleccionada === 'all' ? 'activa' : ''}`}
-          onClick={() => setCategoriaSeleccionada('all')}
-        >
+        <button className={`categoria-tab ${categoriaSeleccionada === 'all' ? 'activa' : ''}`} onClick={() => setCategoriaSeleccionada('all')}>
           <i className="fas fa-th"></i> Todos
         </button>
-        
         {categorias.map(categoria => (
-          <button 
+          <button
             key={categoria.id}
             className={`categoria-tab ${categoriaSeleccionada === categoria.id.toString() ? 'activa' : ''}`}
             onClick={() => setCategoriaSeleccionada(categoria.id.toString())}
@@ -131,7 +116,7 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
           </button>
         ))}
       </div>
-      
+
       <div className="productos-grid">
         {productosFiltrados.length === 0 ? (
           <div className="no-productos">
@@ -149,19 +134,19 @@ const CartaDigital = ({ onAddToOrder, readOnly = false }) => {
                   </div>
                 )}
               </div>
-              
               <div className="producto-info">
                 <h3>{producto.nombre}</h3>
                 <p className="producto-descripcion">{producto.descripcion}</p>
                 <div className="producto-footer">
-                  <span className="producto-precio">{producto.precio.toFixed(2)} €</span>
+                  <span className="producto-precio">
+                    {producto.precio.toFixed(2)} €
+                    {addedItemId === producto.id && (
+                      <span className="producto-anadido">Añadido</span>
+                    )}
+                  </span>
                   {renderAlergenos(producto.alergenos)}
-                  
                   {producto.disponible && !readOnly && (
-                    <button 
-                      className="add-to-order"
-                      onClick={() => onAddToOrder(producto)}
-                    >
+                    <button className="add-to-order" onClick={() => handleAddClick(producto)}>
                       <i className="fas fa-plus"></i>
                     </button>
                   )}

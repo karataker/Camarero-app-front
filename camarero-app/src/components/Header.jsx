@@ -24,7 +24,7 @@ const Header = () => {
 
   const handleLogout = () => {
     setUsuario(null);
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   return (
@@ -71,6 +71,12 @@ const Header = () => {
                 title="Administrar Carta Digital"
               >
                 <i className="fas fa-utensils"></i>
+              </Link>
+            )}
+
+            {usuario?.tipo === 'admin' && (
+              <Link to="/admin/home" className="header-link home-link">
+                <i className="fas fa-home"></i>
               </Link>
             )}
 

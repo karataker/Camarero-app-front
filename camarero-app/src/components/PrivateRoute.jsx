@@ -6,11 +6,11 @@ const PrivateRoute = ({ children, tipo }) => {
   const { usuario } = useUser();
 
   if (!usuario) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   if (tipo && usuario.tipo !== tipo) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login-empleado" />;
   }
 
   return children;

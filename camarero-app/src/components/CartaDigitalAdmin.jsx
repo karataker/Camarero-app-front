@@ -27,10 +27,10 @@ const CartaDigitalAdmin = ({ barId }) => {
         await new Promise(resolve => setTimeout(resolve, 800)); 
         
         const categoriasEjemplo = [
-          { id: 1, nombre: 'Bebidas', icono: 'fa-glass-martini-alt' },
-          { id: 2, nombre: 'Tapas', icono: 'fa-cheese' },
-          { id: 3, nombre: 'Platos principales', icono: 'fa-utensils' },
-          { id: 4, nombre: 'Postres', icono: 'fa-ice-cream' }
+          { id: 1, nombre: 'Bebidas', icono: 'fa-glass-martini-alt', productos: [] },
+          { id: 2, nombre: 'Tapas', icono: 'fa-cheese', productos: [] },
+          { id: 3, nombre: 'Platos principales', icono: 'fa-utensils', productos: [] },
+          { id: 4, nombre: 'Postres', icono: 'fa-ice-cream', productos: [] }
         ];
         
         const productosEjemplo = [
@@ -39,6 +39,10 @@ const CartaDigitalAdmin = ({ barId }) => {
           { id: 103, nombre: 'Refresco', descripcion: 'Coca-Cola, Fanta, etc.', precio: 2.20, categoria: 1, imagen: 'https://via.placeholder.com/100', alergenos: [], stock: 0 },
           // Otros productos...
         ];
+        
+        categoriasEjemplo.forEach(categoria => {
+          categoria.productos = productosEjemplo.filter(producto => producto.categoria === categoria.id);
+        });
         
         setCategorias(categoriasEjemplo);
         setProductos(productosEjemplo);
@@ -83,14 +87,20 @@ const CartaDigitalAdmin = ({ barId }) => {
       
       // Añadimos el producto a la lista local (en un caso real, refrescaríamos desde la API)
       const nuevoId = Math.max(...productos.map(p => p.id)) + 1;
-      setProductos(prev => [...prev, { 
+      const nuevoProductoConId = { 
         ...nuevoProducto,
         id: nuevoId,
         categoria: parseInt(nuevoProducto.categoria),
         precio: parseFloat(nuevoProducto.precio),
         stock: parseInt(nuevoProducto.stock),
         imagen: 'https://via.placeholder.com/100'
-      }]);
+      };
+      setProductos(prev => [...prev, nuevoProductoConId]);
+      setCategorias(prev => prev.map(categoria => 
+        categoria.id === nuevoProductoConId.categoria 
+          ? { ...categoria, productos: [...categoria.productos, nuevoProductoConId] } 
+          : categoria
+      ));
       
       // Reset del formulario
       setNuevoProducto({
@@ -107,33 +117,26 @@ const CartaDigitalAdmin = ({ barId }) => {
     }
   };
 
-  // Actualizar stock
-  const handleActualizarStock = async (productoId, nuevoStock) => {
-    try {
-      // Aquí iría la lógica para actualizar el stock en la API
-      console.log(`Actualizando stock del producto ${productoId} a ${nuevoStock}`);
+  const productosFiltrados = productos
+    .filter(producto => {
+      // Filter by category if one is selected
+      if (categoriaSeleccionada !== 'all') {
+        if (producto.categoria.toString() !== categoriaSeleccionada) {
+          return false;
+        }
+      }
       
-      // Simulamos una actualización exitosa
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // Filter by search term if present
+      if (busqueda) {
+        const searchTerm = busqueda.toLowerCase();
+        return (
+          producto.nombre.toLowerCase().includes(searchTerm) ||
+          producto.descripcion.toLowerCase().includes(searchTerm)
+        );
+      }
       
-      // Actualizamos el stock en la lista local
-      setProductos(prev => prev.map(p => 
-        p.id === productoId 
-          ? { ...p, stock: parseInt(nuevoStock) } 
-          : p
-      ));
-    } catch (err) {
-      console.error('Error al actualizar el stock:', err);
-    }
-  };
-
-  // Filtrar productos
-  const productosFiltrados = productos.filter(producto => {
-    const coincideCategoria = categoriaSeleccionada === 'all' || producto.categoria === parseInt(categoriaSeleccionada);
-    const coincideBusqueda = producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) || 
-                            producto.descripcion.toLowerCase().includes(busqueda.toLowerCase());
-    return coincideCategoria && coincideBusqueda;
-  });
+      return true;
+    });
 
   if (cargando) {
     return <div className="carta-cargando"><i className="fas fa-spinner fa-spin"></i> Cargando productos...</div>;
@@ -193,9 +196,6 @@ const CartaDigitalAdmin = ({ barId }) => {
           <div key={producto.id} className="producto-card">
             <div className="producto-imagen">
               <img src={producto.imagen} alt={producto.nombre} />
-              <div className={`stock-badge ${producto.stock <= 0 ? 'sin-stock' : producto.stock < 5 ? 'bajo-stock' : ''}`}>
-                Stock: {producto.stock}
-              </div>
             </div>
             
             <div className="producto-info">
@@ -204,27 +204,9 @@ const CartaDigitalAdmin = ({ barId }) => {
               
               <div className="producto-footer">
                 <span className="producto-precio">{producto.precio.toFixed(2)} €</span>
-                
-                <div className="stock-control">
-                  <button 
-                    className="stock-btn stock-minus" 
-                    onClick={() => handleActualizarStock(producto.id, Math.max(0, producto.stock - 1))}
-                  >
-                    <i className="fas fa-minus"></i>
-                  </button>
-                  <input 
-                    type="number" 
-                    min="0" 
-                    value={producto.stock}
-                    onChange={(e) => handleActualizarStock(producto.id, e.target.value)}
-                    className="stock-input"
-                  />
-                  <button 
-                    className="stock-btn stock-plus" 
-                    onClick={() => handleActualizarStock(producto.id, producto.stock + 1)}
-                  >
-                    <i className="fas fa-plus"></i>
-                  </button>
+                <div className={`stock-indicator ${producto.stock <= 0 ? 'sin-stock' : producto.stock < 5 ? 'bajo-stock' : 'stock-normal'}`}>
+                  <i className="fas fa-box"></i>
+                  <span>Stock: {producto.stock}</span>
                 </div>
               </div>
             </div>

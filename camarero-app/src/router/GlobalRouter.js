@@ -10,10 +10,12 @@ import LocalesCliente from '../views/LocalesCliente';
 import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
-import PanelEmpleado from '../views/PanelEmpleado';
 import ClienteCartaView from '../views/ClienteCartaView';
-import PedidoConfirmado from '../views/PedidoConfirmado';
+import ClienteComandas from '../views/ClienteComandasView';
 import AdminCartaView from '../views/AdminCartaView';
+import HomeAdmin from '../views/HomeAdmin';
+import PanelEmpleado from '../views/PanelEmpleado';
+import AdminPedidosView from '../views/AdminPedidosView';
 
 const GlobalRouter = () => {
   return (
@@ -25,8 +27,8 @@ const GlobalRouter = () => {
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
       
       {/* RUTAS NUEVAS para QR - mantienen el formato de la URL en QRDownloader */}
-      <Route path="/cliente/bar/:barId/mesa/:mesaId" element={<ClienteCartaView />} />
-      <Route path="/cliente/:barId/:mesaId/pedido-confirmado" element={<PedidoConfirmado />} />
+      <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaView />} />
+      <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
       
       <Route path="/escanear" element={<EscanearQR />} />
       {/* <Route path="/login" element={<Login />} /> */}
@@ -42,7 +44,14 @@ const GlobalRouter = () => {
       } />
 
       {/* Admin */}
-      <Route path="/admin/panel" element={
+      <Route path="/admin/home" element={
+        <PrivateRoute tipo="admin">
+          <HomeAdmin />
+        </PrivateRoute>
+      } />
+      
+      {/* Panel Empleado route */}
+      <Route path="/admin/bar/:barId/panel" element={
         <PrivateRoute tipo="admin">
           <PanelEmpleado />
         </PrivateRoute>
@@ -52,6 +61,13 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/carta" element={
         <PrivateRoute tipo="admin">
           <AdminCartaView />
+        </PrivateRoute>
+      } />
+
+      {/* Ruta para la gestión de pedidos (admin) */}
+      <Route path="/admin/bar/:barId/pedidos" element={
+        <PrivateRoute tipo="admin">
+          <AdminPedidosView />
         </PrivateRoute>
       } />
     </Routes>
