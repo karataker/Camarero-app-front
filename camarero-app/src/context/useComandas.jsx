@@ -4,6 +4,7 @@ const ComandaContext = createContext();
 
 export const ComandaProvider = ({ children }) => {
   const [comandas, setComandas] = useState([]);
+  const [comensales, setComensales] = useState(null);
 
   const agregarComanda = (nueva) => {
     setComandas(prev => [...prev, nueva]);
@@ -11,10 +12,17 @@ export const ComandaProvider = ({ children }) => {
 
   const limpiarComandas = () => {
     setComandas([]);
+    setComensales(null);
   };
 
   return (
-    <ComandaContext.Provider value={{ comandas, agregarComanda, limpiarComandas }}>
+    <ComandaContext.Provider value={{
+      comandas,
+      comensales,
+      setComensales,
+      agregarComanda,
+      limpiarComandas
+    }}>
       {children}
     </ComandaContext.Provider>
   );

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../styles/clienteComandas.css';
+import '../styles/clienteComandasView.css';
 import { useComandas } from '../context/useComandas';
 
 const ClienteComandas = () => {
   const { mesaId, barId } = useParams();
   const navigate = useNavigate();
-  const { comandas } = useComandas();
+  const { comandas, comensales } = useComandas();
 
   const nuevaComanda = () => {
     navigate(`/cliente/${barId}/${mesaId}`);
@@ -19,6 +19,12 @@ const ClienteComandas = () => {
   return (
     <div className="cliente-comandas-view">
       <h2>Resumen de Comandas - Mesa {mesaId}</h2>
+
+      {comensales && (
+        <div className="comensales-info">
+          <i className="fas fa-users"></i> <strong>Comensales:</strong> {comensales}
+        </div>
+      )}
 
       <div className="comandas-listado">
         {comandas.length === 0 ? (
