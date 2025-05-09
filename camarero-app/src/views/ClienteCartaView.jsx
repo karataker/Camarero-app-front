@@ -8,7 +8,9 @@ const ClienteCartaView = () => {
   const [pedidoActual, setPedidoActual] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const { agregarComanda } = useComandas();
+  const [comensalesInput, setComensalesInput] = useState('');
+
+  const { agregarComanda, comensales, setComensales } = useComandas();
   const { mesaId, barId } = useParams();
   const navigate = useNavigate();
 
@@ -23,22 +25,6 @@ const ClienteCartaView = () => {
     });
   };
 
-  // const confirmarComanda = () => {
-  //   const nuevaComanda = {
-  //     id: `CMD${Date.now()}`,
-  //     fecha: new Date().toLocaleString(),
-  //     estado: 'en_preparacion',
-  //     estimado: '15 minutos',
-  //     items: pedidoActual.map(p => ({
-  //       nombre: p.nombre,
-  //       cantidad: p.cantidad,
-  //       disponible: Math.random() > 0.5
-  //     }))
-  //   };
-  //   agregarComanda(nuevaComanda);
-  //   navigate(`/cliente/${barId}/${mesaId}/comandas`);
-  // };
-
   const confirmarComanda = () => {
     const nuevaComanda = {
       id: `CMD${Date.now()}`,
@@ -51,16 +37,46 @@ const ClienteCartaView = () => {
           nombre: p.nombre,
           cantidad: p.cantidad,
           disponible: rand > 0.3,
-          recogido: rand > 0.75 // solo si es disponible, puede estar recogido
+          recogido: rand > 0.75
         };
       })
     };
-  
+
     agregarComanda(nuevaComanda);
     navigate(`/cliente/${barId}/${mesaId}/comandas`);
   };
 
   const total = pedidoActual.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+  const handleComensalesSubmit = (e) => {
+    e.preventDefault();
+    const numero = parseInt(comensalesInput);
+    if (!isNaN(numero) && numero > 0) {
+      setComensales(numero);
+    }
+  };
+
+  if (!comensales) {
+    return (
+      <div className="cliente-carta-view cliente-inicial">
+        <form className="comensales-form" onSubmit={handleComensalesSubmit}>
+          <label htmlFor="comensales">¿Cuántos comensales sois?</label>
+          <input
+            id="comensales"
+            type="number"
+            min="1"
+            max="20"
+            value={comensalesInput}
+            onChange={(e) => setComensalesInput(e.target.value)}
+            required
+          />
+          <button type="submit">
+            <i className="fas fa-arrow-right" style={{ marginRight: 6 }}></i> Confirmar
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="cliente-carta-view">
