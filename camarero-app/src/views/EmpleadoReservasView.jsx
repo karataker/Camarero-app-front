@@ -267,7 +267,7 @@ const EmpleadoReservasView = () => {
 
   const reservasFiltradasDelDiaSeleccionado = React.useMemo(() => {
     let reservasDelDia = reservasConfirmadas.filter(r =>
-      new Date(r.fecha).toDateString() === selectedDate.toDateString()
+      r.fecha === selectedDate.toISOString().split('T')[0]
     );
 
     if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
@@ -278,6 +278,7 @@ const EmpleadoReservasView = () => {
         return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
       });
     }
+
     return reservasDelDia.sort((a, b) => a.hora.localeCompare(b.hora));
   }, [reservasConfirmadas, selectedDate, filtroFranja]);
 
@@ -370,7 +371,9 @@ const EmpleadoReservasView = () => {
                 onChange={setSelectedDate}
                 value={selectedDate}
                 tileContent={({ date }) => {
-                  let reservasDelTile = reservasConfirmadas.filter(r => r.fecha === date.toISOString().split('T')[0]);
+                  let reservasDelTile = reservasConfirmadas.filter(r =>
+                    r.fecha === date.toISOString().split('T')[0]
+                  );
 
                   if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
                     const franjaActual = FRANJAS_HORARIAS[filtroFranja];
@@ -404,7 +407,9 @@ const EmpleadoReservasView = () => {
                   );
                 }}
                 tileClassName={({ date }) => {
-                  let reservasDelTile = reservasConfirmadas.filter(r => r.fecha === date.toISOString().split('T')[0]);
+                  let reservasDelTile = reservasConfirmadas.filter(r =>
+                    r.fecha === date.toISOString().split('T')[0]
+                  );
                   if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
                     const franjaActual = FRANJAS_HORARIAS[filtroFranja];
                     reservasDelTile = reservasDelTile.filter(res => {
