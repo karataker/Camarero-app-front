@@ -508,3 +508,136 @@
   border-color: #2EAD63;
   font-weight: bold;
 }
+
+/* Estilos para el detalle de reservas del día */
+.reservas-dia {
+  margin-top: 15px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.reserva-dia-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #2ecc71;
+}
+
+.reserva-dia-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.reserva-dia-info .mesa {
+  font-weight: bold;
+  color: #2c3e50;
+  background: #f0f5f9;
+  padding: 3px 8px;
+  border-radius: 4px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.reserva-dia-info .hora {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.reserva-dia-info .nombre {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.reserva-dia-info .personas {
+  color: #666;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.reserva-dia-info .personas::before {
+  content: "\f007"; /* Código FontAwesome para usuario */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.reserva-dia-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-accion-reserva {
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-accion-reserva:hover {
+  background-color: #f5f5f5;
+  color: #2980b9;
+}
+
+.btn-modificar {
+  color: #3498db;
+}
+
+.btn-modificar:hover {
+  background-color: #eaf2fa;
+  color: #2471a3;
+}
+
+.no-reservas {
+  text-align: center;
+  color: #777;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+/* Día seleccionado: sin sombreado, solo borde negro */
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: transparent !important;
+  color: #222 !important;
+  border-radius: 8px !important;
+  border: 2px solid #222 !important;
+  position: relative;
+  z-index: 1;
+  box-shadow: none !important;
+}
+
+/* Asegura que el número del día siempre sea visible encima del fondo */
+.react-calendar__tile--active abbr {
+  color: #222 !important;
+  font-weight: bold;
+  z-index: 2;
+  position: relative;
+}
+
+/* Si usas un sombreado personalizado para el hover, mantenlo suave */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: #fff9db !important;
+  color: #222 !important;
+  border-radius: 8px;
+}
