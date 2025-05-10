@@ -1,4 +1,4 @@
-.admin-pedidos-view {
+.empleado-pedidos-view {
   padding: 20px;
 }
 
@@ -99,4 +99,8 @@
 
 .pedidos-error {
   color: #e74c3c;
+}
+
+.empleado-pedidos-view {
+  padding: 20px;
 }

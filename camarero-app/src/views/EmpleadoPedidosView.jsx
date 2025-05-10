@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import '../styles/adminPedidosView.css';
+import '../styles/empleadoPedidosView.css';
 
-const AdminPedidosView = () => {
+const EmpleadoPedidosView = () => {
   const { barId } = useParams();
   const [pedidos, setPedidos] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState('todos');
@@ -66,15 +66,15 @@ const AdminPedidosView = () => {
   );
 
   return (
-    <div className="admin-pedidos-view">
-      <div className="admin-breadcrumb">
-        <Link to="/admin/panel">Panel</Link>
+    <div className="empleado-pedidos-view">
+      <div className="empleado-breadcrumb">
+        <Link to="/empleado/panel">Panel</Link>
         <span>/</span>
-        <Link to={`/admin/bar/${barId}`}>Bar</Link>
+        <Link to={`/empleado/bar/${barId}`}>Bar</Link>
         <span>/</span>
         <span>Pedidos</span>
       </div>
-
+      
       <h1>Gestión de Pedidos</h1>
 
       <div className="filtros-pedidos">
@@ -128,4 +128,4 @@ const AdminPedidosView = () => {
   );
 };
 
-export default AdminPedidosView;
+export default EmpleadoPedidosView;

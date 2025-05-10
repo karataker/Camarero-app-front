@@ -13,23 +13,23 @@
 }
 
 /* Breadcrumbs para navegación */
-.admin-breadcrumb {
+.empleado-breadcrumb {
   display: flex;
   align-items: center;
   margin-bottom: 24px;
   font-size: 0.9rem;
 }
 
-.admin-breadcrumb a {
+.empleado-breadcrumb a {
   color: #2EAD63;
   text-decoration: none;
 }
 
-.admin-breadcrumb a:hover {
+.empleado-breadcrumb a:hover {
   text-decoration: underline;
 }
 
-.admin-breadcrumb span {
+.empleado-breadcrumb span {
   margin: 0 8px;
   color: #999;
 }

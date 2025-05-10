@@ -8,7 +8,7 @@ const AdminCartaView = () => {
   
   return (
     <div className="admin-carta-view">
-      <div className="admin-breadcrumb">
+      <div className="empleado-breadcrumb">
         <Link to="/admin/panel">Panel</Link>
         <span>/</span>
         <Link to={`/admin/bar/${barId}`}>Bar</Link>

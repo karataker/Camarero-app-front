@@ -15,8 +15,9 @@ import ClienteComandas from '../views/ClienteComandasView';
 import AdminCartaView from '../views/AdminCartaView';
 import HomeAdmin from '../views/HomeAdmin';
 import PanelEmpleado from '../views/PanelEmpleado';
-import AdminPedidosView from '../views/AdminPedidosView';
+import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/EmpleadoReservasView';
+import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 
 const GlobalRouter = () => {
   return (
@@ -66,16 +67,16 @@ const GlobalRouter = () => {
       } />
 
       {/* Ruta para la gestión de reservas (empleado) */}
-            <Route path="/admin/bar/:barId/reservas" element={
+      <Route path="/admin/bar/:barId/reservas" element={
         <PrivateRoute tipo="admin">
           <EmpleadoReservasView />
         </PrivateRoute>
       } />
 
-      {/* Ruta para la gestión de pedidos (admin) */}
+      {/* Ruta para la gestión de pedidos (admin y empleado) */}
       <Route path="/admin/bar/:barId/pedidos" element={
-        <PrivateRoute tipo="admin">
-          <AdminPedidosView />
+        <PrivateRoute tipo={['admin', 'empleado']}>
+          <EmpleadoPedidosView />
         </PrivateRoute>
       } />
     </Routes>
