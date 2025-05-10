@@ -4,6 +4,111 @@ import Calendar from 'react-calendar';
 import '../styles/empleadoReservasView.css';
 import 'react-calendar/dist/Calendar.css';
 
+// --- Funciones de Ayuda para Tiempos ---
+const horaAMinutos = (horaStr) => {
+  if (!horaStr || typeof horaStr !== 'string' || !horaStr.includes(':')) return 0;
+  const [horas, minutos] = horaStr.split(':').map(Number);
+  return horas * 60 + minutos;
+};
+
+/**
+ * Verifica si dos rangos de tiempo se solapan.
+ * Todos los tiempos son en minutos desde la medianoche.
+ * @param {number} inicio1 Inicio del primer rango
+ * @param {number} fin1 Fin del primer rango
+ * @param {number} inicio2 Inicio del segundo rango
+ * @param {number} fin2 Fin del segundo rango
+ * @returns {boolean} True si hay solapamiento, false en caso contrario
+ */
+const haySolapamiento = (inicio1, fin1, inicio2, fin2) => {
+  return Math.max(inicio1, inicio2) < Math.min(fin1, fin2);
+};
+// --- Fin Funciones de Ayuda ---
+
+const DURACION_RESERVA_EXISTENTE_HORAS = 2; // Duración estándar para reservas existentes
+
+const FRANJAS_HORARIAS = {
+  todas: { nombre: 'Todas', inicioMin: 0, finMin: 24 * 60 - 1 }, // Cubre todo el día
+  almuerzos: { nombre: 'Almuerzos', inicioMin: horaAMinutos('12:00'), finMin: horaAMinutos('14:00') },
+  comidas: { nombre: 'Comidas', inicioMin: horaAMinutos('14:00'), finMin: horaAMinutos('17:00') },
+  cenas: { nombre: 'Cenas', inicioMin: horaAMinutos('20:00'), finMin: horaAMinutos('23:59') },
+};
+
+const MiniMesasView = ({
+  todasLasMesas,
+  reservasDelDia, // Ya vienen filtradas por franja si aplica (o todas si filtroFranja es 'todas')
+  selectedDate,
+  horaConsulta,
+  duracionHorasConsulta = 2,
+  filtroFranjaActual // 'todas', 'almuerzos', etc.
+}) => {
+  if (!selectedDate) {
+    return null;
+  }
+
+  const getEstadoMesa = (mesaId) => {
+    const reservasParaEstaMesa = reservasDelDia.filter(res => res.mesa === mesaId);
+
+    if (horaConsulta) {
+      const inicioConsultaMin = horaAMinutos(horaConsulta);
+      const finConsultaMin = inicioConsultaMin + duracionHorasConsulta * 60;
+
+      for (const res of reservasParaEstaMesa) {
+        const inicioExistenteMin = horaAMinutos(res.hora);
+        const finExistenteMin = inicioExistenteMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+        if (haySolapamiento(inicioConsultaMin, finConsultaMin, inicioExistenteMin, finExistenteMin)) {
+          return { estado: 'ocupada_horario', textoTooltip: `Ocupada de ${res.hora} a aprox. ${new Date(new Date(`1970/01/01 ${res.hora}`).getTime() + DURACION_RESERVA_EXISTENTE_HORAS * 60 * 60 * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (Mesa ${res.mesa})` };
+        }
+      }
+      return { estado: 'libre_horario', textoTooltip: `Libre a las ${horaConsulta} (aprox. ${duracionHorasConsulta}h)` };
+    } else {
+      if (reservasParaEstaMesa.length > 0) {
+        const horariosOcupados = reservasParaEstaMesa.map(r => `${r.hora} (Mesa ${r.mesa})`).join(', ');
+        let textoFranja = filtroFranjaActual !== 'todas' ? ` en ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}` : ' hoy';
+        return { estado: 'ocupada_dia', textoTooltip: `Ocupada${textoFranja} en horarios: ${horariosOcupados}` };
+      }
+      let textoFranjaLibre = filtroFranjaActual !== 'todas' ? ` durante ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}` : ' durante el día';
+      return { estado: 'libre_dia', textoTooltip: `Libre${textoFranjaLibre} (verificar horarios específicos)` };
+    }
+  };
+
+  let titulo = `Disponibilidad de Mesas (${selectedDate.toLocaleDateString()})`;
+  if (horaConsulta) {
+    titulo += ` a las ${horaConsulta} (aprox. ${duracionHorasConsulta}h)`;
+  } else if (filtroFranjaActual && filtroFranjaActual !== 'todas') {
+    titulo += ` para ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}`;
+  }
+
+  return (
+    <div className="mini-mesas-container">
+      <h4>{titulo}</h4>
+      {todasLasMesas.length === 0 ? (
+        <p>No hay información de mesas para este bar.</p>
+      ) : (
+        <div className="mini-mesas-grid">
+          {todasLasMesas.map(mesa => {
+            const { estado, textoTooltip } = getEstadoMesa(mesa.id);
+            let claseCss = '';
+            if (estado === 'ocupada_horario' || estado === 'ocupada_dia') claseCss = 'ocupada';
+            else if (estado === 'libre_horario' || estado === 'libre_dia') claseCss = 'libre';
+
+            return (
+              <div
+                key={mesa.id}
+                className={`mini-mesa-item ${claseCss}`}
+                title={textoTooltip || `Mesa ${mesa.nombre} - Capacidad: ${mesa.capacidad || 'N/A'}`}
+              >
+                {mesa.nombre}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {horaConsulta && <p className="nota-disponibilidad">* La disponibilidad horaria asume una duración de {duracionHorasConsulta}h para la nueva reserva y {DURACION_RESERVA_EXISTENTE_HORAS}h para las existentes.</p>}
+    </div>
+  );
+};
+
 const EmpleadoReservasView = () => {
   const { barId } = useParams();
   const [reservas, setReservas] = useState([]);
@@ -20,6 +125,8 @@ const EmpleadoReservasView = () => {
     email: '',
     mensaje: ''
   });
+  const [duracionReservaHoras] = useState(2); // Configurable: duración estándar de una reserva
+  const [filtroFranja, setFiltroFranja] = useState('todas'); // 'todas', 'almuerzos', 'comidas', 'cenas'
 
   useEffect(() => {
     cargarReservas();
@@ -28,7 +135,6 @@ const EmpleadoReservasView = () => {
   const cargarReservas = async () => {
     try {
       setCargando(true);
-      // TODO: Replace with actual API call
       const mockReservas = [
         {
           id: 1,
@@ -41,7 +147,7 @@ const EmpleadoReservasView = () => {
           estado: 'pendiente',
           mensaje: 'Mesa cerca de ventana si es posible',
           fechaSolicitud: '2025-05-04T10:30:00',
-          mesa: null // Pending reservations don't have a table assigned
+          mesa: null
         },
         {
           id: 2,
@@ -54,7 +160,7 @@ const EmpleadoReservasView = () => {
           estado: 'confirmada',
           mensaje: '',
           fechaSolicitud: '2025-05-03T15:20:00',
-          mesa: 'M01' // Confirmed reservation with M01 table
+          mesa: 'M01'
         },
         {
           id: 3,
@@ -67,7 +173,7 @@ const EmpleadoReservasView = () => {
           estado: 'confirmada',
           mensaje: 'Celebración de cumpleaños',
           fechaSolicitud: '2025-05-03T09:15:00',
-          mesa: 'M04' // Confirmed reservation with M04 table
+          mesa: 'M04'
         },
         {
           id: 4,
@@ -93,7 +199,7 @@ const EmpleadoReservasView = () => {
           estado: 'confirmada',
           mensaje: 'Mesa tranquila para reunión',
           fechaSolicitud: '2025-05-02T11:20:00',
-          mesa: 'M02' // Confirmed reservation with M02 table
+          mesa: 'M02'
         },
         {
           id: 6,
@@ -106,7 +212,7 @@ const EmpleadoReservasView = () => {
           estado: 'confirmada',
           mensaje: 'Comida familiar',
           fechaSolicitud: '2025-05-03T16:10:00',
-          mesa: 'M03' // Confirmed reservation with M03 table
+          mesa: 'M03'
         },
         {
           id: 7,
@@ -119,7 +225,7 @@ const EmpleadoReservasView = () => {
           estado: 'confirmada',
           mensaje: '',
           fechaSolicitud: '2025-05-03T17:30:00',
-          mesa: 'M01' // Confirmed reservation with M01 table
+          mesa: 'M01'
         },
         {
           id: 8,
@@ -135,12 +241,11 @@ const EmpleadoReservasView = () => {
           mesa: null
         }
       ];
-      
-      // Sort by request date (newest first)
-      const reservasOrdenadas = mockReservas.sort((a, b) => 
+
+      const reservasOrdenadas = mockReservas.sort((a, b) =>
         new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)
       );
-      
+
       setReservas(reservasOrdenadas);
     } catch (err) {
       setError('Error al cargar las reservas');
@@ -152,7 +257,6 @@ const EmpleadoReservasView = () => {
 
   const handleConfirmarReserva = async (reservaId) => {
     try {
-      // TODO: Replace with actual API call
       setReservas(prevReservas =>
         prevReservas.map(reserva =>
           reserva.id === reservaId
@@ -167,7 +271,6 @@ const EmpleadoReservasView = () => {
 
   const handleRechazarReserva = async (reservaId) => {
     try {
-      // TODO: Replace with actual API call
       setReservas(prevReservas =>
         prevReservas.map(reserva =>
           reserva.id === reservaId
@@ -201,8 +304,42 @@ const EmpleadoReservasView = () => {
     });
   };
 
+  const obtenerTodasLasMesasDelBar = (currentBarId) => {
+    if (currentBarId === "1") {
+      return [
+        { id: 'M01', nombre: 'M01', capacidad: 4 },
+        { id: 'M02', nombre: 'M02', capacidad: 2 },
+        { id: 'M03', nombre: 'M03', capacidad: 6 },
+        { id: 'M04', nombre: 'M04', capacidad: 4 },
+        { id: 'M05', nombre: 'M05', capacidad: 2 },
+        { id: 'M06', nombre: 'M06', capacidad: 4 },
+        { id: 'M07', nombre: 'M07', capacidad: 2 },
+        { id: 'M08', nombre: 'M08', capacidad: 8 },
+      ];
+    }
+    return [];
+  };
+
+  const todasLasMesasDelBar = obtenerTodasLasMesasDelBar(barId);
+
   const reservasPendientes = reservas.filter(r => r.estado === 'pendiente');
   const reservasConfirmadas = reservas.filter(r => r.estado === 'confirmada');
+
+  const reservasFiltradasDelDiaSeleccionado = React.useMemo(() => {
+    let reservasDelDia = reservasConfirmadas.filter(r =>
+      new Date(r.fecha).toDateString() === selectedDate.toDateString()
+    );
+
+    if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
+      const franjaActual = FRANJAS_HORARIAS[filtroFranja];
+      reservasDelDia = reservasDelDia.filter(res => {
+        const inicioReservaMin = horaAMinutos(res.hora);
+        const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+        return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
+      });
+    }
+    return reservasDelDia.sort((a, b) => a.hora.localeCompare(b.hora));
+  }, [reservasConfirmadas, selectedDate, filtroFranja]);
 
   if (cargando) {
     return <div className="reservas-loading">Cargando reservas...</div>;
@@ -224,7 +361,7 @@ const EmpleadoReservasView = () => {
 
       <div className="reservas-header">
         <h1>Gestión de Reservas</h1>
-        <button 
+        <button
           className="btn-nueva-reserva"
           onClick={() => setMostrarFormulario(true)}
         >
@@ -233,7 +370,6 @@ const EmpleadoReservasView = () => {
       </div>
 
       <div className="reservas-container">
-        {/* Pending Reservations Section - Now first */}
         <div className="reservas-pendientes-section">
           <h2>Reservas Pendientes de Confirmación</h2>
           <div className="reservas-grid">
@@ -283,74 +419,114 @@ const EmpleadoReservasView = () => {
           </div>
         </div>
 
-        {/* Calendar Section - Now second */}
         <div className="calendario-reservas-section">
-          <h2>Calendario de Reservas</h2>
+          <div className="calendario-header-controls">
+            <h2>Calendario de Reservas</h2>
+            <div className="filtro-franja-horaria">
+              <span>Filtrar por: </span>
+              {Object.keys(FRANJAS_HORARIAS).map(keyFranja => (
+                <button
+                  key={keyFranja}
+                  className={`btn-filtro-franja ${filtroFranja === keyFranja ? 'active' : ''}`}
+                  onClick={() => setFiltroFranja(keyFranja)}
+                >
+                  {FRANJAS_HORARIAS[keyFranja].nombre}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="calendario-layout">
             <div className="calendario-container">
               <Calendar
                 onChange={setSelectedDate}
                 value={selectedDate}
                 tileContent={({ date }) => {
-                  const dateStr = date.toISOString().split('T')[0];
-                  const reservasDelDia = reservasConfirmadas.filter(
-                    r => r.fecha === dateStr
-                  ).sort((a, b) => a.hora.localeCompare(b.hora));
+                  let reservasDelTile = reservasConfirmadas.filter(r => r.fecha === date.toISOString().split('T')[0]);
 
-                  if (reservasDelDia.length === 0) return null;
+                  if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
+                    const franjaActual = FRANJAS_HORARIAS[filtroFranja];
+                    reservasDelTile = reservasDelTile.filter(res => {
+                      const inicioReservaMin = horaAMinutos(res.hora);
+                      const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+                      return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
+                    });
+                  }
+                  reservasDelTile.sort((a, b) => a.hora.localeCompare(b.hora));
+
+                  if (reservasDelTile.length === 0) return null;
 
                   return (
                     <div className="calendario-reservas">
-                      {reservasDelDia.slice(0, 3).map((reserva) => (
-                        <div 
-                          key={reserva.id} 
+                      {reservasDelTile.slice(0, 2).map((reserva) => (
+                        <div
+                          key={reserva.id}
                           className="mini-reserva"
-                          title={`${reserva.nombre} - ${reserva.personas} personas`}
+                          title={`${reserva.nombre} - ${reserva.mesa} - ${reserva.personas}p`}
                         >
-                          {reserva.hora} ({reserva.personas}p)
+                          {reserva.hora.substring(0, 5)} {reserva.mesa ? `(${reserva.mesa.substring(0, 3)})` : ''}
                         </div>
                       ))}
-                      {reservasDelDia.length > 3 && (
+                      {reservasDelTile.length > 2 && (
                         <div className="mini-reserva-count">
-                          +{reservasDelDia.length - 3} más
+                          +{reservasDelTile.length - 2} más
                         </div>
                       )}
                     </div>
                   );
                 }}
                 tileClassName={({ date }) => {
-                  const dateStr = date.toISOString().split('T')[0];
-                  return reservasConfirmadas.some(r => r.fecha === dateStr) ? 'tiene-reservas' : '';
+                  let reservasDelTile = reservasConfirmadas.filter(r => r.fecha === date.toISOString().split('T')[0]);
+                  if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
+                    const franjaActual = FRANJAS_HORARIAS[filtroFranja];
+                    reservasDelTile = reservasDelTile.filter(res => {
+                      const inicioReservaMin = horaAMinutos(res.hora);
+                      const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+                      return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
+                    });
+                  }
+                  return reservasDelTile.length > 0 ? 'tiene-reservas' : '';
                 }}
               />
             </div>
-            
+
             <div className="reservas-dia-container">
-              <h3>Reservas para {selectedDate.toLocaleDateString()}</h3>
+              <h3>
+                Reservas para {selectedDate.toLocaleDateString()}
+                {filtroFranja !== 'todas' && ` (${FRANJAS_HORARIAS[filtroFranja].nombre})`}
+              </h3>
               <div className="reservas-dia">
-                {reservasConfirmadas
-                  .filter(r => new Date(r.fecha).toDateString() === selectedDate.toDateString())
-                  .sort((a, b) => a.hora.localeCompare(b.hora))
-                  .map(reserva => (
-                    <div key={reserva.id} className="reserva-dia-card">
-                      <span className="mesa">Mesa {reserva.mesa}</span>
-                      <span className="hora">{reserva.hora}</span>
-                      <span className="nombre">{reserva.nombre}</span>
-                      <span className="personas">{reserva.personas} personas</span>
-                    </div>
-                  ))}
-                {reservasConfirmadas.filter(r => 
-                  new Date(r.fecha).toDateString() === selectedDate.toDateString()
-                ).length === 0 && (
-                  <div className="no-reservas">No hay reservas para este día</div>
+                {reservasFiltradasDelDiaSeleccionado.map(reserva => (
+                  <div key={reserva.id} className="reserva-dia-card">
+                    <span className="mesa">Mesa {reserva.mesa}</span>
+                    <span className="hora">{reserva.hora}</span>
+                    <span className="nombre">{reserva.nombre}</span>
+                    <span className="personas">{reserva.personas} personas</span>
+                  </div>
+                ))}
+                {reservasFiltradasDelDiaSeleccionado.length === 0 && (
+                  <div className="no-reservas">
+                    No hay reservas para este día{filtroFranja !== 'todas' ? ` en la franja de ${FRANJAS_HORARIAS[filtroFranja].nombre.toLowerCase()}` : ''}.
+                  </div>
                 )}
               </div>
+
+              <MiniMesasView
+                todasLasMesas={todasLasMesasDelBar}
+                reservasDelDia={reservasFiltradasDelDiaSeleccionado}
+                selectedDate={selectedDate}
+                horaConsulta={
+                  mostrarFormulario && nuevaReserva.fecha === selectedDate.toISOString().split('T')[0] && nuevaReserva.hora
+                    ? nuevaReserva.hora
+                    : null
+                }
+                duracionHorasConsulta={duracionReservaHoras}
+                filtroFranjaActual={filtroFranja}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* New Reservation Modal */}
       {mostrarFormulario && (
         <div className="modal-overlay">
           <div className="modal-reserva">
@@ -448,9 +624,9 @@ const EmpleadoReservasView = () => {
               </div>
               <div className="form-actions">
                 <button type="submit" className="btn-submit">Guardar</button>
-                <button 
-                  type="button" 
-                  className="btn-cancel" 
+                <button
+                  type="button"
+                  className="btn-cancel"
                   onClick={() => setMostrarFormulario(false)}
                 >
                   Cancelar

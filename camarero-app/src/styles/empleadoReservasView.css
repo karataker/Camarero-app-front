@@ -383,7 +383,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* Add ellipsis for overflowing text */
-  font-size: 0.7rem;
+  font-size: 0.75em; /* Ajustar si es necesario para que quepa más info */
   text-align: left;
   width: 100%;
   box-sizing: border-box;
@@ -451,4 +451,103 @@
   .reservas-dia {
     max-height: 300px; /* Adjust height for stacked view */
   }
+}
+
+/* Mini Mesas View Styles */
+.mini-mesas-container {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.mini-mesas-container h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.05em; /* Un poco más grande que el texto normal */
+}
+
+.mini-mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); /* Ajusta minmax para el tamaño deseado */
+  gap: 12px; /* Espacio entre mesas */
+}
+
+.mini-mesa-item {
+  padding: 12px 5px; /* Más padding vertical */
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 600; /* Semi-bold */
+  font-size: 0.85em;
+  cursor: default;
+  border: 1px solid transparent; /* Borde transparente por defecto */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.mini-mesa-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+}
+
+.mini-mesa-item.libre {
+  background-color: #e8f5e9; /* Verde claro para libre */
+  color: #388e3c; /* Verde oscuro */
+  border-color: #c8e6c9;
+}
+
+.mini-mesa-item.ocupada {
+  background-color: #ffebee; /* Rojo claro para ocupada */
+  color: #d32f2f; /* Rojo oscuro */
+  border-color: #ffcdd2;
+  /* text-decoration: line-through; Opcional si quieres tachar el texto */
+}
+
+/* Calendar Header Controls */
+.calendario-header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap; /* Para que los filtros pasen abajo en pantallas pequeñas */
+}
+
+.calendario-header-controls h2 {
+  margin: 0;
+  margin-right: 20px; /* Espacio antes de los filtros */
+}
+
+.filtro-franja-horaria {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap; /* Para que los botones se ajusten */
+}
+
+.filtro-franja-horaria span {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.btn-filtro-franja {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-filtro-franja:hover {
+  background-color: #e9e9e9;
+  border-color: #bbb;
+}
+
+.btn-filtro-franja.active {
+  background-color: #2EAD63;
+  color: white;
+  border-color: #2EAD63;
+  font-weight: bold;
 }
