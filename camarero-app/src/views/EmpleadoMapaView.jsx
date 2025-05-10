@@ -4,12 +4,12 @@ import { useBar } from '../context/BarContext';
 import QRDownloader from '../components/QRDownloader';
 import ComensalesIconos from '../components/ComensalesIconos';
 import { Link } from 'react-router-dom';
-import '../styles/panelEmpleado.css';
+import '../styles/empleadoMapaView.css';
 
 // Dejamos solo las 3 zonas principales
 const zonas = ['Interior', 'Terraza', 'Barra'];
 
-const PanelEmpleado = () => {
+const EmpleadoMapaView = () => {
   const {
     bares,
     cargarBares,
@@ -220,4 +220,4 @@ const PanelEmpleado = () => {
   );
 };
 
-export default PanelEmpleado;
+export default EmpleadoMapaView;
