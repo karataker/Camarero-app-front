@@ -140,12 +140,6 @@ const EmpleadoPedidosView = () => {
         {pedidosFiltrados.map(pedido => (
           <div key={pedido.id} className={`pedido-card estado-${pedido.estado}`}>
             <div className="pedido-header">
-              <span style={{ marginRight: 8, fontSize: '1.5em', verticalAlign: 'middle' }}>
-                {pedido.estado === 'pendiente' && <MdOutlinePendingActions color="#e74c3c" title="Pendiente" />}
-                {pedido.estado === 'preparacion' && <GiCook color="#f39c12" title="En preparación" />}
-                {pedido.estado === 'listo' && <MdOutlineDeliveryDining color="#2ecc71" title="Listo para servir" />}
-                {pedido.estado === 'entregado' && <MdDoneAll color="#95a5a6" title="Entregado" />}
-              </span>
               <div>
                 <h3 style={{ margin: 0, display: 'inline-block', verticalAlign: 'middle' }}>
                   Mesa {pedido.mesa}
@@ -164,10 +158,9 @@ const EmpleadoPedidosView = () => {
               </div>
             </div>
 
-            <div style={{ margin: '8px 0 0 0' }}>
-              {/* Etiquetas de tiempos por estado */}
+            {/* Gráfico de barras con tiempos y total */}
+            <div style={{ margin: '8px 0 0 0', display: 'flex', alignItems: 'center' }}>
               {(() => {
-                // Utilidades para minutos
                 const min = (a, b) => {
                   if (!a || !b) return 0;
                   const [h1, m1] = a.split(':').map(Number);
@@ -178,119 +171,140 @@ const EmpleadoPedidosView = () => {
                   if (diff < 0) diff += 24 * 60;
                   return diff;
                 };
-                // Fases
                 const t1 = pedido.horaEntrada && pedido.horaPreparacion ? min(pedido.horaEntrada, pedido.horaPreparacion) : 0;
                 const t2 = pedido.horaPreparacion && pedido.horaListo ? min(pedido.horaPreparacion, pedido.horaListo) : 0;
                 const t3 = pedido.horaListo && pedido.horaEntregado ? min(pedido.horaListo, pedido.horaEntregado) : 0;
-                // Si el pedido está en una fase, calcula el tiempo hasta ahora
                 const horaActualStr = new Date().toTimeString().slice(0,5);
                 const tActual = {
                   pendiente: pedido.horaEntrada ? min(pedido.horaEntrada, horaActualStr) : 0,
                   preparacion: pedido.horaPreparacion ? min(pedido.horaPreparacion, horaActualStr) : 0,
                   listo: pedido.horaListo ? min(pedido.horaListo, horaActualStr) : 0,
                 };
-                // Suma total para proporciones
                 const total = t1 + t2 + t3 + (
                   pedido.estado === 'pendiente' ? tActual.pendiente :
                   pedido.estado === 'preparacion' ? tActual.preparacion :
                   pedido.estado === 'listo' ? tActual.listo : 0
-                ) || 1; // evitar división por cero
+                ) || 1;
 
-                // Etiquetas de tiempo por estado
+                // Helper para mostrar el tiempo en formato amigable
+                const formatMin = min => min > 59 ? `${Math.floor(min/60)}h ${min%60}min` : `${min}min`;
+
+                // Calcula el tiempo de la fase actual si está en curso
+                let tPendiente = t1;
+                let tPreparacion = t2;
+                let tListo = t3;
+                if (pedido.estado === 'pendiente') tPendiente += tActual.pendiente;
+                if (pedido.estado === 'preparacion') tPreparacion += tActual.preparacion;
+                if (pedido.estado === 'listo') tListo += tActual.listo;
+
                 return (
                   <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', marginBottom: 2 }}>
-                      <span style={{ color: '#e74c3c' }}>
-                        {t1 > 0 && `Pendiente: ${t1} min`}
-                        {pedido.estado === 'pendiente' && `Pendiente: ${tActual.pendiente} min`}
-                      </span>
-                      <span style={{ color: '#f39c12' }}>
-                        {t2 > 0 && `Preparación: ${t2} min`}
-                        {pedido.estado === 'preparacion' && `Preparación: ${tActual.preparacion} min`}
-                      </span>
-                      <span style={{ color: '#2ecc71' }}>
-                        {t3 > 0 && `Listo: ${t3} min`}
-                        {pedido.estado === 'listo' && `Listo: ${tActual.listo} min`}
-                      </span>
-                      <span style={{ color: '#6c63ff' }}>
-                        {pedido.estado === 'entregado' && t3 > 0 && `Entregado`}
-                      </span>
-                      <span style={{ marginLeft: 'auto', fontWeight: 'bold', color: '#333' }}>
-                        Total: {total} min
-                      </span>
-                    </div>
-                    <div className="barra-tiempos-fases" style={{ height: 12, display: 'flex', borderRadius: 6, overflow: 'hidden', background: '#eee' }}>
+                    <div className="barra-tiempos-fases" style={{ height: 20, display: 'flex', borderRadius: 6, overflow: 'hidden', background: '#eee', flex: 1, minWidth: 0 }}>
                       {/* Entrada → Preparación */}
                       <div style={{
-                        width: `${(t1/total)*100}%`,
+                        width: `${(tPendiente/total)*100}%`,
                         background: '#ffb3b3',
                         height: '100%',
-                      }} title={`Pendiente: ${t1} min`} />
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        fontWeight: 500,
+                        fontSize: '0.95em',
+                        color: '#a94442',
+                        whiteSpace: 'nowrap',
+                        minWidth: tPendiente > 0 ? 40 : 0
+                      }}>
+                        {tPendiente > 0 && <span>{formatMin(tPendiente)}</span>}
+                      </div>
                       {/* Preparación → Listo */}
                       <div style={{
-                        width: `${(t2/total)*100}%`,
+                        width: `${(tPreparacion/total)*100}%`,
                         background: '#ffe082',
                         height: '100%',
-                      }} title={`Preparación: ${t2} min`} />
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        fontWeight: 500,
+                        fontSize: '0.95em',
+                        color: '#b8860b',
+                        whiteSpace: 'nowrap',
+                        minWidth: tPreparacion > 0 ? 40 : 0
+                      }}>
+                        {tPreparacion > 0 && <span>{formatMin(tPreparacion)}</span>}
+                      </div>
                       {/* Listo → Entregado */}
                       <div style={{
-                        width: `${(t3/total)*100}%`,
+                        width: `${(tListo/total)*100}%`,
                         background: '#b9f6ca',
                         height: '100%',
-                      }} title={`Listo: ${t3} min`} />
-                      {/* Fase actual (en curso) */}
-                      {pedido.estado === 'pendiente' && (
-                        <div style={{
-                          width: `${(tActual.pendiente/total)*100}%`,
-                          background: '#e74c3c',
-                          height: '100%',
-                          opacity: 0.7,
-                        }} title={`Pendiente: ${tActual.pendiente} min (en curso)`} />
-                      )}
-                      {pedido.estado === 'preparacion' && (
-                        <div style={{
-                          width: `${(tActual.preparacion/total)*100}%`,
-                          background: '#f39c12',
-                          height: '100%',
-                          opacity: 0.7,
-                        }} title={`Preparación: ${tActual.preparacion} min (en curso)`} />
-                      )}
-                      {pedido.estado === 'listo' && (
-                        <div style={{
-                          width: `${(tActual.listo/total)*100}%`,
-                          background: '#2ecc71',
-                          height: '100%',
-                          opacity: 0.7,
-                        }} title={`Listo: ${tActual.listo} min (en curso)`} />
-                      )}
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        fontWeight: 500,
+                        fontSize: '0.95em',
+                        color: '#218838',
+                        whiteSpace: 'nowrap',
+                        minWidth: tListo > 0 ? 40 : 0
+                      }}>
+                        {tListo > 0 && <span>{formatMin(tListo)}</span>}
+                      </div>
                     </div>
+                    <span style={{ marginLeft: 10, fontWeight: 600, fontSize: '1em', color: '#333', minWidth: 60, textAlign: 'right' }}>
+                      {formatMin(total)}
+                    </span>
                   </>
                 );
               })()}
             </div>
 
             <div className="pedido-items">
-              {pedido.items.map((item, index) => (
-                <div key={index} className="pedido-item">
-                  <span className="item-cantidad">{item.cantidad}x</span>
-                  <span className="item-nombre">{item.nombre}</span>
-                  <span className={`item-estado estado-${pedido.estado}`}>
-                    {pedido.estado === 'pendiente' && 'Pendiente'}
-                    {pedido.estado === 'preparacion' && 'En preparación'}
-                    {pedido.estado === 'listo' && 'Listo'}
-                    {pedido.estado === 'entregado' && 'Entregado'}
-                  </span>
-                </div>
-              ))}
+              {pedido.items.map((item, index) => {
+                const fases = [
+                  { key: 'pendiente', label: 'Pendiente' },
+                  { key: 'preparacion', label: 'En preparación' },
+                  { key: 'listo', label: 'Listo' },
+                  { key: 'entregado', label: 'Entregado' }
+                ];
+                // Determina la fase actual alcanzada
+                const faseActual = fases.findIndex(f => f.key === item.estado);
+
+                return (
+                  <div key={index} className="pedido-item" style={{ alignItems: 'center' }}>
+                    <span className="item-cantidad">{item.cantidad}x</span>
+                    <span className="item-nombre">{item.nombre}</span>
+                    <div className="item-fases">
+                      {fases.map((fase, i) => (
+                        <span
+                          key={fase.key}
+                          className={
+                            "item-fase fase-" + fase.key +
+                            (i === faseActual ? " fase-activa" : "") +
+                            (i < faseActual ? " fase-completada" : "")
+                          }
+                        >
+                          {fase.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="pedido-footer">
               <span className="pedido-total">{pedido.total.toFixed(2)} €</span>
-              <span className={`item-estado estado-${pedido.estado}`}>
-                {pedido.estado === 'pendiente' && 'Pendiente'}
-                {pedido.estado === 'preparacion' && 'En preparación'}
-                {pedido.estado === 'listo' && 'Listo'}
-                {pedido.estado === 'entregado' && 'Entregado'}
+              <span
+                className="pedido-pago"
+                style={{
+                  marginLeft: 12,
+                  fontWeight: 500,
+                  color: pedido.pagado ? '#2ecc71' : '#e74c3c'
+                }}
+              >
+                {pedido.pagado ? 'Pagado' : 'Pendiente de pago'}
               </span>
             </div>
           </div>

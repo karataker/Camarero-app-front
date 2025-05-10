@@ -36,25 +36,13 @@
   transition: box-shadow 0.2s;
 }
 
-/* Sombreados por estado */
-.estado-pendiente {
-  border-left-color: #e74c3c !important;
-  background-color: #ffeded !important; /* rojo clarito */
-}
-
-.estado-preparacion {
-  border-left-color: #f39c12 !important;
-  background-color: #fff8e1 !important; /* amarillo clarito */
-}
-
-.estado-listo {
-  border-left-color: #2ecc71 !important;
-  background-color: #e6f9ed !important; /* verde clarito */
-}
-
+/* Quitar sombreado y color de fondo/borde del estado general del pedido */
+.estado-pendiente,
+.estado-preparacion,
+.estado-listo,
 .estado-entregado {
-  border-left-color: #6c63ff !important;
-  background-color: #ecebff !important; /* lila clarito */
+  border-left-color: #ddd !important;
+  background-color: transparent !important;
   opacity: 1;
 }
 
@@ -71,6 +59,11 @@
 .estado-preparacion .item-estado { color: #f39c12; background: #fff8e1; }
 .estado-listo .item-estado { color: #2ecc71; background: #e6f9ed; }
 .estado-entregado .item-estado { color: #6c63ff; background: #ecebff; }
+
+.item-fase {
+  margin-right: 2px;
+  user-select: none;
+}
 
 .pedido-header {
   display: flex;
@@ -102,12 +95,64 @@
 .pedido-item {
   display: flex;
   gap: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .item-cantidad {
   color: #666;
   min-width: 30px;
+  flex-shrink: 0;
+}
+
+.item-nombre {
+  flex: 1 1 120px;
+  min-width: 80px;
+  word-break: break-word;
+}
+
+.item-fases {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  flex-wrap: wrap;
+  min-width: 300px;
+}
+
+.item-fase {
+  margin-right: 0;
+  margin-bottom: 2px;
+  user-select: none;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 0.85em;
+  font-weight: 500;
+  min-width: 70px;
+  text-align: center;
+  border: 1px solid #eee;
+  background: #f7f7f7;
+  color: #bbb;
+  opacity: 0.7;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.item-fase.fase-activa {
+  opacity: 1;
+  border: 1.5px solid #bbb;
+}
+
+.item-fase.fase-pendiente.fase-activa { background: #ffeded; color: #e74c3c; }
+.item-fase.fase-preparacion.fase-activa { background: #fff8e1; color: #f39c12; }
+.item-fase.fase-listo.fase-activa { background: #e6f9ed; color: #2ecc71; }
+.item-fase.fase-entregado.fase-activa { background: #ecebff; color: #6c63ff; }
+
+.item-fase.fase-completada {
+  background: #e0e0e0;
+  color: #aaa;
+  opacity: 1;
+  border: 1px solid #eee;
 }
 
 .pedido-footer {

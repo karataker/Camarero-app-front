@@ -10,9 +10,9 @@ export const mockComandas = [
     horaListo: null,
     horaEntregado: null,
     items: [
-      { nombre: 'Hamburguesa Completa', cantidad: 2 },
-      { nombre: 'Coca-Cola', cantidad: 2 },
-      { nombre: 'Patatas Fritas', cantidad: 1 }
+      { nombre: 'Hamburguesa Completa', cantidad: 2, estado: 'pendiente' },
+      { nombre: 'Coca-Cola', cantidad: 2, estado: 'pendiente' },
+      { nombre: 'Patatas Fritas', cantidad: 1, estado: 'pendiente' }
     ],
     total: 25.80
   },
@@ -26,8 +26,8 @@ export const mockComandas = [
     horaListo: null,
     horaEntregado: null,
     items: [
-      { nombre: 'Ensalada Mixta', cantidad: 1 },
-      { nombre: 'Agua con Gas', cantidad: 2 }
+      { nombre: 'Ensalada Mixta', cantidad: 1, estado: 'preparacion' },
+      { nombre: 'Agua con Gas', cantidad: 2, estado: 'pendiente' }
     ],
     total: 10.50
   },
@@ -41,7 +41,7 @@ export const mockComandas = [
     horaListo: '15:40',
     horaEntregado: null,
     items: [
-      { nombre: 'Pizza Barbacoa', cantidad: 1 }
+      { nombre: 'Pizza Barbacoa', cantidad: 1, estado: 'listo' }
     ],
     total: 13.90
   },
@@ -56,9 +56,9 @@ export const mockComandas = [
     horaListo: null,
     horaEntregado: null,
     items: [
-      { nombre: 'Pizza Margarita', cantidad: 1 },
-      { nombre: 'Ensalada César', cantidad: 1 },
-      { nombre: 'Agua Mineral', cantidad: 2 }
+      { nombre: 'Pizza Margarita', cantidad: 1, estado: 'preparacion' },
+      { nombre: 'Ensalada César', cantidad: 1, estado: 'preparacion' },
+      { nombre: 'Agua Mineral', cantidad: 2, estado: 'pendiente' }
     ],
     total: 18.50
   },
@@ -73,9 +73,9 @@ export const mockComandas = [
     horaListo: '14:40',
     horaEntregado: null,
     items: [
-      { nombre: 'Pasta Carbonara', cantidad: 1 },
-      { nombre: 'Tiramisú', cantidad: 1 },
-      { nombre: 'Copa de Vino Tinto', cantidad: 1 }
+      { nombre: 'Pasta Carbonara', cantidad: 1, estado: 'listo' },
+      { nombre: 'Tiramisú', cantidad: 1, estado: 'listo' },
+      { nombre: 'Copa de Vino Tinto', cantidad: 1, estado: 'preparacion' }
     ],
     total: 21.75
   },
@@ -90,9 +90,9 @@ export const mockComandas = [
     horaListo: '14:10',
     horaEntregado: '14:15',
     items: [
-      { nombre: 'Sándwich Club', cantidad: 2 },
-      { nombre: 'Refresco de Naranja', cantidad: 2 },
-      { nombre: 'Brownie de Chocolate', cantidad: 2 }
+      { nombre: 'Sándwich Club', cantidad: 2, estado: 'entregado' },
+      { nombre: 'Refresco de Naranja', cantidad: 2, estado: 'entregado' },
+      { nombre: 'Brownie de Chocolate', cantidad: 2, estado: 'listo' }
     ],
     total: 24.60
   },
@@ -107,9 +107,9 @@ export const mockComandas = [
     horaListo: null,
     horaEntregado: null,
     items: [
-      { nombre: 'Paella Mixta', cantidad: 2 },
-      { nombre: 'Sangría', cantidad: 1 },
-      { nombre: 'Pan', cantidad: 1 }
+      { nombre: 'Paella Mixta', cantidad: 2, estado: 'pendiente' },
+      { nombre: 'Sangría', cantidad: 1, estado: 'pendiente' },
+      { nombre: 'Pan', cantidad: 1, estado: 'pendiente' }
     ],
     total: 42.30
   },
@@ -124,9 +124,9 @@ export const mockComandas = [
     horaListo: null,
     horaEntregado: null,
     items: [
-      { nombre: 'Tortilla Española', cantidad: 1 },
-      { nombre: 'Croquetas de Jamón', cantidad: 4 },
-      { nombre: 'Cerveza', cantidad: 2 }
+      { nombre: 'Tortilla Española', cantidad: 1, estado: 'preparacion' },
+      { nombre: 'Croquetas de Jamón', cantidad: 4, estado: 'preparacion' },
+      { nombre: 'Cerveza', cantidad: 2, estado: 'pendiente' }
     ],
     total: 16.90
   },
@@ -141,9 +141,9 @@ export const mockComandas = [
     horaListo: '15:25',
     horaEntregado: null,
     items: [
-      { nombre: 'Sopa de Marisco', cantidad: 1 },
-      { nombre: 'Lubina a la Plancha', cantidad: 1 },
-      { nombre: 'Vino Blanco', cantidad: 1 }
+      { nombre: 'Sopa de Marisco', cantidad: 1, estado: 'listo' },
+      { nombre: 'Lubina a la Plancha', cantidad: 1, estado: 'listo' },
+      { nombre: 'Vino Blanco', cantidad: 1, estado: 'preparacion' }
     ],
     total: 32.50
   },
@@ -158,9 +158,9 @@ export const mockComandas = [
     horaListo: '14:20',
     horaEntregado: '14:30',
     items: [
-      { nombre: 'Tacos de Pollo', cantidad: 3 },
-      { nombre: 'Nachos con Guacamole', cantidad: 1 },
-      { nombre: 'Margarita', cantidad: 2 }
+      { nombre: 'Tacos de Pollo', cantidad: 3, estado: 'entregado' },
+      { nombre: 'Nachos con Guacamole', cantidad: 1, estado: 'entregado' },
+      { nombre: 'Margarita', cantidad: 2, estado: 'entregado' }
     ],
     total: 29.75
   }
