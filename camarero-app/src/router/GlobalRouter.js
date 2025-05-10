@@ -13,7 +13,7 @@ import NotFound from '../views/NotFound';
 import ClienteCartaView from '../views/ClienteCartaView';
 import ClienteComandas from '../views/ClienteComandasView';
 import AdminCartaView from '../views/AdminCartaView';
-import HomeAdmin from '../views/HomeAdmin';
+import HomeEmpleado from '../views/HomeEmpleado';
 import PanelEmpleado from '../views/PanelEmpleado';
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/EmpleadoReservasView';
@@ -42,7 +42,7 @@ const GlobalRouter = () => {
 
       {/* Protected routes */}
       <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />
-      <Route path="/admin/home" element={protectedRoute(HomeAdmin)} />
+      <Route path="/admin/home" element={<HomeEmpleado />} />
       <Route path="/admin/bar/:barId/panel" element={protectedRoute(PanelEmpleado)} />
       <Route path="/admin/bar/:barId/carta" element={protectedRoute(AdminCartaView)} />
       <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} />

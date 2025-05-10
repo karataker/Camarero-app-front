@@ -73,6 +73,7 @@ const Header = () => {
                     <i className="fas fa-home"></i>
                   </Link>
                 )}
+      
                 <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
                   <i className="fas fa-sign-out-alt"></i>
                 </button>

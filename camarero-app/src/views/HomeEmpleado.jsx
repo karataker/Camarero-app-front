@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBar } from '../context/BarContext';
-import { getMockNotificationCount } from '../mocks/notificationMocks'; // Importar la función del mock
-import '../styles/homeAdmin.css';
+import { getMockNotificationCount } from '../mocks/notificationMocks'; 
+import '../styles/homeEmpleado.css'; // Puedes mantener el mismo CSS o cambiarlo
 
-const HomeAdmin = () => {
+const HomeEmpleado = () => { // Cambiado de HomeAdmin a HomeEmpleado
   const navigate = useNavigate();
   const { barSeleccionado } = useBar();
 
+  // Mantén tus opciones actuales o modifícalas según sea necesario
   const opciones = [
     {
       id: 'dashboard',
@@ -100,6 +101,7 @@ const HomeAdmin = () => {
     }
   ];
 
+  // Resto de funciones sin cambios
   const getNotificationCountForOption = (tipoNotificacionOpcion) => {
     if (!tipoNotificacionOpcion) return 0;
     return getMockNotificationCount(tipoNotificacionOpcion);
@@ -114,23 +116,23 @@ const HomeAdmin = () => {
   };
 
   return (
-    <div className="home-admin-container">
+    <div className="home-empleado-container">
       <h1>Panel de Administración</h1>
-      <p className="admin-subtitle">Selecciona una opción para gestionar tu negocio</p>
+      <p className="empleado-subtitle">Selecciona una opción para gestionar tu negocio</p>
       
-      <div className="opciones-admin-grid">
+      <div className="opciones-empleado-grid">
         {opciones.map(opcion => {
           const notificationCount = getNotificationCountForOption(opcion.tipoNotificacion);
 
           return (
             <div 
               key={opcion.id} 
-              className="opcion-admin" 
+              className="opcion-empleado" 
               onClick={() => handleNavigation(opcion.ruta)}
               style={{ backgroundColor: opcion.color }}
             >
               {notificationCount > 0 && (
-                <span className="notification-badge-homeadmin">
+                <span className="notification-badge-homeempleado">
                   {notificationCount > 99 ? '99+' : notificationCount}
                 </span>
               )}
@@ -146,4 +148,4 @@ const HomeAdmin = () => {
   );
 };
 
-export default HomeAdmin;
+export default HomeEmpleado; 
