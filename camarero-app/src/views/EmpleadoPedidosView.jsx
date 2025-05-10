@@ -68,9 +68,9 @@ const EmpleadoPedidosView = () => {
   return (
     <div className="empleado-pedidos-view">
       <div className="empleado-breadcrumb">
-        <Link to="/empleado/panel">Panel</Link>
+        <Link to="/admin/home">Panel</Link>
         <span>/</span>
-        <Link to={`/empleado/bar/${barId}`}>Bar</Link>
+        <Link to={`/admin/bar/${barId}`}>Bar</Link>
         <span>/</span>
         <span>Pedidos</span>
       </div>
