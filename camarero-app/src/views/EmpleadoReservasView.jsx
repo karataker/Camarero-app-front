@@ -40,14 +40,15 @@ const MiniMesasView = ({
   selectedDate,
   horaConsulta,
   duracionHorasConsulta = 2,
-  filtroFranjaActual // 'todas', 'almuerzos', etc.
+  filtroFranjaActual, // 'todas', 'almuerzos', etc.
+  reservaEnEdicionId = null // Para excluir la reserva en edición de las comprobaciones
 }) => {
   if (!selectedDate) {
     return null;
   }
 
   const getEstadoMesa = (mesaId) => {
-    const reservasParaEstaMesa = reservasDelDia.filter(res => res.mesa === mesaId);
+    const reservasParaEstaMesa = reservasDelDia.filter(res => res.mesa === mesaId && res.id !== reservaEnEdicionId);
 
     if (horaConsulta) {
       const inicioConsultaMin = horaAMinutos(horaConsulta);
@@ -114,19 +115,25 @@ const EmpleadoReservasView = () => {
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [nuevaReserva, setNuevaReserva] = useState({
+  const [filtroFranja, setFiltroFranja] = useState('todas');
+  
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [modoModal, setModoModal] = useState('crear'); // 'crear' o 'editar'
+  const [reservaActualFormulario, setReservaActualFormulario] = useState({
+    id: null,
     fecha: '',
     hora: '',
     nombre: '',
     personas: 1,
     telefono: '',
     email: '',
-    mensaje: ''
+    mensaje: '',
+    mesa: null,
   });
-  const [duracionReservaHoras] = useState(2); // Configurable: duración estándar de una reserva
-  const [filtroFranja, setFiltroFranja] = useState('todas'); // 'todas', 'almuerzos', 'comidas', 'cenas'
+
+  const [duracionReservaHoras] = useState(2);
 
   useEffect(() => {
     cargarReservas();
@@ -255,53 +262,101 @@ const EmpleadoReservasView = () => {
     }
   };
 
-  const handleConfirmarReserva = async (reservaId) => {
-    try {
-      setReservas(prevReservas =>
-        prevReservas.map(reserva =>
-          reserva.id === reservaId
-            ? { ...reserva, estado: 'confirmada' }
-            : reserva
-        )
-      );
-    } catch (err) {
-      console.error('Error al confirmar la reserva:', err);
-    }
-  };
-
-  const handleRechazarReserva = async (reservaId) => {
-    try {
-      setReservas(prevReservas =>
-        prevReservas.map(reserva =>
-          reserva.id === reservaId
-            ? { ...reserva, estado: 'rechazada' }
-            : reserva
-        )
-      );
-    } catch (err) {
-      console.error('Error al rechazar la reserva:', err);
-    }
-  };
-
-  const handleNuevaReserva = (e) => {
-    e.preventDefault();
-    const reserva = {
-      id: Date.now(),
-      ...nuevaReserva,
-      estado: 'confirmada',
-      fechaSolicitud: new Date().toISOString()
-    };
-    setReservas(prev => [reserva, ...prev]);
-    setMostrarFormulario(false);
-    setNuevaReserva({
-      fecha: '',
-      hora: '',
+  const abrirModalParaCrear = (fechaSeleccionada, horaSugerida = '') => {
+    setModoModal('crear');
+    setReservaActualFormulario({
+      id: null,
+      fecha: fechaSeleccionada.toISOString().split('T')[0],
+      hora: horaSugerida,
       nombre: '',
       personas: 1,
       telefono: '',
       email: '',
-      mensaje: ''
+      mensaje: '',
+      mesa: null,
     });
+    setMostrarModal(true);
+  };
+
+  const abrirModalParaEditar = (reservaAEditar) => {
+    setModoModal('editar');
+    setReservaActualFormulario({
+      ...reservaAEditar,
+      personas: reservaAEditar.personas || 1,
+    });
+    setSelectedDate(new Date(reservaAEditar.fecha + 'T00:00:00'));
+    setMostrarModal(true);
+  };
+
+  const cerrarModal = () => {
+    setMostrarModal(false);
+  };
+
+  const handleInputChangeModal = (e) => {
+    const { name, value } = e.target;
+    setReservaActualFormulario(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleMesaChangeModal = (mesaId) => {
+    setReservaActualFormulario(prev => ({ ...prev, mesa: mesaId }));
+  };
+
+  const handleGuardarReservaModal = async () => {
+    if (!reservaActualFormulario.nombre || !reservaActualFormulario.fecha || !reservaActualFormulario.hora || !reservaActualFormulario.mesa) {
+      alert('Por favor, completa los campos obligatorios (nombre, fecha, hora, mesa).');
+      return;
+    }
+
+    if (modoModal === 'crear') {
+      const nuevaReservaConId = {
+        ...reservaActualFormulario,
+        id: Date.now(),
+        estado: 'confirmada',
+        fechaSolicitud: new Date().toISOString(),
+      };
+      setReservas(prev => [...prev, nuevaReservaConId].sort((a, b) => new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)));
+    } else if (modoModal === 'editar') {
+      setReservas(prev => prev.map(res =>
+        res.id === reservaActualFormulario.id
+          ? { ...res, ...reservaActualFormulario }
+          : res
+      ).sort((a, b) => new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)));
+    }
+    cerrarModal();
+  };
+
+  const handleConfirmarReserva = async (reservaId) => {
+    const mesasDisponibles = obtenerTodasLasMesasDelBar(barId).map(m => m.id);
+    let mesaAsignada = null;
+
+    const reservaAConfirmar = reservas.find(r => r.id === reservaId);
+    if (reservaAConfirmar) {
+      const reservasConfirmadasEseDiaHora = reservas.filter(
+        r => r.estado === 'confirmada' &&
+          r.fecha === reservaAConfirmar.fecha &&
+          r.hora === reservaAConfirmar.hora
+      ).map(r => r.mesa);
+
+      mesaAsignada = mesasDisponibles.find(m => !reservasConfirmadasEseDiaHora.includes(m)) || mesasDisponibles[0] || 'M01';
+    }
+
+    setReservas(prevReservas =>
+      prevReservas.map(reserva =>
+        reserva.id === reservaId
+          ? { ...reserva, estado: 'confirmada', mesa: reserva.mesa || mesaAsignada }
+          : reserva
+      )
+    );
+  };
+
+  const handleRechazarReserva = async (reservaId) => {
+    setReservas(prevReservas =>
+      prevReservas.map(reserva =>
+        reserva.id === reservaId
+          ? { ...reserva, estado: 'rechazada' }
+          : reserva
+      )
+    );
   };
 
   const obtenerTodasLasMesasDelBar = (currentBarId) => {
@@ -361,11 +416,8 @@ const EmpleadoReservasView = () => {
 
       <div className="reservas-header">
         <h1>Gestión de Reservas</h1>
-        <button
-          className="btn-nueva-reserva"
-          onClick={() => setMostrarFormulario(true)}
-        >
-          <i className="fas fa-plus"></i> Nueva Reserva
+        <button className="btn-nueva-reserva" onClick={() => abrirModalParaCrear(selectedDate, '')}>
+          <i className="fas fa-plus"></i> Nueva Reserva Manual
         </button>
       </div>
 
@@ -497,10 +549,21 @@ const EmpleadoReservasView = () => {
               <div className="reservas-dia">
                 {reservasFiltradasDelDiaSeleccionado.map(reserva => (
                   <div key={reserva.id} className="reserva-dia-card">
-                    <span className="mesa">Mesa {reserva.mesa}</span>
-                    <span className="hora">{reserva.hora}</span>
-                    <span className="nombre">{reserva.nombre}</span>
-                    <span className="personas">{reserva.personas} personas</span>
+                    <div className="reserva-dia-info">
+                      <span className="mesa">Mesa {reserva.mesa || 'N/A'}</span>
+                      <span className="hora">{reserva.hora}</span>
+                      <span className="nombre">{reserva.nombre}</span>
+                      <span className="personas">{reserva.personas} personas</span>
+                    </div>
+                    <div className="reserva-dia-acciones">
+                      <button
+                        className="btn-accion-reserva btn-modificar"
+                        onClick={() => abrirModalParaEditar(reserva)}
+                        title="Modificar Reserva"
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                    </div>
                   </div>
                 ))}
                 {reservasFiltradasDelDiaSeleccionado.length === 0 && (
@@ -515,124 +578,94 @@ const EmpleadoReservasView = () => {
                 reservasDelDia={reservasFiltradasDelDiaSeleccionado}
                 selectedDate={selectedDate}
                 horaConsulta={
-                  mostrarFormulario && nuevaReserva.fecha === selectedDate.toISOString().split('T')[0] && nuevaReserva.hora
-                    ? nuevaReserva.hora
+                  mostrarModal && reservaActualFormulario.fecha === selectedDate.toISOString().split('T')[0] && reservaActualFormulario.hora
+                    ? reservaActualFormulario.hora
                     : null
                 }
                 duracionHorasConsulta={duracionReservaHoras}
                 filtroFranjaActual={filtroFranja}
+                reservaEnEdicionId={modoModal === 'editar' ? reservaActualFormulario.id : null}
               />
             </div>
           </div>
         </div>
       </div>
 
-      {mostrarFormulario && (
+      {mostrarModal && (
         <div className="modal-overlay">
-          <div className="modal-reserva">
-            <h2>Nueva Reserva</h2>
-            <form onSubmit={handleNuevaReserva}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Fecha:</label>
-                  <input
-                    type="date"
-                    value={nuevaReserva.fecha}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      fecha: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Hora:</label>
-                  <input
-                    type="time"
-                    value={nuevaReserva.hora}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      hora: e.target.value
-                    })}
-                    required
-                  />
-                </div>
+          <div className="modal-contenido">
+            <h3>{modoModal === 'crear' ? 'Nueva Reserva Manual' : 'Modificar Reserva'}</h3>
+
+            <div className="form-grupo">
+              <label htmlFor="fecha">Fecha:</label>
+              <input type="date" id="fecha" name="fecha" value={reservaActualFormulario.fecha} onChange={handleInputChangeModal} />
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="hora">Hora:</label>
+              <input type="time" id="hora" name="hora" value={reservaActualFormulario.hora} onChange={handleInputChangeModal} />
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="nombre">Nombre Cliente:</label>
+              <input type="text" id="nombre" name="nombre" value={reservaActualFormulario.nombre} onChange={handleInputChangeModal} placeholder="Nombre del cliente" />
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="personas">Personas:</label>
+              <input type="number" id="personas" name="personas" value={reservaActualFormulario.personas} onChange={handleInputChangeModal} min="1" />
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="telefono">Teléfono:</label>
+              <input type="tel" id="telefono" name="telefono" value={reservaActualFormulario.telefono} onChange={handleInputChangeModal} placeholder="Teléfono de contacto" />
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="email">Email (opcional):</label>
+              <input type="email" id="email" name="email" value={reservaActualFormulario.email} onChange={handleInputChangeModal} placeholder="Email de contacto" />
+            </div>
+            <div className="form-grupo">
+              <label>Mesa Asignada:</label>
+              <div className="selector-mesas-modal">
+                {todasLasMesasDelBar.map(mesa => {
+                  let disponible = true;
+                  const inicioConsultaMin = horaAMinutos(reservaActualFormulario.hora);
+                  const finConsultaMin = inicioConsultaMin + duracionReservaHoras * 60;
+
+                  reservasConfirmadas.forEach(r => {
+                    if (r.mesa === mesa.id && r.fecha === reservaActualFormulario.fecha) {
+                      if (modoModal === 'editar' && r.id === reservaActualFormulario.id) {
+                        return;
+                      }
+                      const inicioExistenteMin = horaAMinutos(r.hora);
+                      const finExistenteMin = inicioExistenteMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+                      if (haySolapamiento(inicioConsultaMin, finConsultaMin, inicioExistenteMin, finExistenteMin)) {
+                        disponible = false;
+                      }
+                    }
+                  });
+
+                  return (
+                    <button
+                      key={mesa.id}
+                      className={`btn-mesa-modal ${reservaActualFormulario.mesa === mesa.id ? 'selected' : ''} ${!disponible ? 'ocupada-modal' : ''}`}
+                      onClick={() => disponible && handleMesaChangeModal(mesa.id)}
+                      disabled={!disponible && reservaActualFormulario.mesa !== mesa.id}
+                      title={!disponible ? `Mesa ${mesa.nombre} ocupada en este horario` : `Seleccionar Mesa ${mesa.nombre}`}
+                    >
+                      {mesa.nombre}
+                    </button>
+                  );
+                })}
               </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Nombre:</label>
-                  <input
-                    type="text"
-                    value={nuevaReserva.nombre}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      nombre: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Personas:</label>
-                  <input
-                    type="number"
-                    value={nuevaReserva.personas}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      personas: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Teléfono:</label>
-                  <input
-                    type="tel"
-                    value={nuevaReserva.telefono}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      telefono: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    value={nuevaReserva.email}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      email: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Mensaje:</label>
-                  <textarea
-                    value={nuevaReserva.mensaje}
-                    onChange={(e) => setNuevaReserva({
-                      ...nuevaReserva,
-                      mensaje: e.target.value
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="btn-submit">Guardar</button>
-                <button
-                  type="button"
-                  className="btn-cancel"
-                  onClick={() => setMostrarFormulario(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
+            </div>
+            <div className="form-grupo">
+              <label htmlFor="mensaje">Comentarios (opcional):</label>
+              <textarea id="mensaje" name="mensaje" value={reservaActualFormulario.mensaje} onChange={handleInputChangeModal} placeholder="Preferencias, alergias, etc."></textarea>
+            </div>
+
+            <div className="modal-acciones">
+              <button onClick={handleGuardarReservaModal} className="btn-principal">
+                {modoModal === 'crear' ? 'Crear Reserva' : 'Guardar Cambios'}
+              </button>
+              <button onClick={cerrarModal} className="btn-secundario">Cancelar</button>
+            </div>
           </div>
         </div>
       )}

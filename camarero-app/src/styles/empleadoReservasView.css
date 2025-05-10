@@ -236,13 +236,20 @@
 
 .reserva-dia-card {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Asegura que info y acciones estén en extremos */
   align-items: center;
-  padding: 10px;
+  padding: 10px 15px; /* Un poco más de padding */
   background: #f8f9fa;
   border-radius: 4px;
   margin-bottom: 8px;
   font-size: 0.9em;
+}
+
+.reserva-dia-info {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre elementos de info */
+  flex-grow: 1;
 }
 
 .reserva-dia-card .mesa {
@@ -251,22 +258,151 @@
   min-width: 70px;
 }
 
-.reserva-dia-card .hora {
-  min-width: 60px;
-  color: #2c3e50;
-  font-weight: bold;
+.reserva-dia-acciones {
+  display: flex;
+  gap: 8px;
 }
 
-.reserva-dia-card .nombre {
-  flex-grow: 1;
-  text-align: left;
-  padding: 0 10px;
+.btn-accion-reserva {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1.1em; /* Iconos un poco más grandes */
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.reserva-dia-card .personas {
-  min-width: 80px;
-  text-align: right;
-  color: #666;
+.btn-accion-reserva:hover {
+  background-color: #e0e0e0;
+  color: #222;
+}
+
+.btn-modificar:hover {
+  color: #007bff; /* Azul para modificar */
+}
+
+/* Estilos para el Modal Unificado */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 550px; /* Ancho máximo del modal */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-contenido h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.form-grupo {
+  margin-bottom: 18px;
+}
+
+.form-grupo label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #444;
+  font-size: 0.9em;
+}
+
+.form-grupo input[type="text"],
+.form-grupo input[type="date"],
+.form-grupo input[type="time"],
+.form-grupo input[type="number"],
+.form-grupo input[type="tel"],
+.form-grupo input[type="email"],
+.form-grupo textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 0.95em;
+}
+
+.form-grupo textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.selector-mesas-modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.btn-mesa-modal {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-mesa-modal.selected {
+  background-color: #2EAD63;
+  color: white;
+  border-color: #2EAD63;
+}
+.btn-mesa-modal.ocupada-modal {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.modal-acciones {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-acciones .btn-principal {
+  background-color: #2EAD63;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.modal-acciones .btn-principal:hover {
+  background-color: #258a50;
+}
+
+.modal-acciones .btn-secundario {
+  background-color: #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.modal-acciones .btn-secundario:hover {
+  background-color: #bbb;
 }
 
 .no-reservas {
