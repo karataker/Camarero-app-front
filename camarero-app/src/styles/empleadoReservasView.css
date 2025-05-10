@@ -4,24 +4,6 @@
   min-height: 85vh;
 }
 
-.empleado-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  font-size: 0.9em;
-  color: #666;
-}
-
-.empleado-breadcrumb a {
-  color: #2EAD63;
-  text-decoration: none;
-}
-
-.empleado-breadcrumb a:hover {
-  text-decoration: underline;
-}
-
 .filtros-reservas {
   margin: 20px 0;
 }
@@ -210,233 +192,71 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.calendario-marca {
-  background: #2EAD63;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 100%; /* Asegurar ancho completo */
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  margin: auto;
+  flex-direction: column; /* Organizar contenido en columna */
 }
 
-.reservas-dia {
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 500px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-}
-
-.reserva-dia-card {
-  display: flex;
-  justify-content: space-between; /* Asegura que info y acciones estén en extremos */
-  align-items: center;
-  padding: 10px 15px; /* Un poco más de padding */
-  background: #f8f9fa;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  font-size: 0.9em;
-}
-
-.reserva-dia-info {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Espacio entre elementos de info */
-  flex-grow: 1;
-}
-
-.reserva-dia-card .mesa {
-  font-weight: bold;
-  color: #2EAD63;
-  min-width: 70px;
-}
-
-.reserva-dia-acciones {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-accion-reserva {
-  background: none;
-  border: none;
-  color: #555;
-  cursor: pointer;
-  padding: 5px;
-  font-size: 1.1em; /* Iconos un poco más grandes */
-  border-radius: 4px;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.btn-accion-reserva:hover {
-  background-color: #e0e0e0;
-  color: #222;
-}
-
-.btn-modificar:hover {
-  color: #007bff; /* Azul para modificar */
-}
-
-/* Estilos para el Modal Unificado */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-contenido {
-  background: white;
-  padding: 25px 30px;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  width: 90%;
-  max-width: 550px; /* Ancho máximo del modal */
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-contenido h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-}
-
-.form-grupo {
-  margin-bottom: 18px;
-}
-
-.form-grupo label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #444;
-  font-size: 0.9em;
-}
-
-.form-grupo input[type="text"],
-.form-grupo input[type="date"],
-.form-grupo input[type="time"],
-.form-grupo input[type="number"],
-.form-grupo input[type="tel"],
-.form-grupo input[type="email"],
-.form-grupo textarea {
-  width: 100%;
+/* Hacer que el calendario se expanda completamente */
+.react-calendar {
+  width: 100% !important;
+  height: 100% !important; /* Añadir altura completa */
+  border: none !important;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 0.95em;
-}
-
-.form-grupo textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-.selector-mesas-modal {
+  max-width: none !important;
+  flex-grow: 1; /* Hacer que crezca para llenar el espacio */
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 5px;
+  flex-direction: column; /* Organizar en columna */
 }
 
-.btn-mesa-modal {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.btn-mesa-modal.selected {
-  background-color: #2EAD63;
-  color: white;
-  border-color: #2EAD63;
-}
-.btn-mesa-modal.ocupada-modal {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
-  cursor: not-allowed;
-  text-decoration: line-through;
-}
-
-.modal-acciones {
-  margin-top: 25px;
+/* Hacer que el contenedor de la vista ocupe todo el espacio disponible */
+.react-calendar__viewContainer {
+  width: 100% !important;
+  max-width: none !important;
+  flex-grow: 1; /* Permitir crecer */
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  flex-direction: column;
 }
 
-.modal-acciones .btn-principal {
-  background-color: #2EAD63;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.modal-acciones .btn-principal:hover {
-  background-color: #258a50;
+/* Asegurar que la vista de mes ocupe todo el espacio */
+.react-calendar__month-view {
+  width: 100% !important;
+  max-width: none !important;
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.modal-acciones .btn-secundario {
-  background-color: #ccc;
-  color: #333;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.modal-acciones .btn-secundario:hover {
-  background-color: #bbb;
+.react-calendar__month-view > div {
+  width: 100% !important;
+  max-width: none !important;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.no-reservas {
-  text-align: center;
-  padding: 20px;
-  color: #777;
+/* Hacer que la cuadrícula de días ocupe todo el espacio disponible */
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  width: 100% !important;
+  flex-grow: 1 !important;
+  height: auto !important; /* Permitir que se ajuste automáticamente */
 }
 
-@media (max-width: 768px) {
-  .reservas-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .reserva-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .reserva-footer {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .reserva-acciones {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  .btn-confirmar,
-  .btn-rechazar {
-    flex: 1;
-    justify-content: center;
-  }
+/* Ajustar altura de los cuadros de día */
+.react-calendar__tile {
+  height: 150px !important; /* Aumentar la altura para mostrar más contenido */
+  min-height: 120px !important; /* Asegurar una altura mínima */
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding: 10px !important;
+  max-width: none !important;
+  flex: 1 0 14.285% !important; /* 1/7th of width */
 }
 
 /* Calendar customization */
@@ -553,6 +373,7 @@
   flex-direction: row;
   gap: 20px; /* Adjust gap as needed */
   width: 100%;
+  height: 70vh; /* Establecer una altura que ocupe la mayor parte de la vista */
 }
 
 /* Container for the Daily Reservations List (Right Half) */

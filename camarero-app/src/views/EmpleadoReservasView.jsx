@@ -405,15 +405,7 @@ const EmpleadoReservasView = () => {
   }
 
   return (
-    <div className="empleado-reservas-view">
-      <div className="empleado-breadcrumb">
-        <Link to="/admin/home">Panel</Link>
-        <span>/</span>
-        <Link to={`/admin/bar/${barId}`}>Bar</Link>
-        <span>/</span>
-        <span>Reservas</span>
-      </div>
-
+    <div className="reservas-view">
       <div className="reservas-header">
         <h1>Gestión de Reservas</h1>
         <button className="btn-nueva-reserva" onClick={() => abrirModalParaCrear(selectedDate, '')}>
