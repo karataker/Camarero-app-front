@@ -16,6 +16,7 @@ import AdminCartaView from '../views/AdminCartaView';
 import HomeAdmin from '../views/HomeAdmin';
 import PanelEmpleado from '../views/PanelEmpleado';
 import AdminPedidosView from '../views/AdminPedidosView';
+import EmpleadoReservasView from '../views/EmpleadoReservasView';
 
 const GlobalRouter = () => {
   return (
@@ -61,6 +62,13 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/carta" element={
         <PrivateRoute tipo="admin">
           <AdminCartaView />
+        </PrivateRoute>
+      } />
+
+      {/* Ruta para la gestión de reservas (empleado) */}
+            <Route path="/admin/bar/:barId/reservas" element={
+        <PrivateRoute tipo="admin">
+          <EmpleadoReservasView />
         </PrivateRoute>
       } />
 
