@@ -44,6 +44,13 @@ const HomeAdmin = () => {
       color: '#e84393'
     },
     {
+      id: 'cocina',
+      nombre: 'Cocina',
+      icono: 'fa-spoon',
+      ruta: `/admin/bar/${barSeleccionado}/cocina`,
+      color: '#FF6B6B'
+    },
+    {
       id: 'inventario',
       nombre: 'Inventario',
       icono: 'fa-boxes',
