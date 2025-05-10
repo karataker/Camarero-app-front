@@ -8,6 +8,25 @@
   margin: 20px 0;
 }
 
+/* Estilos uniformes para todos los filtros */
+.filtros-pedidos select {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  background: #fafafa;
+  color: #222;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  margin: 0;
+}
+
+.filtros-pedidos select:focus {
+  border-color: #b9f6ca;
+  box-shadow: 0 0 0 2px #b9f6ca33;
+}
+
 .filtro-estado {
   padding: 8px 16px;
   border-radius: 4px;
@@ -34,6 +53,17 @@
   border-left: 4px solid;
   background: transparent !important; /* Asegura que el fondo de estado se vea */
   transition: box-shadow 0.2s;
+}
+
+/* Sombreado para pedidos abiertos y cerrados */
+.pedido-card.abierto {
+  background: #fff4f4 !important;
+  border-left-color: #ffb3b3 !important;
+}
+
+.pedido-card.cerrado {
+  background: #f4fff7 !important;
+  border-left-color: #b9f6ca !important;
 }
 
 /* Quitar sombreado y color de fondo/borde del estado general del pedido */

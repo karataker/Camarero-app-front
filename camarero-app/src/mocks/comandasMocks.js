@@ -14,7 +14,9 @@ export const mockComandas = [
       { nombre: 'Coca-Cola', cantidad: 2, estado: 'pendiente' },
       { nombre: 'Patatas Fritas', cantidad: 1, estado: 'pendiente' }
     ],
-    total: 25.80
+    total: 25.80,
+    pagado: false,
+    metodoPago: null
   },
   {
     id: 9,
@@ -29,7 +31,9 @@ export const mockComandas = [
       { nombre: 'Ensalada Mixta', cantidad: 1, estado: 'preparacion' },
       { nombre: 'Agua con Gas', cantidad: 2, estado: 'pendiente' }
     ],
-    total: 10.50
+    total: 10.50,
+    pagado: false,
+    metodoPago: null
   },
   {
     id: 10,
@@ -43,7 +47,9 @@ export const mockComandas = [
     items: [
       { nombre: 'Pizza Barbacoa', cantidad: 1, estado: 'listo' }
     ],
-    total: 13.90
+    total: 13.90,
+    pagado: true,
+    metodoPago: 'tarjeta'
   },
   // Mesa B3
   {
@@ -60,7 +66,9 @@ export const mockComandas = [
       { nombre: 'Ensalada César', cantidad: 1, estado: 'preparacion' },
       { nombre: 'Agua Mineral', cantidad: 2, estado: 'pendiente' }
     ],
-    total: 18.50
+    total: 18.50,
+    pagado: false,
+    metodoPago: null
   },
   // Mesa C2
   {
@@ -77,7 +85,9 @@ export const mockComandas = [
       { nombre: 'Tiramisú', cantidad: 1, estado: 'listo' },
       { nombre: 'Copa de Vino Tinto', cantidad: 1, estado: 'preparacion' }
     ],
-    total: 21.75
+    total: 21.75,
+    pagado: true,
+    metodoPago: 'efectivo'
   },
   // Mesa A4
   {
@@ -94,7 +104,9 @@ export const mockComandas = [
       { nombre: 'Refresco de Naranja', cantidad: 2, estado: 'entregado' },
       { nombre: 'Brownie de Chocolate', cantidad: 2, estado: 'listo' }
     ],
-    total: 24.60
+    total: 24.60,
+    pagado: true,
+    metodoPago: 'tarjeta'
   },
   // Mesa D1
   {
@@ -111,7 +123,9 @@ export const mockComandas = [
       { nombre: 'Sangría', cantidad: 1, estado: 'pendiente' },
       { nombre: 'Pan', cantidad: 1, estado: 'pendiente' }
     ],
-    total: 42.30
+    total: 42.30,
+    pagado: false,
+    metodoPago: null
   },
   // Mesa B2
   {
@@ -128,7 +142,9 @@ export const mockComandas = [
       { nombre: 'Croquetas de Jamón', cantidad: 4, estado: 'preparacion' },
       { nombre: 'Cerveza', cantidad: 2, estado: 'pendiente' }
     ],
-    total: 16.90
+    total: 16.90,
+    pagado: false,
+    metodoPago: null
   },
   // Mesa C4
   {
@@ -145,7 +161,9 @@ export const mockComandas = [
       { nombre: 'Lubina a la Plancha', cantidad: 1, estado: 'listo' },
       { nombre: 'Vino Blanco', cantidad: 1, estado: 'preparacion' }
     ],
-    total: 32.50
+    total: 32.50,
+    pagado: true,
+    metodoPago: 'efectivo'
   },
   // Mesa A2
   {
@@ -162,7 +180,9 @@ export const mockComandas = [
       { nombre: 'Nachos con Guacamole', cantidad: 1, estado: 'entregado' },
       { nombre: 'Margarita', cantidad: 2, estado: 'entregado' }
     ],
-    total: 29.75
+    total: 29.75,
+    pagado: true,
+    metodoPago: 'efectivo'
   }
 ];
 
