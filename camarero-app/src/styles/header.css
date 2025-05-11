@@ -1,0 +1,190 @@
+/* === Header principal === */
+.header {
+  background-color: #ffffff;
+  padding: 0.8rem 2rem; /* Ajusta el padding según sea necesario */
+  display: flex; /* Habilita Flexbox */
+  justify-content: space-between; /* Distribuye el espacio entre las secciones */
+  align-items: center; /* Centra los ítems verticalmente */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  /* La sección izquierda tomará el ancho de su contenido */
+  justify-content: flex-start;
+}
+
+.header-center {
+  flex-grow: 1; /* Permite que la sección central ocupe el espacio disponible */
+  display: flex;
+  justify-content: center; /* Centra el selector de bar dentro de esta sección */
+}
+
+.header-right {
+  /* La sección derecha tomará el ancho de su contenido */
+  justify-content: flex-end;
+}
+
+/* === Logo + título === */
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espacio entre logo y título */
+}
+
+.logo {
+  width: 52px; /* Ajusta según tu preferencia */
+  height: 52px; /* Ajusta según tu preferencia */
+}
+
+.header h1 {
+  font-size: 1.4rem; /* Ajusta según tu preferencia */
+  font-weight: 700;
+  margin: 0;
+  color: #003366;
+}
+
+/* === Selector de Bar === */
+.bar-selector-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* margin-right: 12px; Ya no es necesario si está centrado */
+}
+
+.bar-selector-header label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #003366;
+}
+
+.bar-selector-header select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  color: #003366;
+}
+
+/* === Navegación === */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Espacio entre elementos de navegación */
+}
+
+/* ... (resto de tus estilos para .empleado-icon, .about-link, .home-link, .logout-btn, etc.) ... */
+
+.empleado-icon,
+.header-link,
+.logout-btn,
+.about-link {
+  /* Estilos comunes para los botones/iconos de la navegación */
+  color: #003366;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem; /* Ajusta el tamaño de fuente/icono */
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.empleado-icon i,
+.header-link i,
+.logout-btn i {
+  font-size: 1.3rem; /* Tamaño específico para iconos FontAwesome */
+}
+
+.empleado-icon:hover,
+.header-link:hover,
+.logout-btn:hover,
+.about-link:hover {
+  color: #2EAD63;
+}
+
+/* === Enlace Sobre nosotros === */
+.about-link {
+  background: none;
+  border: none;
+  color: #003366;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.about-link:hover {
+  color: #2EAD63;
+  text-decoration: underline;
+}
+
+.empleado-icon {
+  font-size: 1.4rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, color 0.3s ease;
+  color: #003366;
+}
+
+.empleado-icon:hover {
+  transform: scale(1.2);
+  color: #2EAD63;
+}
+
+/* Icono para administrar carta digital */
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 1.5rem;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+/* Estilos para el icono de administración de carta */
+.admin-carta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white; /* Color del icono */
+  margin: 0 12px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.admin-carta-icon:hover {
+  background-color: #004d99;
+  transform: scale(1.1);
+}
+
+/* Asegurar que el icono sea visible y tenga el tamaño adecuado */
+.admin-carta-icon i {
+  font-size: 1.2rem;
+  color: white; /* Forzar color blanco para el icono */
+  text-shadow: none; /* Eliminar cualquier sombra que pueda afectar la visibilidad */
+  display: block; /* Asegurar que se muestre como bloque */
+}

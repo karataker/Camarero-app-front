@@ -1,0 +1,36 @@
+.pedido-container {
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .pedido-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .pedido-form input {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .pedido-form button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .pedido-confirmacion {
+    background-color: #e9f8ef;
+    border: 1px solid #b3e6c1;
+    padding: 20px;
+    border-radius: 8px;
+  }

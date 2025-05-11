@@ -1,0 +1,17 @@
+.comensales-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  
+  .comensales-icon {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .comensales-cantidad {
+    font-weight: bold;
+    color: #333;
+  }
+  

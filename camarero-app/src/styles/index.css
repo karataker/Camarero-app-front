@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f6f6f6;
+  color: #333;
+}
+a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 10px;
+}
+a:hover {
+  text-decoration: underline;
+}
