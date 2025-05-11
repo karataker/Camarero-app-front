@@ -1,16 +1,12 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUser } from '../hooks/useUser';
 
-const PrivateRoute = ({ children, tipo }) => {
-  const { usuario } = useUser();
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('token');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-  if (!usuario) {
-    return <Navigate to="/" />;
-  }
-
-  if (tipo && usuario.tipo !== tipo) {
-    return <Navigate to="/login-empleado" />;
+  if (!isAuthenticated || !isAdmin) {
+    return <Navigate to="/login-empleado" replace />;
   }
 
   return children;

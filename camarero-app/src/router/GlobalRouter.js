@@ -13,63 +13,43 @@ import NotFound from '../views/NotFound';
 import ClienteCartaView from '../views/ClienteCartaView';
 import ClienteComandas from '../views/ClienteComandasView';
 import AdminCartaView from '../views/AdminCartaView';
-import HomeAdmin from '../views/HomeAdmin';
-import PanelEmpleado from '../views/PanelEmpleado';
-import AdminPedidosView from '../views/AdminPedidosView';
+import HomeEmpleado from '../views/HomeEmpleado';
+import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
+import EmpleadoReservasView from '../views/EmpleadoReservasView';
+import EmpleadoInventarioView from '../views/EmpleadoInventarioView';
+import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
+import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
+import EmpleadoMapaView from '../views/EmpleadoMapaView';
 
 const GlobalRouter = () => {
+  const protectedRoute = (Component, tipo = 'admin') => (
+    <PrivateRoute tipo={tipo}>
+      <Component />
+    </PrivateRoute>
+  );
+
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<HomeCliente />} />
       <Route path="/reservar" element={<ReservaCliente />} />
-      
-      {/* Ruta existente */}
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
-      
-      {/* RUTAS NUEVAS para QR - mantienen el formato de la URL en QRDownloader */}
       <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaView />} />
       <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
-      
       <Route path="/escanear" element={<EscanearQR />} />
-      {/* <Route path="/login" element={<Login />} /> */}
-      {/* <Route path="/register" element={<Register />} /> */}
       <Route path="/login-empleado" element={<LoginEmpleado />} />
       <Route path="*" element={<NotFound />} />
 
-      {/* Cliente */}
-      <Route path="/cliente/locales" element={
-        <PrivateRoute tipo="cliente">
-          <LocalesCliente />
-        </PrivateRoute>
-      } />
-
-      {/* Admin */}
-      <Route path="/admin/home" element={
-        <PrivateRoute tipo="admin">
-          <HomeAdmin />
-        </PrivateRoute>
-      } />
-      
-      {/* Panel Empleado route */}
-      <Route path="/admin/bar/:barId/panel" element={
-        <PrivateRoute tipo="admin">
-          <PanelEmpleado />
-        </PrivateRoute>
-      } />
-
-      {/* Ruta para la gestión de carta (admin) */}
-      <Route path="/admin/bar/:barId/carta" element={
-        <PrivateRoute tipo="admin">
-          <AdminCartaView />
-        </PrivateRoute>
-      } />
-
-      {/* Ruta para la gestión de pedidos (admin) */}
-      <Route path="/admin/bar/:barId/pedidos" element={
-        <PrivateRoute tipo="admin">
-          <AdminPedidosView />
-        </PrivateRoute>
-      } />
+      {/* Protected routes */}
+      <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />
+      <Route path="/admin/home" element={<HomeEmpleado />} />
+      <Route path="/admin/bar/:barId/carta" element={protectedRoute(AdminCartaView)} />
+      <Route path="/admin/bar/:barId/panel" element={protectedRoute(EmpleadoMapaView)} />
+      <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} />
+      <Route path="/admin/bar/:barId/pedidos" element={protectedRoute(EmpleadoPedidosView)} />
+      <Route path="/admin/bar/:barId/inventario" element={protectedRoute(EmpleadoInventarioView)} />
+      <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />
+      <Route path="/admin/bar/:barId/facturacion" element={protectedRoute(EmpleadoFacturacionView)} />
     </Routes>
   );
 };

@@ -16,22 +16,19 @@ const LoginEmpleado = () => {
       const matricula = e.target.matricula.value;
       const password = e.target.password.value;
 
-      // Validación simple (mock)
-      const mockUsuario = {
-        tipo: matricula === '1234' && password === 'admin' ? 'admin' : 'camarero',
-        nombre: 'Empleado Demo'
-      };
-
-      if (mockUsuario.tipo === 'admin') {
+      // Simulamos login (mock)
+      if (matricula === '1234' && password === 'admin') {
+        const mockUsuario = {
+          tipo: 'admin',
+          nombre: 'Admin Demo'
+        };
         setUsuario(mockUsuario);
-        navigate('/admin/home'); // Redirigir a HomeAdmin
-      } else if (mockUsuario.tipo === 'camarero') {
-        setUsuario(mockUsuario);
-        navigate('/admin/panel'); // Mantener la redirección actual para camareros
+        localStorage.setItem('isAdmin', 'true'); // Add this line
+        localStorage.setItem('token', 'dummy-token'); // Add this line
+        navigate('/admin/home');
       } else {
-        navigate('/'); // Redirección por defecto
+        throw new Error('Credenciales inválidas');
       }
-      
     } catch (error) {
       alert('Matrícula o contraseña incorrectas');
     } finally {

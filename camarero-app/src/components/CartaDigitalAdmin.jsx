@@ -161,13 +161,6 @@ const CartaDigitalAdmin = ({ barId }) => {
             />
             <i className="fas fa-search"></i>
           </div>
-          
-          <button 
-            className="btn-nuevo-producto"
-            onClick={() => setMostrarFormulario(true)}
-          >
-            <i className="fas fa-plus"></i> Nuevo Producto
-          </button>
         </div>
       </div>
       
@@ -212,6 +205,14 @@ const CartaDigitalAdmin = ({ barId }) => {
             </div>
           </div>
         ))}
+        
+        {/* Add new product card */}
+        <div className="producto-card producto-add" onClick={() => setMostrarFormulario(true)}>
+          <div className="producto-add-content">
+            <i className="fas fa-plus"></i>
+            <span>Añadir Producto</span>
+          </div>
+        </div>
       </div>
       
       {/* Modal de nuevo producto */}
