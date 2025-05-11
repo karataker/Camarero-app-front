@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../styles/relojCocina.css'; // Asegúrate de importar este CSS
 
 const Reloj = ({ formato = 'HH:mm:ss' }) => {
   const [hora, setHora] = useState(new Date());
@@ -8,18 +9,18 @@ const Reloj = ({ formato = 'HH:mm:ss' }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Formato simple: HH:mm:ss o HH:mm
   const pad = (n) => n.toString().padStart(2, '0');
   const mostrarHora = () => {
     const h = pad(hora.getHours());
     const m = pad(hora.getMinutes());
     const s = pad(hora.getSeconds());
-    if (formato === 'HH:mm') return `${h}:${m}`;
-    return `${h}:${m}:${s}`;
+    return formato === 'HH:mm' ? `${h}:${m}` : `${h}:${m}:${s}`;
   };
 
   return (
-    <span className="reloj">{mostrarHora()}</span>
+    <div className="reloj-cocina">
+      <span>{mostrarHora()}</span>
+    </div>
   );
 };
 

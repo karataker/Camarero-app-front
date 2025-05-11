@@ -147,7 +147,8 @@
   gap: 4px;
   margin-left: auto;
   flex-wrap: wrap;
-  min-width: 300px;
+  min-width: 0; 
+  max-width: 100%;
 }
 
 .item-fase {
@@ -158,7 +159,8 @@
   border-radius: 8px;
   font-size: 0.85em;
   font-weight: 500;
-  min-width: 70px;
+  min-width: 60px;
+  flex: 1 1 auto;
   text-align: center;
   border: 1px solid #eee;
   background: #f7f7f7;

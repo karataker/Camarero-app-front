@@ -192,9 +192,11 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  width: 100%; /* Asegurar ancho completo */
+  width: 100%;
   display: flex;
-  flex-direction: column; /* Organizar contenido en columna */
+  flex-direction: column;
+  overflow-y: auto;       /* ✅ Añadido */
+  max-height: 70vh;       /* ✅ Limitamos altura para que no desborde */
 }
 
 /* Hacer que el calendario se expanda completamente */
@@ -371,9 +373,11 @@
 .calendario-layout {
   display: flex;
   flex-direction: row;
-  gap: 20px; /* Adjust gap as needed */
+  gap: 20px;
   width: 100%;
-  height: 70vh; /* Establecer una altura que ocupe la mayor parte de la vista */
+  max-height: 70vh;       /* Mantiene límite general */
+  overflow: hidden;       /* Evita que el layout completo haga scroll */
+  box-sizing: border-box;
 }
 
 /* Container for the Daily Reservations List (Right Half) */
