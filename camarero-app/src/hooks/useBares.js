@@ -1,5 +1,10 @@
 import { useState, useCallback } from 'react';
-import { obtenerBares, crearMesa } from '../services/barServiceMock';
+import {
+  obtenerBares,
+  crearMesa,
+  desfusionarMesa,
+  fusionarMesas as fusionarMesasApi
+} from '../services/barService.js';
 
 export const useBares = () => {
   const [bares, setBares] = useState([]);
@@ -17,9 +22,9 @@ export const useBares = () => {
     const bar = bares.find(b => b.id === barId);
     if (!bar) return null;
 
-    const yaExiste = bar.mesas.some(m => m.codigo === nuevaMesa.codigo);
+    const yaExiste = bar.mesas.some(m => m.nombre === nuevaMesa.nombre);
     if (yaExiste) {
-      console.warn(`Ya existe una mesa con el código ${nuevaMesa.codigo}`);
+      console.warn(`Ya existe una mesa con el nombre ${nuevaMesa.nombre}`);
       return null;
     }
 
@@ -37,35 +42,30 @@ export const useBares = () => {
   };
 
   const fusionarMesas = async (barId, mesaPrincipalCodigo, mesaSecundariaCodigo) => {
-    setBares((prevBares) =>
-      prevBares.map((bar) => {
-        if (bar.id !== barId) return bar;
-  
-        const mesaPrincipal = bar.mesas.find(m => m.codigo === mesaPrincipalCodigo);
-        const mesaSecundaria = bar.mesas.find(m => m.codigo === mesaSecundariaCodigo);
-  
-        // Solo fusionar si ambas existen y están disponibles
-        if (!mesaPrincipal || !mesaSecundaria) return bar;
-        if (!mesaPrincipal.disponible || !mesaSecundaria.disponible) return bar;
-  
-        // Marcar secundaria como fusionada con principal
-        const nuevasMesas = bar.mesas.map(mesa => {
-          if (mesa.codigo === mesaSecundariaCodigo) {
-            return {
-              ...mesa,
-              fusionadaCon: mesaPrincipalCodigo,
-              disponible: false // opcional si se quiere ocultar su "disponibilidad"
-            };
-          }
-          return mesa;
-        });
-  
-        return {
-          ...bar,
-          mesas: nuevasMesas
-        };
-      })
-    );
+    try {
+      await fusionarMesasApi(barId, mesaPrincipalCodigo, mesaSecundariaCodigo);
+
+      setBares((prevBares) =>
+        prevBares.map((bar) => {
+          if (bar.id !== barId) return bar;
+
+          const nuevasMesas = bar.mesas.map((mesa) => {
+            if (mesa.nombre === mesaSecundariaCodigo) {
+              return {
+                ...mesa,
+                fusionadaCon: mesaPrincipalCodigo,
+                estado: "reservada"
+              };
+            }
+            return mesa;
+          });
+
+          return { ...bar, mesas: nuevasMesas };
+        })
+      );
+    } catch (err) {
+      console.error("Error al fusionar mesas:", err);
+    }
   };
 
   const desfusionarMesa = (barId, mesaMaestraCodigo) => {
@@ -80,25 +80,14 @@ export const useBares = () => {
         return {
           ...bar,
           mesas: bar.mesas.map(m => {
-            if (m.codigo === mesaMaestraCodigo) {
-              return {
-                ...m,
-                disponible: true,
-                comensales: 0,
-                pedidoEnviado: false
-              };
-            }
-
-            if (mesasFusionadas.some(fm => fm.codigo === m.codigo)) {
+            if (m.nombre === mesaMaestraCodigo || mesasFusionadas.some(fm => fm.nombre === m.nombre)) {
               return {
                 ...m,
                 fusionadaCon: null,
-                disponible: true,
-                comensales: 0,
-                pedidoEnviado: false
+                estado: "disponible",
+                comensales: 0
               };
             }
-
             return m;
           })
         };
