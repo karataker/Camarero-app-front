@@ -8,9 +8,10 @@ const QRDownloader = ({ mesaCodigo, barId, qrUrl }) => {
   const [abierto, setAbierto] = useState(false);
   const qrRef = useRef(null);
 
-  const enlace = qrUrl || `${window.location.origin}/cliente/bar/${barId}/mesa/${mesaCodigo}`;
+  const enlace = qrUrl || `${window.location.origin}/cliente/${barId}/${mesaCodigo}`;
 
   const handleDownloadPDF = async () => {
+    if (!qrRef.current) return;
     const canvas = await html2canvas(qrRef.current);
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF();
@@ -22,7 +23,8 @@ const QRDownloader = ({ mesaCodigo, barId, qrUrl }) => {
   return (
     <div className="qr-container">
       <button className="qr-toggle" onClick={() => setAbierto(!abierto)}>
-        <i className={`fas ${abierto ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i> Mostrar QR
+        <i className={`fas ${abierto ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+        Mostrar QR
       </button>
 
       {abierto && (

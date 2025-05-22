@@ -20,7 +20,7 @@ export const obtenerMesas = async (barId) => {
 
   return data.map((mesa) => ({
     ...mesa,
-    qrUrl: generarQrUrl(barId, mesa.nombre)
+    qrUrl: generarQrUrl(barId, mesa.codigo)
   }));
 };
 
@@ -45,5 +45,5 @@ export const crearMesa = async (barId, nuevaMesa) => {
 export const desfusionarMesa = async (barId, codigoMaestra) => {
   const res = await request(`/api/bares/${barId}/mesas/desfusionar/${codigoMaestra}`, {}, "PUT");
   if (!res.ok) throw new Error("Error al desfusionar la mesa");
-  return res.ok;
+  return res.json();
 };
