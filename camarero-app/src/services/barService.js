@@ -1,36 +1,49 @@
-// src/services/barService.js
+import { request } from "./apiClient";
 
-const API_URL = 'http://localhost:8080/api/bares';
+const BASE_QR_URL = "http://localhost:8762"; // Cambiar si el backend se mueve
 
+const generarQrUrl = (barId, mesaNombre) =>
+  `${BASE_QR_URL}/${barId}/${mesaNombre}`;
+
+// Obtener todos los bares
 export const obtenerBares = async () => {
-  const response = await fetch(API_URL);
-  if (!response.ok) {
-    throw new Error('Error al obtener los bares');
-  }
-  const data = await response.json();
-  return data;
+  const res = await request("/api/bares", {}, "GET");
+  if (!res.ok) throw new Error("Error al obtener los bares");
+  return res.json();
 };
 
-export const crearMesa = async (barId, nuevaMesa) => {
-  const response = await fetch(`${API_URL}/${barId}/mesas`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(nuevaMesa)
-  });
-  if (!response.ok) {
-    throw new Error('Error al crear nueva mesa');
-  }
-  const data = await response.json();
-  return data;
-};
-
+// Obtener mesas de un bar
 export const obtenerMesas = async (barId) => {
-  const response = await fetch(`${API_URL}/${barId}/mesas`);
-  if (!response.ok) {
-    throw new Error('Error al obtener las mesas del bar');
-  }
-  const data = await response.json();
-  return data;
+  const res = await request(`/api/bares/${barId}/mesas`, {}, "GET");
+  if (!res.ok) throw new Error("Error al obtener las mesas del bar");
+  const data = await res.json();
+
+  return data.map((mesa) => ({
+    ...mesa,
+    qrUrl: generarQrUrl(barId, mesa.nombre)
+  }));
+};
+
+// Fusionar mesas
+export const fusionarMesas = async (barId, mesaPrincipalCodigo, mesaSecundariaCodigo) => {
+  const res = await request(`/api/bares/${barId}/mesas/fusionar`, {
+    mesaPrincipalCodigo,
+    mesaSecundariaCodigo
+  }, "PUT");
+  if (!res.ok) throw new Error("Error al fusionar las mesas");
+  return res.ok;
+};
+
+// Crear nueva mesa
+export const crearMesa = async (barId, nuevaMesa) => {
+  const res = await request(`/api/bares/${barId}/mesas`, nuevaMesa, "POST");
+  if (!res.ok) throw new Error("Error al crear nueva mesa");
+  return res.json();
+};
+
+// Desfusionar todas las mesas unidas a una principal
+export const desfusionarMesa = async (barId, codigoMaestra) => {
+  const res = await request(`/api/bares/${barId}/mesas/desfusionar/${codigoMaestra}`, {}, "PUT");
+  if (!res.ok) throw new Error("Error al desfusionar la mesa");
+  return res.ok;
 };

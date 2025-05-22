@@ -13,7 +13,7 @@ const Header = () => {
   const { barSeleccionado, setBarSeleccionado } = useBar();
 
   useEffect(() => {
-    if (usuario?.tipo === 'empleado' || usuario?.tipo === 'admin') {
+    if (usuario?.tipo === 'ADMIN' || usuario?.tipo === 'CAMARERO') {
       cargarBares();
     }
   }, [usuario, cargarBares]);
@@ -38,7 +38,7 @@ const Header = () => {
 
         {/* Sección Central: Selector de Bar (solo para admin) */}
         <div className="header-section header-center">
-          {usuario?.tipo === 'admin' && (
+          {usuario?.tipo === 'ADMIN' && (
             <div className="bar-selector-header">
               <label htmlFor="barSelect">Bar:</label>
               <select
@@ -68,7 +68,7 @@ const Header = () => {
 
             {usuario?.tipo && (
               <>
-                {usuario?.tipo === 'admin' && (
+                {usuario?.tipo === 'ADMIN' && (
                   <Link to="/admin/home" className="header-link home-link" title="Inicio Admin">
                     <i className="fas fa-home"></i>
                   </Link>
