@@ -20,6 +20,7 @@ import EmpleadoInventarioView from '../views/EmpleadoInventarioView';
 import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/EmpleadoMapaView';
+import AdminUsuarioView from '../views/AdminUsuarioView';
 
 const GlobalRouter = () => {
   const protectedRoute = (Component, tipo = 'admin') => (
@@ -50,6 +51,7 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/inventario" element={protectedRoute(EmpleadoInventarioView)} />
       <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />
       <Route path="/admin/bar/:barId/facturacion" element={protectedRoute(EmpleadoFacturacionView)} />
+      <Route path="/admin/bar/:barId/usuarios" element={protectedRoute(AdminUsuarioView)} />
     </Routes>
   );
 };
