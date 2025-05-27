@@ -75,6 +75,7 @@
 
 /* Mesa */
 .mesa-box {
+  position: relative;
   background-color: white;
   border-radius: 10px;
   padding: 14px;
@@ -96,6 +97,24 @@
 .mesa-box.ocupada {
   background-color: #f8d7da !important;
   border: 1px solid #f5c6cb !important;
+}
+
+/* Icono de eliminar mesa */
+.icono-eliminar-mesa {
+  position: absolute;
+  top: 6px; /* Ajusta la posición vertical */
+  right: 6px; /* Ajusta la posición horizontal */
+  font-size: 1.6rem; /* Aumenta el tamaño de la "X" */
+  color: #dc3545;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s ease, text-shadow 0.2s ease; /* Añade transición para el sombreado */
+  text-shadow: none; /* Elimina el sombreado por defecto */
+}
+
+.icono-eliminar-mesa:hover {
+  color: #c82333;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Añade sombreado al pasar el ratón */
 }
 
 /* Añadir nueva mesa */

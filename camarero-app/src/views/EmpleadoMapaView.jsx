@@ -14,7 +14,8 @@ const EmpleadoMapaView = () => {
     añadirMesa,
     fusionarMesas,
     desfusionarMesa,
-    getBarById
+    getBarById,
+    eliminarMesa
   } = useBares();
 
   const { barSeleccionado } = useBar();
@@ -59,7 +60,7 @@ const EmpleadoMapaView = () => {
     return resultado;
   };
 
-    const handleAñadirMesa = async (zona) => {
+  const handleAñadirMesa = async (zona) => {
     const entrada = nuevosCodigos[zona] || {};
     const codigo = entrada.codigo?.trim();
     const capacidad = entrada.capacidad;
@@ -86,6 +87,21 @@ const EmpleadoMapaView = () => {
 
   const handleSetMesaParaFusionar = (zona, codigo) => {
     setMesasParaFusionar(prev => ({ ...prev, [zona]: codigo }));
+  };
+
+  const puedeEliminarMesa = (mesa) => {
+    // Solo se pueden eliminar mesas que no estén fusionadas
+    return mesa.fusionadaCon === null && !barActual?.mesas.some(m => m.fusionadaCon === mesa.codigo);
+  };
+
+  const handleEliminarMesa = async (codigoMesa) => {
+    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar esta mesa?");
+    if (confirmacion) {
+      const resultado = await eliminarMesa(barSeleccionado, codigoMesa);
+      if (!resultado) {
+        alert("No se pudo eliminar la mesa. Inténtalo de nuevo.");
+      }
+    }
   };
 
   return (
@@ -167,6 +183,16 @@ const EmpleadoMapaView = () => {
                         </button>
                       )}
                   </>
+                )}
+
+                {puedeEliminarMesa(mesa) && (
+                  <span
+                    className="icono-eliminar-mesa"
+                    onClick={() => handleEliminarMesa(mesa.codigo)}
+                    title="Eliminar mesa"
+                  >
+                    &times;
+                  </span>
                 )}
               </div>
             ))}

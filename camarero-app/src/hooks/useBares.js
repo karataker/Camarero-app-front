@@ -3,7 +3,8 @@ import {
   obtenerBares,
   crearMesa as crearMesaApi,
   desfusionarMesa as desfusionarMesaApi,
-  fusionarMesas as fusionarMesasApi
+  fusionarMesas as fusionarMesasApi,
+  eliminarMesa as eliminarMesaApi // ✅ AÑADIDO
 } from '../services/barService.js';
 
 export const useBares = () => {
@@ -74,6 +75,27 @@ export const useBares = () => {
     }
   };
 
+  const eliminarMesa = async (barId, mesaCodigo) => {
+    try {
+      // ✅ Hacemos la petición real al backend
+      await eliminarMesaApi(barId, mesaCodigo);
+
+      // ✅ Y luego actualizamos el estado local
+      setBares(prev =>
+        prev.map(bar =>
+          bar.id === barId
+            ? { ...bar, mesas: bar.mesas.filter(m => m.codigo !== mesaCodigo) }
+            : bar
+        )
+      );
+
+      return true;
+    } catch (error) {
+      console.error('Error al eliminar mesa:', error);
+      return false;
+    }
+  };
+
   const getBarById = (id) => bares.find(b => b.id === id);
 
   return {
@@ -82,6 +104,7 @@ export const useBares = () => {
     añadirMesa,
     fusionarMesas,
     desfusionarMesa,
+    eliminarMesa,
     getBarById
   };
 };

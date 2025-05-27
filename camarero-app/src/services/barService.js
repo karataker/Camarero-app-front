@@ -47,3 +47,9 @@ export const desfusionarMesa = async (barId, codigoMaestra) => {
   if (!res.ok) throw new Error("Error al desfusionar la mesa");
   return res.json();
 };
+
+export const eliminarMesa = async (barId, codigoMesa) => {
+  const res = await request(`/api/bares/${barId}/mesas/${codigoMesa}`, {}, "DELETE");
+  if (!res.ok) throw new Error("Error al eliminar la mesa");
+  return true;
+};
