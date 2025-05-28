@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/reservaCliente.css';
-import { obtenerBaresYzonas, enviarReserva, descargarCartaPDF } from '../services/reservaServiceMock';
+import '../../../styles/cliente/reservas/reservaCliente.css';
+import { obtenerBaresYzonas, enviarReserva, descargarCartaPDF } from '../../../services/reservaServiceMock';
 import { useNavigate } from 'react-router-dom';
-import ReservaModal from '../components/ReservaModal';
+import ReservaModal from '../../../components/ReservaModal';
 
 const ReservarCliente = () => {
   const [bares, setBares] = useState([]);

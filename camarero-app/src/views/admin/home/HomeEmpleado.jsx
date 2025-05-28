@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useBar } from '../context/BarContext';
-import { getMockNotificationCount } from '../mocks/notificationMocks'; 
-import '../styles/homeEmpleado.css'; // Puedes mantener el mismo CSS o cambiarlo
+import { useBar } from '../../../context/BarContext'; 
+import { getMockNotificationCount } from '../../../mocks/notificationMocks';
+import '../../../styles/admin/home/homeEmpleado.css'; 
 
-const HomeEmpleado = () => { // Cambiado de HomeAdmin a HomeEmpleado
+const HomeEmpleado = () => { 
   const navigate = useNavigate();
   const { barSeleccionado } = useBar();
 
@@ -148,4 +148,4 @@ const HomeEmpleado = () => { // Cambiado de HomeAdmin a HomeEmpleado
   );
 };
 
-export default HomeEmpleado; 
+export default HomeEmpleado;

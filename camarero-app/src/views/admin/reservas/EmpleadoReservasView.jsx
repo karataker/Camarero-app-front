@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
-import '../styles/empleadoReservasView.css';
+import '../../../styles/admin/reservas/empleadoReservasView.css';
 import 'react-calendar/dist/Calendar.css';
 // Importar los mocks
-import { mockReservas, obtenerMesasDelBar } from '../mocks/reservasMocks';
+import { mockReservas, obtenerMesasDelBar } from '../../../mocks/reservasMocks';
 
 // --- Funciones de Ayuda para Tiempos ---
 const horaAMinutos = (horaStr) => {
