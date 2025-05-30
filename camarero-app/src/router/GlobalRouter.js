@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomeCliente from '../views/HomeCliente';
 import ReservaCliente from '../views/cliente/reservas/ReservaCliente';
-import EscanearQR from '../views/EscanearQR';
+import EscanearQR from '../views/cliente/qr/EscanearQR';
 import FormularioPedido from '../views/FormularioPedido';
 import LocalesCliente from '../views/LocalesCliente';
 import LoginEmpleado from '../views/LoginEmpleado';
@@ -17,7 +17,7 @@ import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
 import EmpleadoInventarioView from '../views/EmpleadoInventarioView';
 import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
-import EmpleadoMapaView from '../views/EmpleadoMapaView';
+import EmpleadoMapaView from '../views/admin/mesas/EmpleadoMapaView';
 import AdminUsuarioView from '../views/AdminUsuarioView';
 
 const GlobalRouter = () => {

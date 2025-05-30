@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserQRCodeReader } from '@zxing/browser';
-import '../styles/escanearQR.css';
+import '../../../styles/cliente/qr/escanearQR.css';
 import { useNavigate } from 'react-router-dom';
 
 const EscanearQR = () => {

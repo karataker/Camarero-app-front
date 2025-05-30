@@ -8,11 +8,32 @@ export const crearReserva = async (reserva) => {
 };
 
 
-export const obtenerReservas = async () => {
-  const res = await request('/api/reservas', {}, 'GET');
+export const obtenerReservas = async (barId) => {
+  const res = await request(`/api/reservas?barId=${barId}`, {}, 'GET');
   if (!res.ok) throw new Error('Error al obtener reservas');
   return res.json();
 };
+
+export const eliminarReserva = async (id) => {
+  const res = await request(`/api/reservas/${id}`, {}, 'DELETE');
+  if (!res.ok) throw new Error('Error al eliminar la reserva');
+  return true;
+};
+
+
+//añadidas 29/09/2025
+export const actualizarEstadoReserva = async (id, nuevoEstado) => {
+  const res = await request(`/api/reservas/${id}`, { estado: nuevoEstado }, 'PATCH');
+  if (!res.ok) throw new Error('Error al actualizar estado de reserva');
+  return res.json();
+};
+
+export const actualizarReserva = async (id, reservaActualizada) => {
+  const res = await request(`/api/reservas/${id}`, reservaActualizada, 'PUT');
+  if (!res.ok) throw new Error('Error al actualizar la reserva');
+  return res.json();
+}
+
 
 
 
