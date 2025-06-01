@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import '../../../styles/cliente/reservas/reservaCliente.css';
 import { crearReserva } from '../../../services/reservaService';
 import { obtenerBares } from '../../../services/barService';
-import { descargarCartaPDF } from '../../../services/reservaServiceMock'; // Se mantiene mock según interacciones previas
 import { useNavigate } from 'react-router-dom';
 import ReservaModal from '../../../components/ReservaModal';
 
@@ -53,7 +52,6 @@ const ReservarCliente = () => {
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [comensales, setComensales] = useState(1);
-  // const [fechaHora, setFechaHora] = useState(''); // Se reemplaza por fechaSeleccionada y horaSeleccionada
   const [fechaSeleccionada, setFechaSeleccionada] = useState('');
   const [horaSeleccionada, setHoraSeleccionada] = useState('');
   const [opcionesDeHora, setOpcionesDeHora] = useState([]);
@@ -109,7 +107,6 @@ const ReservarCliente = () => {
     const fechaHoraISO = `${fechaSeleccionada}T${horaSeleccionada}:00`; // Asegúrate que la hora tenga segundos si el backend lo requiere
 
     const reserva = {
-      // barId: barSeleccionado, // Comentado o eliminado
       bar: { id: barSeleccionado }, // Información del bar anidada
       zonaPreferida: zona,
       nombreCliente: nombre,
@@ -120,12 +117,10 @@ const ReservarCliente = () => {
       mensaje: mensaje,
       estado: 'pendiente', // O el estado inicial que defina tu backend
       fechaSolicitud: new Date().toISOString()
-      // Asegúrate de que todos los campos coincidan con lo que espera tu entidad Reserva en el backend
     };
 
     try {
       await crearReserva(reserva);
-      // await descargarCartaPDF(barSeleccionado); 
       setMostrarModal(true);
     } catch (err) {
       console.error('Error al crear reserva:', err);

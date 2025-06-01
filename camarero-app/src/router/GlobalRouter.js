@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HomeCliente from '../views/HomeCliente';
+import HomeCliente from '../views/cliente/home/HomeCliente';
 import ReservaCliente from '../views/cliente/reservas/ReservaCliente';
 import EscanearQR from '../views/cliente/qr/EscanearQR';
 import FormularioPedido from '../views/FormularioPedido';
