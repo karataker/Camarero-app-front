@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { useParams, Link } from 'react-router-dom'; // useParams ya no es necesario, Link podría serlo si lo usas en otra parte
-import { Link } from 'react-router-dom'; // Mantén Link si lo usas
+import { Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import '../../../styles/admin/reservas/empleadoReservasView.css';
 import 'react-calendar/dist/Calendar.css';
@@ -11,22 +10,9 @@ import {
   actualizarReserva,
   eliminarReserva
 } from '../../../services/reservaService.js';
-import { useBar } from '../../../context/BarContext'; // Importar useBar
-import { useBares } from '../../../hooks/useBares'; // Para obtener el nombre del bar
-
-// ✅ TEMPORAL: Mock solo para mesas hasta tener servicio real
-const obtenerMesasDelBar = (barId) => {
-  return [
-    { id: 'M01', nombre: 'M01', capacidad: 4 },
-    { id: 'M02', nombre: 'M02', capacidad: 2 },
-    { id: 'M03', nombre: 'M03', capacidad: 6 },
-    { id: 'M04', nombre: 'M04', capacidad: 4 },
-    { id: 'M05', nombre: 'M05', capacidad: 2 },
-    { id: 'M06', nombre: 'M06', capacidad: 4 },
-    { id: 'M07', nombre: 'M07', capacidad: 2 },
-    { id: 'M08', nombre: 'M08', capacidad: 8 },
-  ];
-};
+import { obtenerMesas } from '../../../services/barService.js'; // <--- IMPORTAR obtenerMesas
+import { useBar } from '../../../context/BarContext';
+import { useBares } from '../../../hooks/useBares';
 
 // --- Funciones de Ayuda para Tiempos ---
 const horaAMinutos = (horaStr) => {
@@ -35,11 +21,33 @@ const horaAMinutos = (horaStr) => {
   return horas * 60 + minutos;
 };
 
+const minutosAFormatoHora = (totalMinutos) => {
+  if (typeof totalMinutos !== 'number' || isNaN(totalMinutos)) return '00:00';
+  const horas = Math.floor(totalMinutos / 60);
+  const minutos = totalMinutos % 60;
+  return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+};
+
 const haySolapamiento = (inicio1, fin1, inicio2, fin2) => {
   return Math.max(inicio1, inicio2) < Math.min(fin1, fin2);
 };
 
 const DURACION_RESERVA_EXISTENTE_HORAS = 2;
+
+// Helper para generar franjas horarias
+const generarFranjasHorarias = (intervaloMinutos) => {
+  const franjas = [];
+  for (let horas = 0; horas < 24; horas++) {
+    for (let minutos = 0; minutos < 60; minutos += intervaloMinutos) {
+      const horaFormateada = horas.toString().padStart(2, '0');
+      const minutoFormateado = minutos.toString().padStart(2, '0');
+      franjas.push(`${horaFormateada}:${minutoFormateado}`);
+    }
+  }
+  return franjas;
+};
+
+const FRANJAS_HORARIAS_MODAL = generarFranjasHorarias(15); // Genera ["00:00", "00:15", ..., "23:45"]
 
 const FRANJAS_HORARIAS = {
   todas: { nombre: 'Todas', inicioMin: 0, finMin: 24 * 60 - 1 },
@@ -55,6 +63,7 @@ const MiniMesasView = ({
   horaConsulta,
   duracionHorasConsulta = 2,
   filtroFranjaActual,
+  // franjasHorariasDefinidas, // Descomentar si se usa la configuración dinámica de franjas
   reservaEnEdicionId = null
 }) => {
   if (!selectedDate) {
@@ -72,13 +81,14 @@ const MiniMesasView = ({
         const inicioExistenteMin = horaAMinutos(res.hora);
         const finExistenteMin = inicioExistenteMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
         if (haySolapamiento(inicioConsultaMin, finConsultaMin, inicioExistenteMin, finExistenteMin)) {
-          return { estado: 'ocupada_horario', textoTooltip: `Ocupada de ${res.hora} a aprox. ${new Date(new Date(`1970/01/01 ${res.hora}`).getTime() + DURACION_RESERVA_EXISTENTE_HORAS * 60 * 60 * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (Mesa ${res.mesa})` };
+          return { estado: 'ocupada_horario', textoTooltip: `Ocupada de ${res.hora} a aprox. ${minutosAFormatoHora(inicioExistenteMin + DURACION_RESERVA_EXISTENTE_HORAS * 60)} (Mesa ${res.mesa})` };
         }
       }
       return { estado: 'libre_horario', textoTooltip: `Libre a las ${horaConsulta} (aprox. ${duracionHorasConsulta}h)` };
     } else {
       if (reservasParaEstaMesa.length > 0) {
         const horariosOcupados = reservasParaEstaMesa.map(r => `${r.hora} (Mesa ${r.mesa})`).join(', ');
+        // Asegúrate que FRANJAS_HORARIAS esté accesible aquí o se pase como prop (franjasHorariasDefinidas)
         let textoFranja = filtroFranjaActual !== 'todas' ? ` en ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}` : ' hoy';
         return { estado: 'ocupada_dia', textoTooltip: `Ocupada${textoFranja} en horarios: ${horariosOcupados}` };
       }
@@ -91,29 +101,41 @@ const MiniMesasView = ({
   if (horaConsulta) {
     titulo += ` a las ${horaConsulta} (aprox. ${duracionHorasConsulta}h)`;
   } else if (filtroFranjaActual && filtroFranjaActual !== 'todas') {
+    // Asegúrate que FRANJAS_HORARIAS esté accesible aquí o se pase como prop (franjasHorariasDefinidas)
     titulo += ` para ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}`;
   }
+
+  // Ya NO filtramos las mesas por la propiedad 'disponible' aquí.
+  // const mesasDisponiblesParaMostrar = todasLasMesas.filter(mesa => mesa.disponible === true);
 
   return (
     <div className="mini-mesas-container">
       <h4>{titulo}</h4>
+      {/* Mapear directamente sobre todasLasMesas */}
       {todasLasMesas.length === 0 ? (
-        <p>No hay información de mesas para este bar.</p>
+        <p>No hay mesas configuradas para este bar.</p>
       ) : (
         <div className="mini-mesas-grid">
-          {todasLasMesas.map(mesa => {
+          {todasLasMesas.map(mesa => { // Mapear sobre todasLasMesas
             const { estado, textoTooltip } = getEstadoMesa(mesa.id);
             let claseCss = '';
             if (estado === 'ocupada_horario' || estado === 'ocupada_dia') claseCss = 'ocupada';
             else if (estado === 'libre_horario' || estado === 'libre_dia') claseCss = 'libre';
 
+            // Adicionalmente, podrías querer una clase si la mesa está marcada como no disponible globalmente
+            if (mesa.disponible === false) { // O !mesa.disponible si es booleano
+              claseCss += ' mesa-no-disponible-globalmente'; // Añade una clase específica
+            }
+
             return (
               <div
                 key={mesa.id}
                 className={`mini-mesa-item ${claseCss}`}
-                title={textoTooltip || `Mesa ${mesa.nombre} - Capacidad: ${mesa.capacidad || 'N/A'}`}
+                title={textoTooltip || `Mesa ${mesa.nombre || mesa.codigo} - Capacidad: ${mesa.capacidad || 'N/A'}${mesa.disponible === false ? ' (No disponible)' : ''}`}
               >
-                {mesa.nombre}
+                {mesa.nombre || mesa.codigo}
+                {/* Opcional: Añadir un indicador visual si la mesa no está disponible globalmente */}
+                {mesa.disponible === false && <span className="indicador-no-disponible-global" title="Mesa no disponible actualmente"> (ND)</span>}
               </div>
             );
           })}
@@ -124,17 +146,30 @@ const MiniMesasView = ({
   );
 };
 
+// Helper para formatear un objeto Date a YYYY-MM-DD local
+const formatearFechaA_YYYYMMDD_Local = (dateObj) => {
+  if (!dateObj) return '';
+  const year = dateObj.getFullYear();
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const EmpleadoReservasView = () => {
-  // const { barId } = useParams(); // Ya no se usa useParams para el barId
-  const { barSeleccionado } = useBar(); // Usar barSeleccionado del contexto
-  const { bares, cargarBares: cargarBaresHook } = useBares(); // Renombrar para evitar conflicto con cargarReservas
+  const { barSeleccionado } = useBar();
+  const { bares, cargarBares: cargarBaresHook } = useBares();
   const [nombreBarActual, setNombreBarActual] = useState('');
 
   const [reservas, setReservas] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const [cargandoReservas, setCargandoReservas] = useState(true); // Renombrado para claridad
+  const [errorReservas, setErrorReservas] = useState(null); // Renombrado para claridad
   
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [mesasDelBarActual, setMesasDelBarActual] = useState([]); // <--- NUEVO ESTADO para mesas
+  const [cargandoMesas, setCargandoMesas] = useState(false); // <--- NUEVO ESTADO para carga de mesas
+  const [errorMesas, setErrorMesas] = useState(null); // <--- NUEVO ESTADO para error de mesas
+
+
+  const [selectedDate, setSelectedDate] = useState(new Date()); // selectedDate es un objeto Date local
   const [filtroFranja, setFiltroFranja] = useState('todas');
   
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -179,17 +214,15 @@ const EmpleadoReservasView = () => {
   const cargarReservas = useCallback(async () => {
     if (!barSeleccionado) {
       setReservas([]);
-      setCargando(false);
-      // console.log('[EmpleadoReservasView] cargarReservas: No barSeleccionado, clearing reservations.');
+      setCargandoReservas(false);
       return;
     }
     try {
-      setCargando(true);
-      setError(null);
-      // console.log(`[EmpleadoReservasView] cargarReservas: Fetching reservations for barSeleccionado: ${barSeleccionado}`);
-      const data = await obtenerReservas(barSeleccionado); // Usar barSeleccionado del contexto
-      // console.log('[EmpleadoReservasView] cargarReservas: Data received:', data);
-      
+      setCargandoReservas(true);
+      setErrorReservas(null);
+      const data = await obtenerReservas(barSeleccionado);
+      console.log('Datos CRUDOS de reservas del backend:', data); // <--- LOG 1
+
       const reservasFormateadas = data.map(res => {
         let fecha = '';
         let hora = '';
@@ -205,55 +238,86 @@ const EmpleadoReservasView = () => {
 
         return {
           id: res.id,
-          fecha,
-          hora,
+          fecha, // <--- Verifica este formato
+          hora,  // <--- Verifica este formato
           nombre: res.nombreCliente || res.nombre || '', 
           personas: res.numeroComensales || res.comensales || res.personas || 1, 
           telefono: res.telefono || '',
           email: res.correoElectronico || res.email || '', 
           mensaje: res.mensaje || '',
           mesa: res.mesaId || (res.mesa ? (typeof res.mesa === 'object' ? res.mesa.id : res.mesa) : null), 
-          estado: res.estado || 'pendiente',
+          estado: res.estado || 'pendiente', // <--- Verifica este valor
           fechaSolicitud: res.fechaSolicitud || res.createdAt || new Date().toISOString(), 
           zona: res.zonaPreferida || res.zona || '' 
         };
       });
+      console.log('Reservas FORMATEADAS:', reservasFormateadas); // <--- LOG 2
 
       const reservasOrdenadas = reservasFormateadas.sort((a, b) =>
         new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)
       );
 
       setReservas(reservasOrdenadas);
-      // console.log('[EmpleadoReservasView] cargarReservas: Reservations state updated.');
 
     } catch (err) {
-      // console.error('[EmpleadoReservasView] cargarReservas: Error loading reservations:', err);
-      setError('Error al cargar las reservas: ' + err.message);
+      setErrorReservas('Error al cargar las reservas: ' + err.message);
     } finally {
-      setCargando(false);
-      // console.log('[EmpleadoReservasView] cargarReservas: Loading finished.');
+      setCargandoReservas(false);
     }
-  }, [barSeleccionado]); // useCallback ahora depende de barSeleccionado del contexto
+  }, [barSeleccionado]);
 
   // El useEffect ahora depende de la función cargarReservas memoizada.
   // Se ejecutará cuando cargarReservas cambie (es decir, cuando barSeleccionado cambie).
   useEffect(() => {
-    // console.log('[EmpleadoReservasView] useEffect for cargarReservas triggered. Current barSeleccionado:', barSeleccionado);
     cargarReservas();
-  }, [cargarReservas]); // La dependencia de la función memoizada es correcta
+  }, [cargarReservas]);
+
+  // NUEVO useEffect para cargar las mesas del bar seleccionado
+  useEffect(() => {
+    const fetchMesasDelBar = async () => {
+      if (!barSeleccionado) {
+        setMesasDelBarActual([]);
+        setCargandoMesas(false);
+        setErrorMesas(null);
+        return;
+      }
+      try {
+        setCargandoMesas(true);
+        setErrorMesas(null);
+        const dataMesas = await obtenerMesas(barSeleccionado); // Llamada al servicio real
+        setMesasDelBarActual(dataMesas || []);
+      } catch (err) {
+        console.error('Error cargando mesas del bar:', err);
+        setErrorMesas('Error al cargar las mesas del bar: ' + err.message);
+        setMesasDelBarActual([]);
+      } finally {
+        setCargandoMesas(false);
+      }
+    };
+
+    fetchMesasDelBar();
+  }, [barSeleccionado]); // Depende de barSeleccionado
 
   const abrirModalParaCrear = (fechaSeleccionada, horaSugerida = '') => {
     setModoModal('crear');
+    let horaInicial = horaSugerida;
+    if (!horaSugerida && FRANJAS_HORARIAS_MODAL.length > 0) {
+      // Podrías buscar la hora más cercana o simplemente la primera/una por defecto
+      // Por ahora, si no hay sugerencia, y hay franjas, dejamos que el usuario elija
+      // o podrías poner la primera franja: FRANJAS_HORARIAS_MODAL[0]
+    }
+
     setReservaActualFormulario({
       id: null,
-      fecha: fechaSeleccionada.toISOString().split('T')[0],
-      hora: horaSugerida,
+      fecha: formatearFechaA_YYYYMMDD_Local(fechaSeleccionada), // <--- CORRECCIÓN AQUÍ
+      hora: horaInicial,
       nombre: '',
       personas: 1,
       telefono: '',
       email: '',
       mensaje: '',
       mesa: null,
+      estado: 'pendiente', // Por defecto para nueva reserva manual
     });
     setMostrarModal(true);
   };
@@ -309,7 +373,8 @@ const EmpleadoReservasView = () => {
           numeroComensales: parseInt(reservaActualFormulario.personas, 10),
           fechaHora: `${reservaActualFormulario.fecha}T${reservaActualFormulario.hora}:00`,
           mensaje: reservaActualFormulario.mensaje,
-          estado: reservaActualFormulario.estado || 'confirmada', // Usar estado del formulario o 'confirmada'
+          // estado: reservaActualFormulario.estado || 'confirmada', // LÍNEA ANTERIOR
+          estado: 'confirmada', // <--- CAMBIO: Las reservas manuales de empleados se crean como confirmadas
           mesa: { id: reservaActualFormulario.mesa } // Enviar como objeto Mesa anidado
         };
 
@@ -325,7 +390,7 @@ const EmpleadoReservasView = () => {
           numeroComensales: parseInt(reservaActualFormulario.personas, 10),
           fechaHora: `${reservaActualFormulario.fecha}T${reservaActualFormulario.hora}:00`,
           mensaje: reservaActualFormulario.mensaje,
-          mesa: { id: reservaActualFormulario.mesa }, // Enviar como objeto Mesa anidado
+          mesa: { id: reservaActualFormulario.mesa }, // Enviar como objeto Mesa anidada
           estado: reservaActualFormulario.estado, 
         };
         await actualizarReserva(reservaActualFormulario.id, datosActualizados); 
@@ -378,20 +443,21 @@ const EmpleadoReservasView = () => {
     }
   };
 
-  const obtenerTodasLasMesasDelBar = (currentBarId) => {
-    // Usar currentBarId (que será barSeleccionado)
-    return obtenerMesasDelBar(currentBarId);
-  };
+  // Ya no se necesita esta función, las mesas se cargan en el estado mesasDelBarActual
+  // const obtenerTodasLasMesasDelBar = (currentBarId) => {
+  //   return obtenerMesasDelBar(currentBarId); // Esto era el mock
+  // };
 
-  // Usar barSeleccionado del contexto
-  const todasLasMesasDelBar = obtenerTodasLasMesasDelBar(barSeleccionado);
+  // Usar mesasDelBarActual del estado
+  // const todasLasMesasDelBar = obtenerTodasLasMesasDelBar(barSeleccionado); // Ya no se usa así
 
   const reservasPendientes = reservas.filter(r => r.estado === 'pendiente');
   const reservasConfirmadas = reservas.filter(r => r.estado === 'confirmada');
 
   const reservasFiltradasDelDiaSeleccionado = React.useMemo(() => {
+    const fechaSeleccionadaFormateada = formatearFechaA_YYYYMMDD_Local(selectedDate); // <--- CORRECCIÓN AQUÍ
     let reservasDelDia = reservasConfirmadas.filter(r =>
-      r.fecha === selectedDate.toISOString().split('T')[0]
+      r.fecha === fechaSeleccionadaFormateada // Comparar con la fecha local formateada
     );
 
     if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
@@ -406,23 +472,27 @@ const EmpleadoReservasView = () => {
     return reservasDelDia.sort((a, b) => a.hora.localeCompare(b.hora));
   }, [reservasConfirmadas, selectedDate, filtroFranja]);
 
-  if (cargando && !barSeleccionado) { // Añadir condición para no mostrar "Cargando" si no hay bar
+  if (cargandoReservas && !barSeleccionado) {
     return <div className="reservas-loading">Selecciona un bar para ver las reservas.</div>;
   }
   
-  if (cargando) {
-    return <div className="reservas-loading">Cargando reservas...</div>;
+  if (cargandoReservas || cargandoMesas) { // Considerar también cargandoMesas
+    return <div className="reservas-loading">Cargando datos...</div>;
   }
 
-  if (error) {
-    return <div className="reservas-error">{error}</div>;
+  if (errorReservas) {
+    return <div className="reservas-error">{errorReservas}</div>;
   }
+  if (errorMesas) { // Mostrar error si falla la carga de mesas
+    return <div className="reservas-error">{errorMesas}</div>;
+  }
+
 
   return (
     <div className="empleado-reservas-view">
       <div className="reservas-header">
         <h1>Gestión de Reservas {nombreBarActual && `- ${nombreBarActual}`}</h1>
-        {barSeleccionado && ( // Solo mostrar botón si hay un bar seleccionado
+        {barSeleccionado && (
           <button className="btn-nueva-reserva" onClick={() => abrirModalParaCrear(selectedDate, '')}>
             <i className="fas fa-plus"></i> Nueva Reserva Manual
           </button>
@@ -435,7 +505,7 @@ const EmpleadoReservasView = () => {
         </div>
       )}
 
-      {barSeleccionado && ( // Solo mostrar contenido si hay un bar seleccionado
+      {barSeleccionado && (
         <div className="reservas-container">
           <div className="reservas-pendientes-section">
             <h2>Reservas Pendientes de Confirmación {nombreBarActual && <span className="subtitulo-bar">({nombreBarActual})</span>}</h2>
@@ -498,15 +568,26 @@ const EmpleadoReservasView = () => {
               <h2>Calendario de Reservas {nombreBarActual && <span className="subtitulo-bar">({nombreBarActual})</span>}</h2>
               <div className="filtro-franja-horaria">
                 <span>Filtrar por: </span>
-                {Object.keys(FRANJAS_HORARIAS).map(keyFranja => (
-                  <button
-                    key={keyFranja}
-                    className={`btn-filtro-franja ${filtroFranja === keyFranja ? 'active' : ''}`}
-                    onClick={() => setFiltroFranja(keyFranja)}
-                  >
-                    {FRANJAS_HORARIAS[keyFranja].nombre}
-                  </button>
-                ))}
+                {Object.keys(FRANJAS_HORARIAS).map(keyFranja => {
+                  const franja = FRANJAS_HORARIAS[keyFranja];
+                  let textoBoton = franja.nombre;
+                  if (keyFranja !== 'todas') { // No mostrar rango para "Todas"
+                    const inicioHora = minutosAFormatoHora(franja.inicioMin);
+                    // Para finMin, si es el final del día (23:59), podemos mostrarlo así o ajustar.
+                    // 24 * 60 - 1 = 1439 minutos. minutosAFormatoHora(1439) -> "23:59"
+                    const finHora = minutosAFormatoHora(franja.finMin);
+                    textoBoton += ` (${inicioHora} - ${finHora})`;
+                  }
+                  return (
+                    <button
+                      key={keyFranja}
+                      className={`btn-filtro-franja ${filtroFranja === keyFranja ? 'active' : ''}`}
+                      onClick={() => setFiltroFranja(keyFranja)}
+                    >
+                      {textoBoton}
+                    </button>
+                  );
+                })}
               </div>
             </div>
             <div className="calendario-layout">
@@ -514,55 +595,85 @@ const EmpleadoReservasView = () => {
                 <Calendar
                   onChange={setSelectedDate}
                   value={selectedDate}
-                  tileContent={({ date }) => {
-                    let reservasDelTile = reservasConfirmadas.filter(r =>
-                      r.fecha === date.toISOString().split('T')[0]
-                    );
+                  tileContent={({ date, view }) => { // 'date' es un objeto Date local
+                    if (view === 'month') {
+                      const localDateString = formatearFechaA_YYYYMMDD_Local(date); // <--- CORRECCIÓN AQUÍ
+                      let reservasDelTile = reservasConfirmadas.filter(r =>
+                        r.fecha === localDateString // Comparar con la fecha local formateada
+                      );
 
-                    if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
-                      const franjaActual = FRANJAS_HORARIAS[filtroFranja];
-                      reservasDelTile = reservasDelTile.filter(res => {
-                        const inicioReservaMin = horaAMinutos(res.hora);
-                        const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
-                        return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
-                      });
+                      if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
+                        const franjaActual = FRANJAS_HORARIAS[filtroFranja];
+                        reservasDelTile = reservasDelTile.filter(res => {
+                          const inicioReservaMin = horaAMinutos(res.hora);
+                          const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+                          return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
+                        });
+                      }
+                      reservasDelTile.sort((a, b) => a.hora.localeCompare(b.hora));
+
+                      if (reservasDelTile.length === 0) return null;
+
+                      return (
+                        <div className="calendario-reservas">
+                          {reservasDelTile.slice(0, 2).map((reserva) => {
+                            // ... (lógica existente para mostrar la reserva) ...
+                            let mesaDisplayString = '';
+                            let mesaTitleString = 'N/A';
+
+                            if (reserva.mesa != null) {
+                              const mesaObjeto = mesasDelBarActual.find(m => m.id === reserva.mesa);
+                              if (mesaObjeto) {
+                                const nombreMesa = mesaObjeto.nombre || mesaObjeto.codigo;
+                                mesaTitleString = nombreMesa || `Mesa ID ${reserva.mesa}`;
+                                if (nombreMesa && typeof nombreMesa === 'string') {
+                                  mesaDisplayString = `(${nombreMesa.substring(0, 3)})`;
+                                } else {
+                                  mesaDisplayString = `(ID ${reserva.mesa})`;
+                                }
+                              } else {
+                                mesaTitleString = `Mesa ID ${reserva.mesa}`;
+                                const idStr = String(reserva.mesa);
+                                mesaDisplayString = `(${idStr.substring(0, Math.min(3, idStr.length))})`;
+                              }
+                            }
+                            return (
+                              <div
+                                key={reserva.id}
+                                className="mini-reserva"
+                                title={`${reserva.nombre} - ${nombreBarActual} - ${mesaTitleString} - ${reserva.personas}p`}
+                              >
+                                {reserva.hora.substring(0, 5)} {mesaDisplayString}
+                              </div>
+                            );
+                          })}
+                          {reservasDelTile.length > 2 && (
+                            <div className="mini-reserva-count">
+                              +{reservasDelTile.length - 2} más
+                            </div>
+                          )}
+                        </div>
+                      );
                     }
-                    reservasDelTile.sort((a, b) => a.hora.localeCompare(b.hora));
-
-                    if (reservasDelTile.length === 0) return null;
-
-                    return (
-                      <div className="calendario-reservas">
-                        {reservasDelTile.slice(0, 2).map((reserva) => (
-                          <div
-                            key={reserva.id}
-                            className="mini-reserva"
-                            title={`${reserva.nombre} - ${nombreBarActual} - ${reserva.mesa} - ${reserva.personas}p`}
-                          >
-                            {reserva.hora.substring(0, 5)} {reserva.mesa ? `(${reserva.mesa.substring(0, 3)})` : ''}
-                          </div>
-                        ))}
-                        {reservasDelTile.length > 2 && (
-                          <div className="mini-reserva-count">
-                            +{reservasDelTile.length - 2} más
-                          </div>
-                        )}
-                      </div>
-                    );
+                    return null;
                   }}
-                  tileClassName={({ date }) => {
-                    let reservasDelTile = reservasConfirmadas.filter(r =>
-                      r.fecha === date.toISOString().split('T')[0]
-                    );
-                    if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
-                      const franjaActual = FRANJAS_HORARIAS[filtroFranja];
-                      reservasDelTile = reservasDelTile.filter(res => {
-                        const inicioReservaMin = horaAMinutos(res.hora);
-                        const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
-                        return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
-                      });
+                  tileClassName={({ date, view }) => { // 'date' es un objeto Date local
+                    if (view === 'month') {
+                      const localDateString = formatearFechaA_YYYYMMDD_Local(date); // <--- CORRECCIÓN AQUÍ
+                      let reservasDelTile = reservasConfirmadas.filter(r =>
+                        r.fecha === localDateString // Comparar con la fecha local formateada
+                      );
+                      if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
+                        const franjaActual = FRANJAS_HORARIAS[filtroFranja];
+                        reservasDelTile = reservasDelTile.filter(res => {
+                          const inicioReservaMin = horaAMinutos(res.hora);
+                          const finReservaMin = inicioReservaMin + DURACION_RESERVA_EXISTENTE_HORAS * 60;
+                          return haySolapamiento(inicioReservaMin, finReservaMin, franjaActual.inicioMin, franjaActual.finMin);
+                        });
+                      }
+                      return reservasDelTile.length > 0 ? 'tiene-reservas' : '';
                     }
-                    return reservasDelTile.length > 0 ? 'tiene-reservas' : '';
+                    return '';
                   }}
                 />
               </div>
@@ -574,25 +685,37 @@ const EmpleadoReservasView = () => {
                   {nombreBarActual && <span className="subtitulo-bar-dia"> ({nombreBarActual})</span>}
                 </h3>
                 <div className="reservas-dia">
-                  {reservasFiltradasDelDiaSeleccionado.map(reserva => (
-                    <div key={reserva.id} className="reserva-dia-card">
-                      <div className="reserva-dia-info">
-                        <span className="mesa">Mesa {reserva.mesa || 'N/A'}</span>
-                        <span className="hora">{reserva.hora}</span>
-                        <span className="nombre">{reserva.nombre}</span>
-                        <span className="personas">{reserva.personas} personas</span>
+                  {reservasFiltradasDelDiaSeleccionado.map(reserva => {
+                    let nombreMesaMostrado = 'N/A';
+                    if (reserva.mesa != null) { // reserva.mesa es el ID
+                      const mesaObjeto = mesasDelBarActual.find(m => m.id === reserva.mesa);
+                      if (mesaObjeto) {
+                        nombreMesaMostrado = mesaObjeto.codigo || mesaObjeto.nombre || `ID ${reserva.mesa}`;
+                      } else {
+                        nombreMesaMostrado = `ID ${reserva.mesa}`; // Fallback si no se encuentra el objeto mesa
+                      }
+                    }
+
+                    return (
+                      <div key={reserva.id} className="reserva-dia-card">
+                        <div className="reserva-dia-info">
+                          <span className="mesa">Mesa {nombreMesaMostrado}</span>
+                          <span className="hora">{reserva.hora}</span>
+                          <span className="nombre">{reserva.nombre}</span>
+                          <span className="personas">{reserva.personas} personas</span>
+                        </div>
+                        <div className="reserva-dia-acciones">
+                          <button
+                            className="btn-accion-reserva btn-modificar"
+                            onClick={() => abrirModalParaEditar(reserva)}
+                            title="Modificar Reserva"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                        </div>
                       </div>
-                      <div className="reserva-dia-acciones">
-                        <button
-                          className="btn-accion-reserva btn-modificar"
-                          onClick={() => abrirModalParaEditar(reserva)}
-                          title="Modificar Reserva"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {reservasFiltradasDelDiaSeleccionado.length === 0 && (
                     <div className="no-reservas">
                       No hay reservas para este día{filtroFranja !== 'todas' ? ` en la franja de ${FRANJAS_HORARIAS[filtroFranja].nombre.toLowerCase()}` : ''} para {nombreBarActual || 'este bar'}.
@@ -601,11 +724,12 @@ const EmpleadoReservasView = () => {
                 </div>
 
                 <MiniMesasView
-                  todasLasMesas={todasLasMesasDelBar}
+                  todasLasMesas={mesasDelBarActual}
                   reservasDelDia={reservasFiltradasDelDiaSeleccionado}
-                  selectedDate={selectedDate}
+                  selectedDate={selectedDate} // selectedDate es un objeto Date local
                   horaConsulta={
-                    mostrarModal && reservaActualFormulario.fecha === selectedDate.toISOString().split('T')[0] && reservaActualFormulario.hora
+                    // Comprobar si la fecha del formulario (que es YYYY-MM-DD) coincide con la fecha seleccionada (también YYYY-MM-DD)
+                    mostrarModal && reservaActualFormulario.fecha === formatearFechaA_YYYYMMDD_Local(selectedDate) && reservaActualFormulario.hora
                       ? reservaActualFormulario.hora
                       : null
                   }
@@ -619,7 +743,7 @@ const EmpleadoReservasView = () => {
         </div>
       )}
 
-      {mostrarModal && barSeleccionado && ( // Solo mostrar modal si hay bar seleccionado
+      {mostrarModal && barSeleccionado && (
         <div className="modal-overlay">
           <div className="modal-contenido">
             <h3>{modoModal === 'crear' ? 'Nueva Reserva Manual' : 'Modificar Reserva'}</h3>
@@ -630,7 +754,20 @@ const EmpleadoReservasView = () => {
             </div>
             <div className="form-grupo">
               <label htmlFor="hora">Hora:</label>
-              <input type="time" id="hora" name="hora" value={reservaActualFormulario.hora} onChange={handleInputChangeModal} />
+              <select
+                id="hora"
+                name="hora"
+                value={reservaActualFormulario.hora}
+                onChange={handleInputChangeModal}
+                className="form-control-select" // Añade una clase para estilizar si es necesario
+              >
+                <option value="" disabled>Selecciona una hora</option>
+                {FRANJAS_HORARIAS_MODAL.map(franja => (
+                  <option key={franja} value={franja}>
+                    {franja}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-grupo">
               <label htmlFor="nombre">Nombre Cliente:</label>
@@ -651,12 +788,14 @@ const EmpleadoReservasView = () => {
             <div className="form-grupo">
               <label>Mesa Asignada:</label>
               <div className="selector-mesas-modal">
-                {todasLasMesasDelBar.map(mesa => {
+                {mesasDelBarActual.map(mesa => { // <--- USAR mesasDelBarActual
                   let disponible = true;
                   const inicioConsultaMin = horaAMinutos(reservaActualFormulario.hora);
                   const finConsultaMin = inicioConsultaMin + duracionReservaHoras * 60;
 
                   reservasConfirmadas.forEach(r => {
+                    // Aquí la lógica de disponibilidad de mesas usa r.mesa que debería ser el ID de la mesa
+                    // y mesa.id que viene de mesasDelBarActual. Asegúrate que los IDs coincidan en formato/tipo.
                     if (r.mesa === mesa.id && r.fecha === reservaActualFormulario.fecha) {
                       if (modoModal === 'editar' && r.id === reservaActualFormulario.id) {
                         return;
@@ -675,12 +814,14 @@ const EmpleadoReservasView = () => {
                       className={`btn-mesa-modal ${reservaActualFormulario.mesa === mesa.id ? 'selected' : ''} ${!disponible ? 'ocupada-modal' : ''}`}
                       onClick={() => disponible && handleMesaChangeModal(mesa.id)}
                       disabled={!disponible && reservaActualFormulario.mesa !== mesa.id}
-                      title={!disponible ? `Mesa ${mesa.nombre} ocupada en este horario` : `Seleccionar Mesa ${mesa.nombre}`}
+                      title={!disponible ? `Mesa ${mesa.nombre || mesa.codigo} ocupada en este horario` : `Seleccionar Mesa ${mesa.nombre || mesa.codigo}`}
                     >
-                      {mesa.nombre}
+                      {mesa.nombre || mesa.codigo} {/* Mostrar nombre o código de la mesa */}
                     </button>
                   );
                 })}
+                 {mesasDelBarActual.length === 0 && !cargandoMesas && <p>No hay mesas configuradas para este bar.</p>}
+                 {cargandoMesas && <p>Cargando mesas...</p>}
               </div>
             </div>
             <div className="form-grupo">

@@ -21,12 +21,11 @@ export const eliminarReserva = async (id) => {
 };
 
 
-//añadidas 29/09/2025
-export const actualizarEstadoReserva = async (id, nuevoEstado) => {
-  const res = await request(`/api/reservas/${id}`, { estado: nuevoEstado }, 'PATCH');
-  if (!res.ok) throw new Error('Error al actualizar estado de reserva');
-  return res.json();
-};
+//export const actualizarEstadoReserva = async (id, nuevoEstado) => {
+//  const res = await request(`/api/reservas/${id}`, { estado: nuevoEstado }, 'PATCH');
+//  if (!res.ok) throw new Error('Error al actualizar estado de reserva');
+//  return res.json();
+//};
 
 export const actualizarReserva = async (id, reservaActualizada) => {
   const res = await request(`/api/reservas/${id}`, reservaActualizada, 'PUT');
