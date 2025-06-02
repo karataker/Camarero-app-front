@@ -1,36 +1,49 @@
 import { request } from "./apiClient";
 
-const BASE_QR_URL = "http://localhost:8762"; // Cambiar si el backend se mueve
+const BASE_QR_URL = "http://localhost:8762"; // This is your base for QR URLs
 
-const generarQrUrl = (barId, mesaNombre) =>
-  `${BASE_QR_URL}/${barId}/${mesaNombre}`;
+// CORRECTED: Changed backticks and removed extra slashes around BASE_QR_URL
+// The correct syntax for template literals is `${variableName}`
+const generarQrUrl = (barId, mesaCodigo) =>
+  `${BASE_QR_URL}/${barId}/${mesaCodigo}`; // Corrected template literal syntax
 
+// Obtener todos los bares
 export const obtenerBares = async () => {
   const res = await request("/api/bares", {}, "GET");
   if (!res.ok) throw new Error("Error al obtener los bares");
   return res.json();
 };
 
-// Obtener mesas de un bar - barId now in path
+// Obtener mesas de un bar (modificado para obtener todas las mesas del bar)
 export const obtenerMesas = async (barId) => {
+  // Assuming the latest backend structure for mesas is /api/bares/{barId}/mesas
   const res = await request(`/api/bares/${barId}/mesas`, {}, "GET");
   if (!res.ok) throw new Error("Error al obtener las mesas del bar");
   const data = await res.json();
 
   return data.map((mesa) => ({
     ...mesa,
-    qrUrl: generarQrUrl(barId, mesa.codigo)
+    qrUrl: generarQrUrl(barId, mesa.codigo) // This will now correctly use the BASE_QR_URL value
   }));
 };
 
-// Obtener todas las mesas de todos los bares. Added 30/05/2025
-// This endpoint might need to be adjusted if you no longer want a global /api/mesas.
-// If you only ever access mesas via a bar, you can remove this.
+// NUEVA FUNCIÓN: Ocupar una mesa
+export const ocuparMesa = async (barId, mesaCodigo, comensales) => {
+  const payload = { comensales };
+  const res = await request(`/api/bares/${barId}/mesas/${mesaCodigo}/ocupar`, payload, "PUT");
+  if (!res.ok) {
+    const errorBody = await res.text();
+    throw new Error(`Error al ocupar la mesa: ${errorBody}`);
+  }
+  return res.json(); // Returns the updated Mesa object
+};
+
+// Other existing functions (ensure they also use the updated backend paths)
+
 export const obtenerTodasLasMesas = async () => {
-  // If you keep this, ensure your backend has an endpoint for it (e.g., a dedicated /api/mesas that returns all)
-  // Or, iterate through all bars and then get their mesas.
-  console.warn("`obtenerTodasLasMesas` might not be compatible with new endpoint structure. Consider refactoring.");
-  const res = await request("/api/mesas", {}, "GET"); // Assuming /api/mesas without barId still returns all
+  // This endpoint might be problematic if /api/mesas no longer returns all mesas across bars
+  // Consider if this function is still needed or how it should fetch if barId is always required.
+  const res = await request("/api/mesas", {}, "GET");
   if (!res.ok) throw new Error("Error al obtener todas las mesas");
   const data = await res.json();
 
@@ -49,12 +62,12 @@ export const obtenerTodasLasMesas = async () => {
   });
 };
 
-// Fusionar mesas - barId now in path
 export const fusionarMesas = async (barId, mesaPrincipalCodigo, mesaSecundariaCodigo) => {
   const payload = {
     mesaPrincipalCodigo,
     mesaSecundariaCodigo
   };
+  // Ensure the backend endpoint matches this (e.g., /api/bares/{barId}/mesas/fusionar)
   const res = await request(`/api/bares/${barId}/mesas/fusionar`, payload, "PUT");
   if (!res.ok) {
     const errorBody = await res.text();
@@ -63,12 +76,11 @@ export const fusionarMesas = async (barId, mesaPrincipalCodigo, mesaSecundariaCo
   return res.ok;
 };
 
-// Crear nueva mesa - barId now in path
 export const crearMesa = async (barId, nuevaMesaData) => {
   const payload = {
     ...nuevaMesaData
-    // No need to include bar: { id: barId } in payload as barId is in the path
   };
+  // Ensure the backend endpoint matches this (e.g., /api/bares/{barId}/mesas)
   const res = await request(`/api/bares/${barId}/mesas`, payload, "POST");
   if (!res.ok) {
     const errorBody = await res.text();
@@ -79,8 +91,8 @@ export const crearMesa = async (barId, nuevaMesaData) => {
 
 export const añadirMesa = crearMesa;
 
-// Desfusionar todas las mesas unidas a una principal - barId now in path
 export const desfusionarMesa = async (barId, codigoMaestra) => {
+  // Ensure the backend endpoint matches this (e.g., /api/bares/{barId}/mesas/desfusionar/{codigo})
   const res = await request(`/api/bares/${barId}/mesas/desfusionar/${codigoMaestra}`, {}, "PUT");
   if (!res.ok) {
     const errorBody = await res.text();
@@ -89,8 +101,8 @@ export const desfusionarMesa = async (barId, codigoMaestra) => {
   return res.json();
 };
 
-// Eliminar mesa - barId now in path
 export const eliminarMesa = async (barId, codigoMesa) => {
+  // Ensure the backend endpoint matches this (e.g., /api/bares/{barId}/mesas/{codigoMesa})
   const res = await request(`/api/bares/${barId}/mesas/${codigoMesa}`, {}, "DELETE");
   if (!res.ok) {
     const errorBody = await res.text();

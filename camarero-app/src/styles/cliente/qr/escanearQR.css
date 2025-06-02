@@ -4,8 +4,109 @@
   padding: 30px;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.escanear-container h2 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: #002b5c;
+  font-weight: bold;
+}
+
+.qr-video-wrapper {
+  width: 100%;
+  max-width: 380px;
+  height: 380px;
+  margin: auto;
+  border: 2px solid #28a745;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background-color: black; /* útil si la cámara tarda en mostrar */
+}
+
+.qr-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* rellena bien el contenedor sin deformar */
+}
+
+.comensales-input-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.comensales-input-container label {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.comensales-input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comensales-input-container input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+.btn-submit-comensales {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-submit-comensales:hover {
+  background-color: #218838;
+}
+
+.mesa-asignada-actions {
+  margin-top: 20px;
+}
+
+.mesa-asignada-actions .btn-ver-carta {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mesa-asignada-actions .btn-ver-carta:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: #dc3545;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.message {
+  color: #28a745;
+  font-weight: bold;
+  margin-top: 15px;
 }
 
 .volver-btn {
@@ -22,69 +123,3 @@
 .volver-btn:hover {
   background-color: #5a6268;
 }
-
-.escanear-container h2 {
-  font-size: 1.4rem;
-  margin-bottom: 20px;
-  color: #002b5c;
-}
-
-.qr-video-wrapper {
-  width: 100%;
-  max-width: 380px; /* antes 320px */
-  height: 380px;     /* asegúrate de forzar altura cuadrada */
-  margin: auto;
-  border: 2px solid #28a745;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  background-color: black; /* útil si la cámara tarda en mostrar */
-}
-
-.qr-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* rellena bien el contenedor sin deformar */
-}
-
-.resultado {
-  margin-top: 20px;
-  font-size: 1rem;
-  color: #007bff;
-}
-
-.resultado button {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 0.95rem;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.resultado button:hover {
-  background-color: #218838;
-}
-
-.error {
-  color: #dc3545;
-  font-weight: bold;
-  margin-top: 15px;
-}
-
-.volver-btn {
-    top: 20px;
-    left: 20px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    z-index: 10;
-  }

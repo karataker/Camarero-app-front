@@ -1,59 +1,69 @@
 .reserva-container {
-  max-width: 500px;
+  max-width: 600px;
   margin: 40px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', sans-serif;
 }
 
 .reserva-container h2 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   color: #002b5c;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   text-align: center;
+  font-weight: bold;
 }
 
 .reserva-form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
 .reserva-form label {
-  margin-bottom: 5px;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   color: #333;
+  margin-bottom: 5px;
 }
 
 .reserva-form input,
-.reserva-form select {
-  padding: 10px;
+.reserva-form select,
+.reserva-form textarea {
+  padding: 12px;
   font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s ease-in-out;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reserva-form input:focus,
-.reserva-form select:focus {
+.reserva-form select:focus,
+.reserva-form textarea:focus {
   border-color: #28a745;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
   outline: none;
+}
+
+.reserva-form textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 .reserva-form button {
   background-color: #28a745;
   color: white;
-  padding: 12px;
-  font-size: 1rem;
+  padding: 14px;
+  font-size: 1.1rem;
   font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,24 +71,63 @@
 
 .reserva-form button:hover {
   background-color: #218838;
+  transform: scale(1.02);
+}
+
+.reserva-form button:active {
+  background-color: #1e7e34;
+  transform: scale(0.98);
 }
 
 .reserva-success {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 15px;
+  border-radius: 8px;
   margin-top: 20px;
   text-align: center;
+  font-size: 1rem;
 }
 
 .reserva-error {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 15px;
+  border-radius: 8px;
   margin-top: 20px;
   text-align: center;
+  font-size: 1rem;
+}
+
+.reserva-form select {
+  appearance: none;
+  background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23333" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>') no-repeat right 10px center;
+  background-size: 10px 10px;
+}
+
+.reserva-form select:focus {
+  background-position: right 8px center;
+}
+
+.reserva-form .no-bares-warning {
+  font-size: 0.9rem;
+  color: #dc3545;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.reserva-form .fas {
+  margin-right: 8px;
+}
+
+.reserva-form textarea::placeholder {
+  font-style: italic;
+  color: #aaa;
+}
+
+.reserva-form input::placeholder {
+  font-style: italic;
+  color: #aaa;
 }
