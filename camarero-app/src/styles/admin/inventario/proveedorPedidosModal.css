@@ -1,0 +1,61 @@
+.proveedor-pedidos-modal {
+  padding: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.proveedor-pedidos-modal h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #003366;
+}
+
+.tabla-pedidos-proveedor {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.tabla-pedidos-proveedor th,
+.tabla-pedidos-proveedor td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.tabla-pedidos-proveedor th {
+  background-color: #f0f4f8;
+  color: #333;
+  font-weight: 600;
+}
+
+.tabla-pedidos-proveedor tr:hover {
+  background-color: #f9fbfd;
+}
+
+.pedidos-empty {
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+  color: #888;
+}
+
+.modal-actions {
+  text-align: right;
+}
+.modal-actions button {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.modal-actions button:hover {
+  background-color: #5a6268;
+}

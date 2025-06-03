@@ -1,0 +1,92 @@
+.proveedor-crud {
+  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.proveedor-crud h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #003366;
+}
+
+.proveedor-form {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.proveedor-form input {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 180px;
+}
+
+.proveedor-form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.proveedor-form button:hover {
+  background-color: #0056b3;
+}
+
+.proveedor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.proveedor-table th,
+.proveedor-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.proveedor-table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+}
+
+.proveedor-table td {
+  color: #555;
+}
+
+.proveedor-table button {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.proveedor-table .edit-btn {
+  background-color: #ffc107;
+  color: #fff;
+}
+
+.proveedor-table .edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.proveedor-table .delete-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.proveedor-table .delete-btn:hover {
+  background-color: #bd2130;
+}

@@ -12,7 +12,6 @@ import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import ClienteCartaView from '../views/ClienteCartaView';
 import ClienteComandas from '../views/ClienteComandasView';
-import AdminCartaView from '../views/AdminCartaView';
 import HomeEmpleado from '../views/HomeEmpleado';
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/EmpleadoReservasView';
@@ -21,6 +20,9 @@ import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/EmpleadoMapaView';
 import AdminUsuarioView from '../views/AdminUsuarioView';
+import AdminInventarioView from '../views/admin/inventario/AdminInventarioView';
+import AdminCartaView from '../views/admin/carta/AdminCartaView';
+import AdminComprasView from '../views/admin/Compras/AdminComprasView';
 
 const GlobalRouter = () => {
   const protectedRoute = (Component, tipo = 'admin') => (
@@ -48,7 +50,8 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/panel" element={protectedRoute(EmpleadoMapaView)} />
       <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} />
       <Route path="/admin/bar/:barId/pedidos" element={protectedRoute(EmpleadoPedidosView)} />
-      <Route path="/admin/bar/:barId/inventario" element={protectedRoute(EmpleadoInventarioView)} />
+      <Route path="/admin/bar/:barId/inventario" element={protectedRoute(AdminInventarioView)} />
+      <Route path="/admin/bar/:barId/compras" element={protectedRoute(AdminComprasView)} />
       <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />
       <Route path="/admin/bar/:barId/facturacion" element={protectedRoute(EmpleadoFacturacionView)} />
       <Route path="/admin/bar/:barId/usuarios" element={protectedRoute(AdminUsuarioView)} />

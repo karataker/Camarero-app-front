@@ -1,0 +1,78 @@
+.modal-form {
+  padding: 1.5rem;
+  max-width: 100%;
+}
+
+.modal-form h2,
+.modal-form h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #003366;
+  font-weight: bold;
+}
+
+.modal-form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.modal-form input,
+.modal-form select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}
+
+.modal-form select {
+  background-color: white;
+}
+
+/* Botón debajo del selector de categoría */
+.modal-form .inline-button {
+  margin-top: -0.2rem;
+  margin-bottom: 1rem;
+  align-self: flex-start;
+  background-color: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  color: #003366;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal-form .inline-button:hover {
+  background-color: #d0e7ff;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.modal-actions button[type="button"] {
+  background-color: #ccc;
+  color: black;
+}

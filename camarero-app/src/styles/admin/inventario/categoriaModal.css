@@ -1,0 +1,54 @@
+.modal-form {
+  padding: 1.5rem;
+  max-width: 100%;
+}
+
+.modal-form h2,
+.modal-form h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #003366;
+  font-weight: bold;
+}
+
+.modal-form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.modal-form input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.modal-actions button[type="button"] {
+  background-color: #ccc;
+  color: black;
+}

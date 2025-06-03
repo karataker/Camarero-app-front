@@ -1,0 +1,107 @@
+.carta-form {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 12px;
+  max-width: 100%;
+}
+
+.carta-form h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  color: #003366;
+}
+
+.carta-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.carta-form input[type="text"],
+.carta-form input[type="number"],
+.carta-form textarea,
+.carta-form select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 0.3rem;
+}
+
+.carta-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.alergenos-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.alergenos-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.ingrediente-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ingrediente-item select,
+.ingrediente-item input {
+  flex: 1;
+}
+
+button[type="button"] {
+  margin-top: 0.5rem;
+  background: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button[type="button"]:hover {
+  background-color: #d0e7ff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-actions button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-actions button:hover {
+  background-color: #0056b3;
+}
+
+.form-actions button:last-child {
+  background-color: #6c757d;
+}
+
+.form-actions button:last-child:hover {
+  background-color: #5a6268;
+}

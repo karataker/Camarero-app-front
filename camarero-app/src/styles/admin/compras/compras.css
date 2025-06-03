@@ -1,0 +1,157 @@
+.admin-compras-view {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+}
+
+.compras-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.crear-pedido-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.crear-pedido-btn:hover {
+  background-color: #0056b3;
+}
+
+.resumen-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.resumen-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex: 1;
+  border-left: 6px solid;
+  transition: transform 0.2s;
+}
+
+.resumen-card:hover {
+  transform: translateY(-3px);
+}
+
+.total-historico {
+  border-color: #007bff;
+}
+
+.total-mes {
+  border-color: #ffc107;
+}
+
+.resumen-card p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 0.5rem;
+}
+
+.resumen-card h2 {
+  font-size: 2rem;
+  color: #003366;
+  margin: 0;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.tabla-pedidos {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tabla-pedidos th,
+.tabla-pedidos td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.tabla-pedidos th {
+  background-color: #f0f4f8;
+  color: #333;
+  font-weight: 600;
+}
+
+.tabla-pedidos td {
+  color: #555;
+}
+
+.tabla-pedidos ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style-type: disc;
+}
+
+.tabla-pedidos .ver-mas {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding-left: 1rem;
+}
+
+crear-pedido-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #565e64;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}

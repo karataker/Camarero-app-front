@@ -1,0 +1,164 @@
+.admin-inventario-view {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.admin-inventario-view h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #003366;
+}
+
+.admin-inventario-view h3 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 0.5rem;
+  color: #003366;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.admin-inventario-view > button,
+.inventario-header > button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-inventario-view > button:hover,
+.inventario-header > button:hover {
+  background-color: #0056b3;
+}
+
+.buscador-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  width: 250px;
+}
+
+.buscador-container i {
+  margin-right: 0.5rem;
+  color: #666;
+}
+
+.buscador-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.categoria-section {
+  margin-bottom: 2rem;
+}
+
+.tabla-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.inventario-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.inventario-table th,
+.inventario-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.inventario-table th {
+  background-color: #f0f4f8;
+  color: #333;
+  font-weight: 600;
+}
+
+.inventario-table td {
+  color: #555;
+}
+
+.inventario-table tr:hover {
+  background-color: #f9fbfd;
+}
+
+.inventario-table .bajo-stock {
+  background-color: #fff4f4;
+}
+
+.inventario-table .bajo-stock td {
+  color: #c82333;
+  font-weight: 500;
+}
+
+.inventario-table button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background-color: #e7f1ff;
+  color: #003366;
+  border: 1px solid #b6d4fe;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.inventario-table button:hover {
+  background-color: #d0e7ff;
+}
+
+.categoria-section h3 {
+  font-size: 1.4rem;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1rem;
+  color: #003366;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #eaf1fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.categoria-section h3:hover {
+  background-color: #d9e7f7;
+}
+
+.categoria-caret {
+  font-size: 1rem;
+  color: #003366;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.categoria-caret.open {
+  transform: rotate(180deg);
+}

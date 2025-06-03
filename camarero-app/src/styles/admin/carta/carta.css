@@ -1,0 +1,271 @@
+/* Layout general de la vista de carta */
+.admin-carta-view {
+  padding: 2rem;
+  background-color: #f7f9fb;
+}
+
+.admin-carta-view h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1c3b57;
+}
+
+/* Botones de categorías */
+.carta-categorias {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.carta-categorias button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #f0f3f7;
+  color: #1c3b57;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.carta-categorias button:hover {
+  background: #e0e7ef;
+}
+
+.carta-categorias .activa {
+  background-color: #003366;
+  color: white;
+}
+
+/* Grid para las tarjetas de producto */
+.carta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, auto));
+  justify-content: start; /* opcional: alinea las tarjetas a la izquierda */
+  gap: 1.5rem;
+}
+
+/* Tarjeta base de producto */
+.carta-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  max-height: 100%;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.carta-item h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #003366;
+}
+
+.carta-item p {
+  margin: 0.5rem 0;
+  color: #444;
+  min-height: 2.4em;
+}
+
+.card-image-container {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
+
+.card-image-container img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.carta-item .precio {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1c3b57;
+}
+
+.carta-item .precio-tag {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2e7d32;
+  margin-bottom: 0.3rem;
+}
+
+/* Contenedor de acciones */
+.carta-item .acciones {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carta-item .acciones button {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: white;
+}
+
+.carta-item .acciones button:first-child {
+  background: #2e7d32;
+}
+
+.carta-item .acciones button:last-child {
+  background: #c62828;
+}
+
+.carta-item .acciones button:hover {
+  opacity: 0.9;
+}
+
+/* Alergenos visuales */
+.producto-alergenos {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  min-height: 24px;
+}
+
+.producto-alergenos img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Tooltip personalizado */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #f9f9f9;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Estado del stock */
+.stock-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.raciones-sin {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+.raciones-ok {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Tarjeta para botón de añadir producto */
+.carta-item.producto-add {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  color: #2e7d32;
+  cursor: pointer;
+  border: 2px dashed #ccc;
+  transition: background-color 0.2s;
+}
+
+.carta-item.producto-add:hover {
+  background-color: #f0f7f4;
+}
+
+.producto-add-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Buscador de productos */
+.carta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.buscador-container {
+  display: flex;
+  align-items: center;
+  max-width: 400px;
+  margin: 1rem 0 2rem;
+  position: relative;
+}
+
+.buscador-container input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  border: 2px solid #2e2e2e;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.buscador-container input:focus {
+  border-color: #1c3b57;
+}
+
+.buscador-container .fa-search {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 1rem;
+}
