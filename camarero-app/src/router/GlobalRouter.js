@@ -10,7 +10,6 @@ import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import ClienteCartaView from '../views/ClienteCartaView';
 import ClienteComandas from '../views/ClienteComandasView';
-import AdminCartaView from '../views/AdminCartaView';
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
