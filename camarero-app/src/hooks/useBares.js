@@ -1,9 +1,11 @@
 import { useState, useCallback } from 'react';
 import {
   obtenerBares,
+  obtenerMesas, // ✅ AÑADIR obtenerMesas a la importación
   crearMesa as crearMesaApi,
   desfusionarMesa as desfusionarMesaApi,
-  fusionarMesas as fusionarMesasApi
+  fusionarMesas as fusionarMesasApi,
+  eliminarMesa as eliminarMesaApi // ✅ AÑADIDO
 } from '../services/barService.js';
 
 export const useBares = () => {
@@ -11,10 +13,27 @@ export const useBares = () => {
 
   const cargarBares = useCallback(async () => {
     try {
-      const data = await obtenerBares();
-      setBares(data);
+      const listaDeBares = await obtenerBares(); // Llama al servicio
+      if (listaDeBares && listaDeBares.length > 0) {
+        const baresConMesas = await Promise.all(
+          listaDeBares.map(async (bar) => {
+            try {
+              // ✅ LLAMAR directamente a obtenerMesas
+              const mesasDelBar = await obtenerMesas(bar.id); 
+              return { ...bar, mesas: mesasDelBar || [] }; // Adjunta las mesas al bar
+            } catch (errorMesas) {
+              console.error(`Error al cargar mesas para el bar ${bar.id}:`, errorMesas);
+              return { ...bar, mesas: [] }; // Continuar con mesas vacías en caso de error
+            }
+          })
+        );
+        setBares(baresConMesas);
+      } else {
+        setBares([]);
+      }
     } catch (error) {
-      console.error('Error cargando bares', error);
+      console.error("Error al cargar bares:", error);
+      setBares([]);
     }
   }, []);
 
@@ -74,6 +93,27 @@ export const useBares = () => {
     }
   };
 
+  const eliminarMesa = async (barId, mesaCodigo) => {
+    try {
+      // ✅ Hacemos la petición real al backend
+      await eliminarMesaApi(barId, mesaCodigo);
+
+      // ✅ Y luego actualizamos el estado local
+      setBares(prev =>
+        prev.map(bar =>
+          bar.id === barId
+            ? { ...bar, mesas: bar.mesas.filter(m => m.codigo !== mesaCodigo) }
+            : bar
+        )
+      );
+
+      return true;
+    } catch (error) {
+      console.error('Error al eliminar mesa:', error);
+      return false;
+    }
+  };
+
   const getBarById = (id) => bares.find(b => b.id === id);
 
   return {
@@ -82,6 +122,7 @@ export const useBares = () => {
     añadirMesa,
     fusionarMesas,
     desfusionarMesa,
+    eliminarMesa,
     getBarById
   };
 };

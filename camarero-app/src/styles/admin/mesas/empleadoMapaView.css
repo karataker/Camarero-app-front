@@ -75,6 +75,7 @@
 
 /* Mesa */
 .mesa-box {
+  position: relative;
   background-color: white;
   border-radius: 10px;
   padding: 14px;
@@ -96,6 +97,24 @@
 .mesa-box.ocupada {
   background-color: #f8d7da !important;
   border: 1px solid #f5c6cb !important;
+}
+
+/* Icono de eliminar mesa */
+.icono-eliminar-mesa {
+  position: absolute;
+  top: 6px; /* Ajusta la posición vertical */
+  right: 6px; /* Ajusta la posición horizontal */
+  font-size: 1.6rem; /* Aumenta el tamaño de la "X" */
+  color: #dc3545;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s ease, text-shadow 0.2s ease; /* Añade transición para el sombreado */
+  text-shadow: none; /* Elimina el sombreado por defecto */
+}
+
+.icono-eliminar-mesa:hover {
+  color: #c82333;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Añade sombreado al pasar el ratón */
 }
 
 /* Añadir nueva mesa */
@@ -126,14 +145,27 @@
   border: 1px solid #ccc;
 }
 
+/* Estilo general para botones dentro de input-nueva-mesa (como el de "Añadir") */
 .input-nueva-mesa button {
   padding: 6px 10px;
-  background-color: #28a745;
+  background-color: #28a745; /* Verde por defecto para botones aquí */
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
+  margin-top: 5px; /* Espacio entre elementos si están en columna */
+  width: calc(100% - 20px); /* Ajusta el ancho para que coincida con los inputs, considerando el padding */
+  box-sizing: border-box; /* Asegura que el padding no aumente el ancho total */
+}
+
+/* Estilo específico para el botón de cancelar, AUMENTANDO ESPECIFICIDAD */
+.input-nueva-mesa button.btn-cancelar-nueva-mesa {
+  background-color: lightcoral; /* Rojo clarito */
+  /* Las demás propiedades como color de texto, padding, etc., se heredan de la regla anterior
+     o se pueden redefinir aquí si necesitas que sean diferentes. */
+  /* Por ejemplo, si el padding o font-size fueran diferentes, los pondrías aquí.
+     Si solo cambia el color de fondo, esto es suficiente. */
 }
 
 /* Contenido de la mesa */
@@ -255,8 +287,8 @@
   align-items: center;
   padding: 10px 20px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+  box-shadow: 0 2px 4px rgba
+ } 
 
 
 
