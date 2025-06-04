@@ -51,7 +51,15 @@ const InventarioModal = ({ isOpen, onClose, onSuccess, producto, barId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = { ...form, barId };
+      const payload = {
+        ...form,
+        barId,
+        categoria: form.categoriaId ? { id: parseInt(form.categoriaId) } : null,
+        proveedor: form.proveedorId ? { id: parseInt(form.proveedorId) } : null,
+      };
+
+      delete payload.categoriaId;
+      delete payload.proveedorId;
       if (isEdit) {
         await updateProductoInventario(producto.id, payload);
       } else {

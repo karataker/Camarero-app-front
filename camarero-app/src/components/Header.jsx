@@ -4,7 +4,6 @@ import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../img/CamareroApp.png';
-import InfoModal from './InfoModal';
 import '../styles/header.css';
 
 const Header = () => {

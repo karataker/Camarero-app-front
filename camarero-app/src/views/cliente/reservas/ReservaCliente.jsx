@@ -120,7 +120,7 @@ const ReservarCliente = () => {
     };
 
     try {
-      await crearReserva(reserva);
+      await crearReserva(barSeleccionado, reserva);
       setMostrarModal(true);
     } catch (err) {
       console.error('Error al crear reserva:', err);
