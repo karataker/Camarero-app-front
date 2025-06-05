@@ -11,14 +11,6 @@ const HomeEmpleado = () => {
   // Mantén tus opciones actuales o modifícalas según sea necesario
   const opciones = [
     {
-      id: 'dashboard',
-      nombre: 'Dashboard',
-      icono: 'fa-tachometer-alt',
-      ruta: `/admin/bar/${barSeleccionado}/dashboard`,
-      color: '#2c3e50',
-      tipoNotificacion: 'dashboard_update' 
-    },
-    {
       id: 'carta',
       nombre: 'Carta Digital',
       icono: 'fa-utensils',

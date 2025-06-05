@@ -21,6 +21,8 @@ import AdminUsuarioView from '../views/AdminUsuarioView';
 import AdminInventarioView from '../views/admin/inventario/AdminInventarioView';
 import AdminCartaView from '../views/admin/carta/AdminCartaView';
 import AdminComprasView from '../views/admin/Compras/AdminComprasView';
+import AdminAnaliticasView from '../views/admin/analiticas/AdminAnaliticasView';
+
 
 const GlobalRouter = () => {
   const protectedRoute = (Component, tipo = 'admin') => (
@@ -52,6 +54,7 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />
       <Route path="/admin/bar/:barId/facturacion" element={protectedRoute(EmpleadoFacturacionView)} />
       <Route path="/admin/bar/:barId/usuarios" element={protectedRoute(AdminUsuarioView)} />
+      <Route path="/admin/bar/:barId/analiticas" element={protectedRoute(AdminAnaliticasView)} />
 
       {/* 404 - debe ir al final */}
       <Route path="*" element={<NotFound />} />
