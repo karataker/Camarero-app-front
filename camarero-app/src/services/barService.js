@@ -110,3 +110,14 @@ export const eliminarMesa = async (barId, codigoMesa) => {
   }
   return res.ok;
 };
+
+// NUEVA FUNCIÓN: Obtener bar por ID
+export const obtenerBarPorId = async (barId) => {
+  // Use the 'request' utility for consistency and correct base URL handling
+  const res = await request(`/api/bares/${barId}`, {}, "GET"); //
+  if (!res.ok) { //
+    const errorBody = await res.text(); // Optional: get more detailed error from response
+    throw new Error(`Error al obtener la información del bar: ${errorBody}`); //
+  }
+  return res.json(); //
+};
