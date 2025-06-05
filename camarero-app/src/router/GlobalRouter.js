@@ -13,7 +13,6 @@ import ClienteComandas from '../views/ClienteComandasView';
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
-import EmpleadoInventarioView from '../views/EmpleadoInventarioView';
 import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/admin/mesas/EmpleadoMapaView';
@@ -44,10 +43,10 @@ const GlobalRouter = () => {
 
       {/* Protected routes */}
       <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />
-      <Route path="/admin/home" element={protectedRoute(HomeEmpleado)} /> {/* ✅ DESCOMENTADO */}
+      <Route path="/admin/home" element={protectedRoute(HomeEmpleado)} /> 
       <Route path="/admin/bar/:barId/carta" element={protectedRoute(AdminCartaView)} />
       <Route path="/admin/bar/:barId/panel" element={protectedRoute(EmpleadoMapaView)} />
-      <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} /> {/* ✅ DESCOMENTADO */}
+      <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} /> 
       <Route path="/admin/bar/:barId/pedidos" element={protectedRoute(EmpleadoPedidosView)} />
       <Route path="/admin/bar/:barId/inventario" element={protectedRoute(AdminInventarioView)} />
       <Route path="/admin/bar/:barId/compras" element={protectedRoute(AdminComprasView)} />
