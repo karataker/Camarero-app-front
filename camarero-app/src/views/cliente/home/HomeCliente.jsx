@@ -22,28 +22,20 @@ const HomeCliente = () => {
     }
   };
 
-  // Función para la nueva opción de ver carta (solo lectura) mediante escaneo
-  const handleEscanearParaVerCarta = () => {
-    // Navega a una nueva ruta de escaneo específica para este flujo
-    navigate('/escanear-ver-carta'); 
-  };
 
   return (
     <div className="home-cliente-container">
-      <h1>Bienvenido a Camarero App</h1>
+      <h1>Bienvenido a nuestro bar digital</h1>
       <div className="opciones-home">
         <div className="opcion" onClick={() => handleLoginAndNavigate('/reservar')}>
-          {/* <i className="fas fa-chair icono-opcion"></i> */}
           <img src={imgReservarMesa} alt="Reservar mesa" className="imagen-opcion" />
           <p>Reservar mesa</p>
         </div>
         <div className="opcion" onClick={() => handleLoginAndNavigate('/escanear')}>
-          {/* <i className="fas fa-qrcode icono-opcion"></i> */}
           <img src={imgCartaAutopedidos} alt="Ver Carta para empezar a pedir" className="imagen-opcion" />
           <p>Ver Carta para empezar a pedir</p>
         </div>
-        <div className="opcion" onClick={handleEscanearParaVerCarta}>
-          {/* <i className="fas fa-qrcode icono-opcion"></i>  */}
+        <div className="opcion" onClick={() => handleLoginAndNavigate('/escanear-ver-carta')}>
           <img src={imgVerCarta} alt="Ver Carta (Solo Lectura)" className="imagen-opcion" />
           <p>Ver Carta (Solo Lectura)</p>
         </div>

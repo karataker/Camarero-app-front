@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomeCliente from '../views/cliente/home/HomeCliente';
 import ReservaCliente from '../views/cliente/reservas/ReservaCliente';
-import EscanearQR from '../views/cliente/qr/EscanearQR';
+import EscanearQRAsignarMesa from '../views/cliente/qr/EscanearQRAsignarmesa';
 import EscanearQRVerCarta from '../views/cliente/qr/EscanearQRVerCarta';
 import FormularioPedido from '../views/FormularioPedido';
 import LocalesCliente from '../views/LocalesCliente';
@@ -10,7 +10,7 @@ import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import ClienteCartaDigitalView from '../views/cliente/carta/ClienteCartaDigitalView';
-import VerCartaSoloLecturaView from '../views/cliente/carta/VerCartaSoloLecturaView';
+import ClienteCartaSoloLecturaView from '../views/cliente/carta/ClienteCartaSoloLecturaView';
 import ClienteComandas from '../views/ClienteComandasView';
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
@@ -42,12 +42,12 @@ const GlobalRouter = () => {
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
       <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaDigitalView/>} />
       <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
-      <Route path="/escanear" element={<EscanearQR />} /> 
+      <Route path="/escanear" element={<EscanearQRAsignarMesa />} /> 
       <Route path="/login-empleado" element={<LoginEmpleado />} />
       <Route path="/cliente/pago-exitoso" element={<PagoExitoso />} />
       <Route path="/cliente/pago-cancelado" element={<PagoCancelado />} />
       <Route path="/escanear-ver-carta" element={<EscanearQRVerCarta />} />
-      <Route path="/ver-carta/:barId" element={<VerCartaSoloLecturaView/>} />
+      <Route path="/ver-carta/:barId" element={<ClienteCartaSoloLecturaView/>} />
 
       {/* Protected routes */}
       <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../../styles/cliente/carta/clienteCartaDigital.css';
 import '../../../styles/cliente/carta/carritoView.css';
-// --- SERVICIOS ---
 import { getProductosByBar, getCategoriasByBar, getRacionesDisponibles } from '../../../services/menuService';
 import { crearSesionPago } from '../../../services/facturacionService';
-import { obtenerBarPorId } from '../../../services/barService'; // 1. IMPORTAR el servicio necesario.
+import { obtenerBarPorId } from '../../../services/barService'; 
 
 import Plato from "../../../img/PlatoDefault.png";
 import { useCarrito } from '../../../context/carritoContext';
@@ -45,10 +44,10 @@ const iconosCategoria = {
 };
 
 const ClienteCartaDigitalView = () => {
-  const [nombreBar, setNombreBar] = useState(''); // 2. AÑADIR estado para el nombre del bar.
+  const [nombreBar, setNombreBar] = useState('');
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('all'); // 'all' en lugar de 'Todos' para consistencia
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('all');
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
@@ -61,15 +60,14 @@ const ClienteCartaDigitalView = () => {
 
   useEffect(() => {
     const cargarCartaYBar = async () => {
-      if (!barId) { // Añadir una comprobación por si barId no está disponible
+      if (!barId) { 
         setError("No se ha especificado un bar.");
         setCargando(false);
         return;
       }
       setCargando(true);
-      setError(null); // Resetear error en cada carga
+      setError(null); 
       try {
-        // 3. OBTENER datos del bar y de la carta en paralelo para mayor eficiencia.
         const [barData, categoriasData, productosData] = await Promise.all([
             obtenerBarPorId(barId),
             getCategoriasByBar(barId),
@@ -77,16 +75,16 @@ const ClienteCartaDigitalView = () => {
         ]);
 
         if (barData && barData.nombre) {
-            setNombreBar(barData.nombre); // Guardar el nombre del bar en el estado.
+            setNombreBar(barData.nombre);
         } else {
-            setNombreBar(`Bar ${barId}`); // Fallback si no hay nombre
+            setNombreBar(`Bar ${barId}`);
             console.warn(`ClienteCartaDigitalView: Nombre del bar no encontrado para barId: ${barId}`);
         }
-        
-        setCategorias(categoriasData || []); // Asegurar que sea un array
+
+        setCategorias(categoriasData || []);
 
         const productosConRaciones = await Promise.all(
-          (productosData || []).map(async (p) => { // Asegurar que productosData sea un array
+          (productosData || []).map(async (p) => {
             try {
               const raciones = await getRacionesDisponibles(p.id);
               return { ...p, disponible: raciones > 0, raciones };
@@ -101,7 +99,7 @@ const ClienteCartaDigitalView = () => {
       } catch (err) {
         console.error("Error al cargar la carta y el bar:", err);
         setError("No se ha podido cargar la información. Inténtalo de nuevo más tarde.");
-        setNombreBar(`Bar ${barId}`); // Fallback en caso de error general
+        setNombreBar(`Bar ${barId}`);
       } finally {
         setCargando(false);
       }
@@ -148,13 +146,13 @@ const ClienteCartaDigitalView = () => {
       sessionStorage.setItem("mesaId", mesaId);
       
       const payload = {
-        cliente: `Mesa ${mesaId} - Bar ${barId}`, // Más info para el backend
+        cliente: `Mesa ${mesaId} - Bar ${barId}`,
         barId,
-        mesaId, // Enviar mesaId también si es relevante para la sesión de pago
+        mesaId,
         lineas: carrito.map(item => ({
           nombre: item.nombre,
           cantidad: item.cantidad,
-          precio: item.precio // Asegúrate que el precio aquí es el unitario
+          precio: item.precio
         }))
       };
 
@@ -179,7 +177,6 @@ const ClienteCartaDigitalView = () => {
     }
   };
   
-  // --- RENDERIZADO ---
   if (cargando) return <div className="carta-cargando"><i className="fas fa-spinner fa-spin"></i> Cargando carta...</div>;
   if (error) return <div className="carta-error"><i className="fas fa-exclamation-triangle"></i> {error}</div>;
 
@@ -195,7 +192,6 @@ const ClienteCartaDigitalView = () => {
       </Modal>
 
       <div className="carta-header">
-        {/* 4. MOSTRAR el nombre del bar en el título. */}
         <h2>Carta Digital{nombreBar && ` - ${nombreBar}`}</h2>
         <div className="carrito-y-confirmar">
           <button className="abrir-carrito" onClick={() => setCarritoAbierto(!carritoAbierto)}>

@@ -7,7 +7,7 @@ import {
   getCategoriasByBar
 } from "../../../services/menuService";
 import ProductoModal from "./ProductoModal";
-import "../../../styles/admin/carta/carta.css";
+import "../../../styles/admin/carta/admincarta.css";
 import Plato from "../../../img/PlatoDefault.png";
 import FrutoSeco from "../../../img/IconoAlergenoFrutosSecos.png";
 import Sulfitos from "../../../img/IconoAlergenoDioxidoAzufre.png";
