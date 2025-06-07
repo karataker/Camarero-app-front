@@ -8,12 +8,11 @@ import LocalesCliente from '../views/LocalesCliente';
 import LoginEmpleado from '../views/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
-import ClienteCartaView from '../views/ClienteCartaView';
+import ClienteCartaDigitalView from '../views/cliente/carta/ClienteCartaDigitalView';
 import ClienteComandas from '../views/ClienteComandasView';
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
-import EmpleadoInventarioView from '../views/EmpleadoInventarioView';
 import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/admin/mesas/EmpleadoMapaView';
@@ -21,6 +20,10 @@ import AdminUsuarioView from '../views/AdminUsuarioView';
 import AdminInventarioView from '../views/admin/inventario/AdminInventarioView';
 import AdminCartaView from '../views/admin/carta/AdminCartaView';
 import AdminComprasView from '../views/admin/Compras/AdminComprasView';
+import PagoExitoso from '../views/cliente/pagos/PagoExitoso';
+import PagoCancelado from '../views/cliente/pagos/PagoCancelado';
+
+
 
 const GlobalRouter = () => {
   const protectedRoute = (Component, tipo = 'admin') => (
@@ -35,10 +38,12 @@ const GlobalRouter = () => {
       <Route path="/" element={<HomeCliente />} />
       <Route path="/reservar" element={<ReservaCliente />} /> 
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
-      <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaView />} />
+      <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaDigitalView/>} />
       <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
       <Route path="/escanear" element={<EscanearQR />} />
       <Route path="/login-empleado" element={<LoginEmpleado />} />
+      <Route path="/cliente/pago-exitoso" element={<PagoExitoso />} />
+      <Route path="/cliente/pago-cancelado" element={<PagoCancelado />} />
 
       {/* Protected routes */}
       <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />

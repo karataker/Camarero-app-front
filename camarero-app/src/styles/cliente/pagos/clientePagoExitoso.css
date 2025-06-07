@@ -1,0 +1,37 @@
+.pago-exitoso-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.check-container {
+  background-color: #f8fdf9;
+  padding: 2rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.check-icon {
+  font-size: 4rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.btn-principal {
+  margin-top: 1.5rem;
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-principal:hover {
+  background-color: #00509e;
+}

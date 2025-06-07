@@ -1,0 +1,185 @@
+.carta-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.carrito-y-confirmar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.abrir-carrito {
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.abrir-carrito:hover {
+  background-color: #00509e;
+}
+
+.confirmar-pedido {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirmar-pedido:hover:enabled {
+  background-color: #218838;
+}
+
+.confirmar-pedido:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.carrito-drawer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  z-index: 999;
+  font-size: 0.9rem;
+}
+
+.carrito-drawer h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #003366;
+}
+
+.carrito-drawer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.carrito-drawer li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.carrito-drawer li:last-child {
+  border-bottom: none;
+}
+
+.carrito-drawer li .producto-nombre {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.carrito-drawer li button {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  margin-left: 10px;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.carrito-drawer li button:hover {
+  background-color: #eee;
+  color: #d00;
+}
+
+.carrito-drawer .total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: #28a745;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.carrito-drawer .enviar-btn {
+  margin-top: 0.8rem;
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.carrito-drawer .enviar-btn:hover:enabled {
+  background-color: #218838;
+}
+
+.carrito-drawer .enviar-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.carrito-drawer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carrito-drawer li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.carrito-quitar-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.carrito-quitar-btn:hover {
+  color: #d9534f;
+}
+
+.carrito-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+}

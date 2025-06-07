@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './hooks/useUser';
 import { BarProvider } from './context/BarContext';
 import { ComandaProvider } from './context/useComandas';
+import { CarritoProvider } from './context/carritoContext';
 import App from './App';
 import './styles/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -15,7 +16,9 @@ root.render(
     <UserProvider>
       <BarProvider>
         <ComandaProvider>
-          <App />
+          <CarritoProvider>
+            <App />
+          </CarritoProvider>
         </ComandaProvider>
       </BarProvider>
     </UserProvider>
