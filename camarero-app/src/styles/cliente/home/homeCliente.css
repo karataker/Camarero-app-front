@@ -33,6 +33,13 @@
     margin-bottom: 10px;
   }
   
+  .imagen-opcion {
+    width: 80px; /* Ajusta el tamaño según necesites */
+    height: 80px; /* Ajusta el tamaño según necesites */
+    object-fit: contain; /* Para asegurar que la imagen se vea bien sin distorsionarse */
+    margin-bottom: 10px;
+  }
+  
   .opcion p {
     font-size: 1.1rem;
     font-weight: bold;

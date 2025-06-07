@@ -4,7 +4,6 @@ import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../img/CamareroApp.png';
-// import InfoModal from './InfoModal'; // Comentado ya que no se usa
 import '../styles/header.css';
 
 const Header = () => {
@@ -15,15 +14,16 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (usuario && (usuario.tipo === 'ADMIN' || usuario.tipo === 'CAMARERO')) {
+    // Cargar bares solo si el usuario es relevante y está en una sección de admin
+    if (usuario && (usuario.tipo === 'ADMIN' || usuario.tipo === 'CAMARERO') && location.pathname.startsWith('/admin/')) {
       cargarBares();
     }
-  }, [usuario, cargarBares]);
+  }, [usuario, cargarBares, location.pathname]);
 
   const handleLogout = () => {
     setUsuario(null);
-    // setBarSeleccionado(null); // Opcional: resetear bar al hacer logout
-    window.location.href = '/';
+    setBarSeleccionado(null); // Resetear bar seleccionado
+    navigate('/'); // Usar navigate para la redirección
   };
 
   const handleChangeBar = (e) => {
@@ -36,39 +36,32 @@ const Header = () => {
     if (nuevoId) {
       if (currentPath.includes('/admin/bar/')) {
         nuevaRuta = currentPath.replace(/\/admin\/bar\/\d+/, `/admin\/bar\/${nuevoId}`);
-      } else if (currentPath.startsWith('/admin/')) {
-        if (currentPath === '/admin/home') {
-             nuevaRuta = `/admin/bar/${nuevoId}/panel`; 
-        }
+      } else if (currentPath === '/admin/home') { // Solo redirigir desde /admin/home
+        nuevaRuta = `/admin/bar/${nuevoId}/panel`;
       }
+      // No se cambia la ruta si se selecciona un bar desde otra página admin general (ej: /admin/usuarios)
     } else {
-        if (currentPath.includes('/admin/bar/')) {
-            nuevaRuta = '/admin/home';
-        }
+      // Si se deselecciona el bar y estamos en una ruta específica de bar, ir a /admin/home
+      if (currentPath.includes('/admin/bar/')) {
+        nuevaRuta = '/admin/home';
+      }
     }
-    
-    if (nuevaRuta !== currentPath && nuevaRuta) { 
+
+    if (nuevaRuta !== currentPath && nuevaRuta) {
       navigate(nuevaRuta, { replace: true });
     }
   };
-  
-  // Rutas o patrones de rutas públicas donde no se deben mostrar los elementos específicos de admin
-  const patronesRutasPublicasSinElementosAdmin = [
-    '/', // HomeCliente
-    '/reservar', // ReservaCliente
-    '/escanear', // EscanearQR
-    '/cliente/' // Cualquier ruta que comience con /cliente/ (como ClienteCartaView, ClienteComandas)
-  ];
 
-  const ocultarElementosAdmin = patronesRutasPublicasSinElementosAdmin.some(patron => 
-    location.pathname === patron || (patron.endsWith('/') && location.pathname.startsWith(patron))
-  );
+  const esRutaAdmin = location.pathname.startsWith('/admin/');
+  // Los elementos de admin (selector de bar, icono home admin) se muestran si:
+  // 1. El usuario es ADMIN
+  // 2. La ruta actual es una ruta de admin
+  const mostrarComponentesAdmin = usuario?.tipo === 'ADMIN' && esRutaAdmin;
 
-  if (loadingUser && !ocultarElementosAdmin) { 
-     return <header className="header"><div>Cargando...</div></header>;
+  // Mostrar loader solo en rutas admin si el usuario está cargando
+  if (loadingUser && esRutaAdmin) {
+    return <header className="header"><div>Cargando...</div></header>;
   }
-
-  const esAdmin = usuario?.tipo === 'ADMIN';
 
   return (
     <>
@@ -83,8 +76,8 @@ const Header = () => {
         </div>
 
         <div className="header-section header-center">
-          {/* Mostrar selector de bar solo si es Admin y NO está en una ruta pública designada */}
-          {esAdmin && !ocultarElementosAdmin && (
+          {/* Mostrar selector de bar si corresponde */}
+          {mostrarComponentesAdmin && (
             <div className="bar-selector-header">
               <label htmlFor="barSelect">Bar:</label>
               <select
@@ -104,7 +97,7 @@ const Header = () => {
 
         <div className="header-section header-right">
           <nav className="nav">
-            {!usuario && (
+            {!usuario && location.pathname !== '/login-empleado' && (
               <Link to="/login-empleado" className="empleado-icon" title="Login empleado">
                 <i className="fas fa-sign-in-alt"></i>
               </Link>
@@ -112,13 +105,13 @@ const Header = () => {
 
             {usuario?.tipo && (
               <>
-                {/* Mostrar icono de home admin solo si es Admin y NO está en una ruta pública designada */}
-                {esAdmin && !ocultarElementosAdmin && (
+                {/* Mostrar icono de home admin si corresponde y no estamos ya en /admin/home */}
+                {mostrarComponentesAdmin && location.pathname !== '/admin/home' && (
                   <Link to="/admin/home" className="header-link home-link" title="Inicio Admin">
                     <i className="fas fa-home"></i>
                   </Link>
                 )}
-                
+
                 <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
                   <i className="fas fa-sign-out-alt"></i>
                 </button>

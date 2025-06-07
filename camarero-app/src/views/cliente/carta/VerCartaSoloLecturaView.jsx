@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import '../../../styles/cliente/carta/clienteCartaDigital.css';
-import '../../../styles/cliente/carta/carritoView.css';
+import '../../../styles/cliente/carta/clienteCartaDigital.css'; // Reutilizamos estilos
 // --- SERVICIOS ---
 import { getProductosByBar, getCategoriasByBar, getRacionesDisponibles } from '../../../services/menuService';
-import { crearSesionPago } from '../../../services/facturacionService';
-import { obtenerBarPorId } from '../../../services/barService'; // 1. IMPORTAR el servicio necesario.
+import { obtenerBarPorId } from '../../../services/barService';
 
 import Plato from "../../../img/PlatoDefault.png";
-import { useCarrito } from '../../../context/carritoContext';
-import { loadStripe } from '@stripe/stripe-js';
-import Modal from '../../../components/Modal';
+// No se necesita useCarrito ni loadStripe ni Modal para confirmación
 
 import FrutoSeco from "../../../img/IconoAlergenoFrutosSecos.png";
 import Sulfitos from "../../../img/IconoAlergenoDioxidoAzufre.png";
 import Gluten from "../../../img/IconoAlergenoGluten.png";
 import Lacteo from "../../../img/IconoAlergenoLacteos.png";
 import Huevo from "../../../img/IconoAlergenoHuevo.png";
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const iconosAlergenos = {
   gluten: Gluten,
@@ -44,32 +38,27 @@ const iconosCategoria = {
   Todos: "fa-th"
 };
 
-const ClienteCartaDigitalView = () => {
-  const [nombreBar, setNombreBar] = useState(''); // 2. AÑADIR estado para el nombre del bar.
+const VerCartaSoloLecturaView = () => {
+  const [nombreBar, setNombreBar] = useState('');
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('all'); // 'all' en lugar de 'Todos' para consistencia
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('all');
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
-  const [addedItemId, setAddedItemId] = useState(null);
-  const [carritoAbierto, setCarritoAbierto] = useState(false);
-  const [mostrarModal, setMostrarModal] = useState(false);
 
-  const { barId, mesaId } = useParams();
-  const { carrito, agregarProducto, quitarProducto, vaciarCarrito } = useCarrito();
+  const { barId } = useParams(); // Solo necesitamos barId
 
   useEffect(() => {
     const cargarCartaYBar = async () => {
-      if (!barId) { // Añadir una comprobación por si barId no está disponible
+      if (!barId) {
         setError("No se ha especificado un bar.");
         setCargando(false);
         return;
       }
       setCargando(true);
-      setError(null); // Resetear error en cada carga
+      setError(null);
       try {
-        // 3. OBTENER datos del bar y de la carta en paralelo para mayor eficiencia.
         const [barData, categoriasData, productosData] = await Promise.all([
             obtenerBarPorId(barId),
             getCategoriasByBar(barId),
@@ -77,16 +66,16 @@ const ClienteCartaDigitalView = () => {
         ]);
 
         if (barData && barData.nombre) {
-            setNombreBar(barData.nombre); // Guardar el nombre del bar en el estado.
+            setNombreBar(barData.nombre);
         } else {
-            setNombreBar(`Bar ${barId}`); // Fallback si no hay nombre
-            console.warn(`ClienteCartaDigitalView: Nombre del bar no encontrado para barId: ${barId}`);
+            setNombreBar(`Bar ${barId}`);
+            console.warn(`VerCartaSoloLecturaView: Nombre del bar no encontrado para barId: ${barId}`);
         }
         
-        setCategorias(categoriasData || []); // Asegurar que sea un array
+        setCategorias(categoriasData || []);
 
         const productosConRaciones = await Promise.all(
-          (productosData || []).map(async (p) => { // Asegurar que productosData sea un array
+          (productosData || []).map(async (p) => {
             try {
               const raciones = await getRacionesDisponibles(p.id);
               return { ...p, disponible: raciones > 0, raciones };
@@ -96,12 +85,11 @@ const ClienteCartaDigitalView = () => {
             }
           })
         );
-
         setProductos(productosConRaciones);
       } catch (err) {
         console.error("Error al cargar la carta y el bar:", err);
         setError("No se ha podido cargar la información. Inténtalo de nuevo más tarde.");
-        setNombreBar(`Bar ${barId}`); // Fallback en caso de error general
+        setNombreBar(`Bar ${barId}`);
       } finally {
         setCargando(false);
       }
@@ -128,83 +116,17 @@ const ClienteCartaDigitalView = () => {
       )}
     </div>
   );
-
-  const handleAddClick = (producto) => {
-    agregarProducto(producto);
-    setAddedItemId(producto.id);
-    setTimeout(() => setAddedItemId(null), 1000);
-  };
-
-  const confirmarYRedirigirAPago = async () => {
-    try {
-      const stripe = await stripePromise;
-      if (!stripe) {
-        console.error("Stripe.js no se ha cargado.");
-        alert("Error al procesar el pago: Stripe no disponible.");
-        return;
-      }
-
-      sessionStorage.setItem("barId", barId);
-      sessionStorage.setItem("mesaId", mesaId);
-      
-      const payload = {
-        cliente: `Mesa ${mesaId} - Bar ${barId}`, // Más info para el backend
-        barId,
-        mesaId, // Enviar mesaId también si es relevante para la sesión de pago
-        lineas: carrito.map(item => ({
-          nombre: item.nombre,
-          cantidad: item.cantidad,
-          precio: item.precio // Asegúrate que el precio aquí es el unitario
-        }))
-      };
-
-      const response = await crearSesionPago(payload);
-      const sessionId = response.id;
-
-      if (!sessionId) {
-        console.error("No se recibió sessionId de la API de pago.");
-        alert("Error al crear la sesión de pago.");
-        return;
-      }
-
-      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
-
-      if (stripeError) {
-        console.error("Error al redirigir a Stripe Checkout:", stripeError);
-        alert(`Error de Stripe: ${stripeError.message}`);
-      }
-    } catch (error) {
-      console.error("Error al redirigir a Stripe:", error);
-      alert("Ocurrió un error al procesar el pago.");
-    }
-  };
   
-  // --- RENDERIZADO ---
   if (cargando) return <div className="carta-cargando"><i className="fas fa-spinner fa-spin"></i> Cargando carta...</div>;
   if (error) return <div className="carta-error"><i className="fas fa-exclamation-triangle"></i> {error}</div>;
 
   return (
     <>
-      <Modal isOpen={mostrarModal} onClose={() => setMostrarModal(false)}>
-        <h2>¿Confirmar pedido?</h2>
-        <p>¿Estás seguro de que quieres enviar el pedido y proceder al pago?</p>
-        <div className="modal-botones-confirmacion">
-          <button className="btn-secundario" onClick={() => setMostrarModal(false)}>Cancelar</button>
-          <button className="btn-principal" onClick={confirmarYRedirigirAPago}>Pagar ahora</button>
-        </div>
-      </Modal>
+      {/* No hay Modal de confirmación de pedido */}
 
       <div className="carta-header">
-        {/* 4. MOSTRAR el nombre del bar en el título. */}
         <h2>Carta Digital{nombreBar && ` - ${nombreBar}`}</h2>
-        <div className="carrito-y-confirmar">
-          <button className="abrir-carrito" onClick={() => setCarritoAbierto(!carritoAbierto)}>
-            <i className="fas fa-shopping-cart"></i> <span>{carrito.length}</span>
-          </button>
-          <button className="confirmar-pedido" onClick={() => setMostrarModal(true)} disabled={carrito.length === 0}>
-            Confirmar Pedido
-          </button>
-        </div>
+        {/* No hay botones de carrito ni confirmar pedido */}
         <div className="carta-busqueda">
           <input
             type="text"
@@ -216,31 +138,7 @@ const ClienteCartaDigitalView = () => {
         </div>
       </div>
 
-      {carritoAbierto && (
-        <div className="carrito-drawer">
-          <h3 className="carrito-titulo">Tu pedido</h3>
-          {carrito.length === 0 ? (
-            <p className="carrito-vacio">Tu carrito está vacío.</p>
-          ) : (
-            <ul className="carrito-lista">
-              {carrito.map((item) => (
-                <li key={item.id} className="carrito-item">
-                  <span>{item.nombre} x{item.cantidad} - {(item.precio * item.cantidad).toFixed(2)}€</span>
-                  <button className="carrito-quitar-btn" onClick={() => quitarProducto(item.id)} title="Eliminar">
-                    <i className="fas fa-times"></i>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          {carrito.length > 0 && (
-            <div className="carrito-total">
-              <span>Total:</span>
-              <strong>{carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0).toFixed(2)}€</strong>
-            </div>
-          )}
-        </div>
-      )}
+      {/* No hay drawer de carrito */}
 
       <div className="carta-digital">
         <div className="categorias-tabs">
@@ -281,16 +179,10 @@ const ClienteCartaDigitalView = () => {
                   <div className="producto-footer">
                     <div className="producto-precio">
                       {producto.precio.toFixed(2)} €
-                      {addedItemId === producto.id && (
-                        <span className="producto-anadido">Añadido</span>
-                      )}
+                      {/* No hay indicador de "Añadido" */}
                     </div>
                     {renderAlergenos(producto)}
-                    {producto.disponible && (
-                      <button className="add-to-order" onClick={() => handleAddClick(producto)}>
-                        <i className="fas fa-plus"></i>
-                      </button>
-                    )}
+                    {/* No hay botón de "Añadir al pedido" */}
                   </div>
                 </div>
               </div>
@@ -302,4 +194,4 @@ const ClienteCartaDigitalView = () => {
   );
 };
 
-export default ClienteCartaDigitalView;
+export default VerCartaSoloLecturaView;

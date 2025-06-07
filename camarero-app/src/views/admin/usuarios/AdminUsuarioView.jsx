@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import usuarioService from '../services/usuarioService';
-import '../styles/adminUsuarioView.css';
+import usuarioService from '../../../services/usuarioService';
+import '../../../styles/admin/usuarios/adminUsuarioView.css';
 
 const AdminUsuarioView = () => {
   const { barId } = useParams();
