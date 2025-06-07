@@ -118,5 +118,5 @@ export const obtenerBarPorId = async (barId) => {
     const errorBody = await res.text(); // Optional: get more detailed error from response
     throw new Error(`Error al obtener la información del bar: ${errorBody}`); //
   }
-  return res.json(); //
+  return res.json();
 };

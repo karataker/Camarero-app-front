@@ -12,3 +12,12 @@ export const crearSesionPago = async (facturaPayload) => {
   if (!res.ok) throw new Error("Error al crear la sesión de pago");
   return res.json(); // { url: "https://checkout.stripe.com/..." }
 };
+
+/**
+ * Llama al backend para confirmar una comanda completa.
+ * @param {Object} comandaPayload - Cliente, barId, mesa, items.
+ */
+export const confirmarComanda = async (comandaPayload) => {
+  const res = await request("/pedidos/comandas/confirmar", comandaPayload, "POST");
+  if (!res.ok) throw new Error("Error al confirmar la comanda");
+};

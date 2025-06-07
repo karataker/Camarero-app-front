@@ -146,6 +146,7 @@ const ClienteCartaDigitalView = () => {
 
       sessionStorage.setItem("barId", barId);
       sessionStorage.setItem("mesaId", mesaId);
+      sessionStorage.setItem("carrito", JSON.stringify(carrito));
       
       const payload = {
         cliente: `Mesa ${mesaId} - Bar ${barId}`, // Más info para el backend
