@@ -1,18 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Agregado useEffect
 import { useParams, useNavigate } from 'react-router-dom';
 import CartaDigital from '../components/CartaDigital';
 import '../styles/clienteCartaView.css';
 import { useComandas } from '../context/useComandas';
+import { obtenerBarPorId } from '../services/barService'; // Asume que esta función existe
 
 const ClienteCartaView = () => {
   const [pedidoActual, setPedidoActual] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [comensalesInput, setComensalesInput] = useState('');
+  const [nombreBar, setNombreBar] = useState(''); // Nuevo estado para el nombre del bar
+  const [cargandoNombreBar, setCargandoNombreBar] = useState(true); // Estado de carga
 
   const { agregarComanda, comensales, setComensales } = useComandas();
   const { mesaId, barId } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const cargarNombreBar = async () => {
+      if (barId) {
+        try {
+          setCargandoNombreBar(true);
+          const barData = await obtenerBarPorId(barId); // Llama al servicio
+          setNombreBar(barData.nombre || `Bar ${barId}`); // Usa el nombre o un fallback
+        } catch (error) {
+          console.error("Error al cargar el nombre del bar:", error);
+          setNombreBar(`Bar ${barId}`); // Fallback en caso de error
+        } finally {
+          setCargandoNombreBar(false);
+        }
+      }
+    };
+    cargarNombreBar();
+  }, [barId]); // Dependencia: barId
 
   const handleAddToOrder = (producto) => {
     setPedidoActual(prev => {
@@ -32,12 +53,13 @@ const ClienteCartaView = () => {
       estado: 'en_preparacion',
       estimado: '15 minutos',
       items: pedidoActual.map(p => {
+        // Simulación de disponibilidad y recogida para el ejemplo
         const rand = Math.random();
         return {
           nombre: p.nombre,
           cantidad: p.cantidad,
-          disponible: rand > 0.3,
-          recogido: rand > 0.75
+          disponible: rand > 0.3, // Simulación
+          recogido: rand > 0.75   // Simulación
         };
       })
     };
@@ -81,7 +103,7 @@ const ClienteCartaView = () => {
   return (
     <div className="cliente-carta-view">
       <div className="cliente-info-bar">
-        <h2>Mesa {mesaId}</h2>
+        <h2>{cargandoNombreBar ? `Cargando bar...` : nombreBar} - Mesa {mesaId}</h2>
         <div className="pedido-resumen">
           <button className="carrito-toggle" onClick={() => setMostrarCarrito(!mostrarCarrito)}>
             <i className="fas fa-shopping-cart"></i> {pedidoActual.length}

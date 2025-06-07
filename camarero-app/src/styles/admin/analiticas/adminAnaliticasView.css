@@ -1,0 +1,167 @@
+.admin-analiticas-view {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 85vh;
+}
+
+.admin-analiticas-view h1 {
+  font-size: 2rem;
+  color: #003366;
+  margin-bottom: 20px;
+}
+
+.filtros {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: end;
+}
+
+.filtro-analisis {
+  display: flex;
+  flex-direction: column;
+}
+
+.botones-analisis {
+  display: flex;
+  gap: 10px;
+}
+
+.botones-analisis button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.botones-analisis button.activo {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.filtro-ano label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.filtro-ano select {
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filtro-acumulado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filtro-acumulado label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.switch-acumulado {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.analiticas-resumen {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2EAD63;
+}
+
+.analiticas-detalles {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.analiticas-detalles h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.analiticas-detalles ul {
+  list-style: none;
+  padding: 0;
+}
+
+.analiticas-detalles li {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.analiticas-graficos {
+  margin-top: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.grafico-analisis {
+  margin-top: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.grafico-analisis h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.filtro-categoria {
+  display: flex;
+  flex-direction: column;
+}
+
+.filtro-categoria label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.filtro-categoria select {
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
