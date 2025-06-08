@@ -6,6 +6,23 @@
 
 .filtros-pedidos {
   margin: 20px 0;
+  display: flex;
+  gap: 24px; /* Espacio entre grupos de filtros */
+  align-items: flex-start; /* Alinear al inicio verticalmente */
+  flex-wrap: wrap; /* Permitir que los filtros se ajusten en pantallas pequeñas */
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column; /* Etiqueta arriba, control abajo */
+  gap: 8px; /* Espacio entre la etiqueta y el control del filtro */
+}
+
+.filtro-label {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 4px; /* Pequeño espacio si la etiqueta está en la misma línea */
 }
 
 /* Estilos uniformes para todos los filtros */
@@ -37,6 +54,105 @@
   padding: 8px 16px;
   border-radius: 4px;
   border: 1px solid #ddd;
+}
+
+/* Estilos para las facetas de estado */
+.filtro-estado-facetas {
+  display: flex;
+  gap: 8px; /* Espacio entre botones de faceta */
+  flex-wrap: wrap; /* Permitir que los botones se ajusten */
+}
+
+.boton-faceta-estado {
+  padding: 8px 16px;
+  border-radius: 20px; /* Estilo píldora */
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  user-select: none; /* Evitar selección de texto al hacer clic rápido */
+}
+
+.boton-faceta-estado:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.boton-faceta-estado.activo {
+  background-color: #3498db; /* Azul (coincide con 'en_preparacion' activo de las fases) */
+  color: white;
+  border-color: #3498db;
+  font-weight: 500; /* O 600 si prefieres más énfasis */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Estilos genéricos para los select restantes */
+.filtro-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9em;
+  background: #fafafa;
+  color: #222;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  min-width: 180px; /* Ancho mínimo para los selects */
+}
+
+.filtro-select:focus {
+  border-color: #3498db; /* Coincidir con el color activo de las facetas */
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.filtro-mesas-minimapa {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Ajusta minmax para el tamaño deseado */
+  gap: 10px; /* Espacio entre mesas */
+  max-width: 600px; /* Opcional: limita el ancho del contenedor del minimapa */
+}
+
+.mini-mesa-item {
+  padding: 10px 5px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.85em;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  color: #495057;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.mini-mesa-item:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.mini-mesa-item.activo {
+  background-color: #28a745; /* Un verde para la mesa activa, puedes cambiarlo */
+  color: white;
+  border-color: #28a745;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-texto-filtro {
+  color: #d9534f; /* Rojo para errores */
+  font-size: 0.9em;
+}
+
+.info-texto-filtro {
+  font-size: 0.9em;
+  color: #555;
+  grid-column: 1 / -1; /* Para que ocupe todo el ancho si no hay mesas */
+  text-align: center;
 }
 
 .pedidos-grid {
