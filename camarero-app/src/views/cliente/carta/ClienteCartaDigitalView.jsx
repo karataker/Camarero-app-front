@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Añadir useNavigate
 import '../../../styles/cliente/carta/clienteCartaDigital.css';
 import '../../../styles/cliente/carta/carritoView.css';
 import { getProductosByBar, getCategoriasByBar, getRacionesDisponibles } from '../../../services/menuService';
@@ -56,7 +56,8 @@ const ClienteCartaDigitalView = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const { barId, mesaId } = useParams();
-  const { carrito, agregarProducto, quitarProducto, vaciarCarrito } = useCarrito();
+  const navigate = useNavigate(); // Inicializar useNavigate
+  const { carrito, agregarProducto, quitarProducto, vaciarCarrito, calcularTotal } = useCarrito(); // Asegúrate de tener calcularTotal o similar
 
   useEffect(() => {
     const cargarCartaYBar = async () => {
@@ -184,8 +185,8 @@ const ClienteCartaDigitalView = () => {
   return (
     <>
       <Modal isOpen={mostrarModal} onClose={() => setMostrarModal(false)}>
-        <h2>¿Confirmar pedido?</h2>
-        <p>¿Estás seguro de que quieres enviar el pedido y proceder al pago?</p>
+        <h2>¿Confirmar comanda?</h2>
+        <p>¿Estás seguro de que quieres enviar la comanda y proceder al pago?</p>
         <div className="modal-botones-confirmacion">
           <button className="btn-secundario" onClick={() => setMostrarModal(false)}>Cancelar</button>
           <button className="btn-principal" onClick={confirmarYRedirigirAPago}>Pagar ahora</button>
@@ -195,12 +196,13 @@ const ClienteCartaDigitalView = () => {
       <div className="carta-header">
         <h2>Carta Digital{nombreBar && ` - ${nombreBar}`}</h2>
         <div className="carrito-y-confirmar">
+          <button className="btn-mis-pedidos" onClick={() => navigate(`/cliente/${barId}/${mesaId}/comandas`)} title="Ver mis comandas">
+            <i className="fas fa-receipt"></i> Mis Comandas
+          </button>
           <button className="abrir-carrito" onClick={() => setCarritoAbierto(!carritoAbierto)}>
             <i className="fas fa-shopping-cart"></i> <span>{carrito.length}</span>
           </button>
-          <button className="confirmar-pedido" onClick={() => setMostrarModal(true)} disabled={carrito.length === 0}>
-            Confirmar Pedido
-          </button>
+          {/* El botón "Confirmar Pedido" se ha movido de aquí */}
         </div>
         <div className="carta-busqueda">
           <input
@@ -215,7 +217,12 @@ const ClienteCartaDigitalView = () => {
 
       {carritoAbierto && (
         <div className="carrito-drawer">
-          <h3 className="carrito-titulo">Tu pedido</h3>
+          <div className="carrito-drawer-header">
+            <h3 className="carrito-titulo">Tu pedido</h3>
+            <button className="carrito-cerrar-btn" onClick={() => setCarritoAbierto(false)} title="Cerrar carrito">
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
           {carrito.length === 0 ? (
             <p className="carrito-vacio">Tu carrito está vacío.</p>
           ) : (
@@ -231,10 +238,21 @@ const ClienteCartaDigitalView = () => {
             </ul>
           )}
           {carrito.length > 0 && (
-            <div className="carrito-total">
-              <span>Total:</span>
-              <strong>{carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0).toFixed(2)}€</strong>
-            </div>
+            <>
+              <div className="carrito-total">
+                <span>Total:</span>
+                <strong>{carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0).toFixed(2)}€</strong>
+              </div>
+              {/* Botón "Confirmar Pedido" movido aquí DENTRO del carrito-drawer */}
+              <div className="carrito-acciones-footer">
+                <button className="btn-vaciar-carrito-drawer" onClick={vaciarCarrito}>
+                  Vaciar Carrito
+                </button>
+                <button className="confirmar-pedido-drawer" onClick={() => { setMostrarModal(true); setCarritoAbierto(false); }} disabled={carrito.length === 0}>
+                  Confirmar Pedido
+                </button>
+              </div>
+            </>
           )}
         </div>
       )}

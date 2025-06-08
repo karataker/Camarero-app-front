@@ -5,13 +5,12 @@ import ReservaCliente from '../views/cliente/reservas/ReservaCliente';
 import EscanearQRAsignarMesa from '../views/cliente/qr/EscanearQRAsignarmesa';
 import EscanearQRVerCarta from '../views/cliente/qr/EscanearQRVerCarta';
 import FormularioPedido from '../views/FormularioPedido';
-import LocalesCliente from '../views/LocalesCliente';
-import LoginEmpleado from '../views/LoginEmpleado';
+import LoginEmpleado from '../views/admin/login/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
 import ClienteCartaDigitalView from '../views/cliente/carta/ClienteCartaDigitalView';
 import ClienteCartaSoloLecturaView from '../views/cliente/carta/ClienteCartaSoloLecturaView';
-import ClienteComandas from '../views/ClienteComandasView';
+import ClienteComandasView from '../views/cliente/comandas/ClienteComandasView'; 
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
@@ -41,7 +40,7 @@ const GlobalRouter = () => {
       <Route path="/reservar" element={<ReservaCliente />} /> 
       <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
       <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaDigitalView/>} />
-      <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandas />} />
+      <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandasView />} />
       <Route path="/escanear" element={<EscanearQRAsignarMesa />} /> 
       <Route path="/login-empleado" element={<LoginEmpleado />} />
       <Route path="/cliente/pago-exitoso" element={<PagoExitoso />} />
@@ -50,7 +49,6 @@ const GlobalRouter = () => {
       <Route path="/ver-carta/:barId" element={<ClienteCartaSoloLecturaView/>} />
 
       {/* Protected routes */}
-      <Route path="/cliente/locales" element={protectedRoute(LocalesCliente, 'cliente')} />
       <Route path="/admin/home" element={protectedRoute(HomeEmpleado)} /> 
       <Route path="/admin/bar/:barId/carta" element={protectedRoute(AdminCartaView)} />
       <Route path="/admin/bar/:barId/panel" element={protectedRoute(EmpleadoMapaView)} />

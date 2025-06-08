@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { login } from "../services/apiClient";
-import { useUser } from "../hooks/useUser";
+import { login } from "../../../services/apiClient";
+import { useUser } from "../../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
-import "../styles/login.css"; 
+import "../../../styles/admin/login/login.css"; 
 
 const LoginEmpleado = () => {
   const [matricula, setMatricula] = useState("");

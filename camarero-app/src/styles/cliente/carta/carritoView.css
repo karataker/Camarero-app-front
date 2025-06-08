@@ -64,6 +64,32 @@
   font-size: 0.9rem;
 }
 
+.carrito-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+
+.carrito-titulo {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.carrito-cerrar-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.carrito-cerrar-btn:hover {
+  color: #333;
+}
+
 .carrito-drawer h3 {
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
@@ -182,4 +208,36 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #28a745;
+}
+
+.confirmar-pedido-drawer,
+.btn-vaciar-carrito-drawer {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirmar-pedido-drawer {
+  background-color: #28a745; /* Verde */
+  color: white;
+}
+
+.confirmar-pedido-drawer:hover {
+  background-color: #218838;
+}
+
+.confirmar-pedido-drawer:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-vaciar-carrito-drawer {
+  background-color: #dc3545; /* Rojo */
+  color: white;
+}
+
+.btn-vaciar-carrito-drawer:hover {
+  background-color: #c82333;
 }

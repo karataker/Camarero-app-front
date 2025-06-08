@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/login.css'; // Reutilizamos estilos básicos
+import '../styles/admin/login/login.css'; // Reutilizamos estilos básicos
 
 const NotFound = () => {
   return (
