@@ -4,7 +4,6 @@ import HomeCliente from '../views/cliente/home/HomeCliente';
 import ReservaCliente from '../views/cliente/reservas/ReservaCliente';
 import EscanearQRAsignarMesa from '../views/cliente/qr/EscanearQRAsignarmesa';
 import EscanearQRVerCarta from '../views/cliente/qr/EscanearQRVerCarta';
-import FormularioPedido from '../views/FormularioPedido';
 import LoginEmpleado from '../views/admin/login/LoginEmpleado';
 import PrivateRoute from '../components/PrivateRoute';
 import NotFound from '../views/NotFound';
@@ -12,7 +11,7 @@ import ClienteCartaDigitalView from '../views/cliente/carta/ClienteCartaDigitalV
 import ClienteCartaSoloLecturaView from '../views/cliente/carta/ClienteCartaSoloLecturaView';
 import ClienteComandasView from '../views/cliente/comandas/ClienteComandasView'; 
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
-import EmpleadoPedidosView from '../views/EmpleadoPedidosView';
+import EmpleadoComandasView from '../views/admin/comandas/EmpleadoComandasView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
 import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
@@ -38,7 +37,6 @@ const GlobalRouter = () => {
       {/* Public routes */}
       <Route path="/" element={<HomeCliente />} />
       <Route path="/reservar" element={<ReservaCliente />} /> 
-      <Route path="/bar/:barId/mesa/:mesaId" element={<FormularioPedido />} />
       <Route path="/cliente/:barId/:mesaId" element={<ClienteCartaDigitalView/>} />
       <Route path="/cliente/:barId/:mesaId/comandas" element={<ClienteComandasView />} />
       <Route path="/escanear" element={<EscanearQRAsignarMesa />} /> 
@@ -53,7 +51,7 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/carta" element={protectedRoute(AdminCartaView)} />
       <Route path="/admin/bar/:barId/panel" element={protectedRoute(EmpleadoMapaView)} />
       <Route path="/admin/bar/:barId/reservas" element={protectedRoute(EmpleadoReservasView)} /> 
-      <Route path="/admin/bar/:barId/pedidos" element={protectedRoute(EmpleadoPedidosView)} />
+      <Route path="/admin/bar/:barId/pedidos" element={protectedRoute(EmpleadoComandasView)} />
       <Route path="/admin/bar/:barId/inventario" element={protectedRoute(AdminInventarioView)} />
       <Route path="/admin/bar/:barId/compras" element={protectedRoute(AdminComprasView)} />
       <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />

@@ -1,0 +1,273 @@
+.empleado-pedidos-view {
+  padding: 20px;
+  background: #f7f7f7;
+  min-height: 100vh;
+}
+
+.filtros-pedidos {
+  margin: 20px 0;
+}
+
+/* Estilos uniformes para todos los filtros */
+.filtros-pedidos select {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  background: #fafafa;
+  color: #222;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  margin: 0;
+}
+
+.filtros-pedidos select:focus {
+  border-color: #b9f6ca;
+  box-shadow: 0 0 0 2px #b9f6ca33;
+}
+
+.filtro-estado {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.filtro-orden-hora {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.pedido-card {
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  /* Se mantiene el borde izquierdo, pero su color se definirá por el estado del pedido si es necesario, o un color base */
+  border-left: 4px solid #ddd; /* Color de borde izquierdo base, puede ser sobrescrito por estado específico */
+  background: #fff !important; /* Fondo blanco por defecto para la tarjeta */
+  transition: box-shadow 0.2s;
+}
+
+/* Sombreado para pedidos abiertos y cerrados - ELIMINADO/COMENTADO */
+/*
+.pedido-card.abierto {
+  background: #fff4f4 !important;
+  border-left-color: #ffb3b3 !important;
+}
+
+.pedido-card.cerrado {
+  background: #f4fff7 !important;
+  border-left-color: #b9f6ca !important;
+}
+*/
+
+/* Estilos para el borde izquierdo según el estado general del pedido */
+/* Estos pueden mantenerse si quieres un indicador visual del estado en el borde */
+.pedido-card.estado-pendiente {
+  border-left-color: #f39c12 !important; /* Naranja/Ámbar */
+}
+.pedido-card.estado-en_preparacion {
+  border-left-color: #3498db !important; /* Azul distintivo */
+}
+.pedido-card.estado-listo {
+  border-left-color: #2ecc71 !important; /* Verde brillante */
+}
+.pedido-card.estado-entregado {
+  border-left-color: #6c757d !important; /* Gris oscuro/Carbón */
+  opacity: 0.9; /* Opcional: ligera opacidad para pedidos ya entregados */
+}
+
+
+/* Quitar sombreado y color de fondo/borde del estado general del pedido */
+/* Esta sección parece redundante o conflictiva con la anterior, la comento/elimino */
+/*
+.estado-pendiente,
+.estado-preparacion,
+.estado-listo,
+.estado-entregado {
+  border-left-color: #ddd !important;
+  background-color: transparent !important;
+  opacity: 1;
+}
+*/
+
+.item-estado {
+  margin-left: auto;
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #f0f0f0;
+}
+
+.estado-pendiente .item-estado { color: #e74c3c; background: #ffeded; }
+.estado-preparacion .item-estado { color: #f39c12; background: #fff8e1; }
+.estado-listo .item-estado { color: #2ecc71; background: #e6f9ed; }
+.estado-entregado .item-estado { color: #6c63ff; background: #ecebff; }
+
+.item-fase {
+  margin-right: 2px;
+  user-select: none;
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.pedido-header h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.pedido-hora {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.pedido-tiempo {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.pedido-items {
+  margin-bottom: 15px;
+}
+
+.pedido-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.item-cantidad {
+  color: #666;
+  min-width: 30px;
+  flex-shrink: 0;
+}
+
+.item-nombre {
+  flex: 1 1 120px;
+  min-width: 80px;
+  word-break: break-word;
+}
+
+/* Estilos para las fases de los ítems de pedido */
+
+.item-fases {
+  display: flex;
+  gap: 4px; /* Espacio entre los botones de fase */
+  margin-left: auto; /* Empuja las fases a la derecha dentro de .pedido-item */
+  flex-wrap: wrap; /* Permite que las fases pasen a la siguiente línea si no caben */
+}
+
+.item-fase {
+  padding: 5px 10px;
+  border-radius: 15px; /* Más redondeado */
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  min-width: 80px; /* Ancho mínimo para el texto */
+  border: 1px solid #dcdcdc; /* Borde base sutil pero visible */
+  background-color: #f8f9fa; /* Fondo base muy claro, pero no transparente */
+  color: #5a6268;             /* Color de texto base legible */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+  opacity: 1; /* Asegurar que no haya opacidad por defecto */
+}
+
+/* Estilo para fases completadas (anteriores a la activa) */
+.item-fase.fase-completada {
+  background-color: #e9ecef; /* Un gris claro, pero más sólido */
+  color: #495057;             /* Texto gris oscuro */
+  border-color: #ced4da;       /* Borde gris claro */
+  /* Quitar la opacidad si la tenía para mejorar legibilidad */
+}
+
+/* Estilos para la FASE ACTIVA específica - ¡CLARO Y MARCADO! */
+/* Se elimina el .item-fase.fase-activa genérico si no aporta valor sobre los específicos */
+
+.item-fase.fase-pendiente.fase-activa {
+  background-color: #f39c12; /* Naranja/Ámbar */
+  color: white;
+  border: 1.5px solid #e67e22; /* Borde naranja más oscuro */
+  font-weight: 600;
+}
+
+.item-fase.fase-en_preparacion.fase-activa {
+  background-color: #3498db; /* Azul distintivo */
+  color: white;
+  border: 1.5px solid #2980b9; /* Borde azul más oscuro */
+  font-weight: 600;
+}
+
+.item-fase.fase-listo.fase-activa {
+  background-color: #2ecc71; /* Verde brillante */
+  color: white;
+  border: 1.5px solid #27ae60; /* Borde verde más oscuro */
+  font-weight: 600;
+}
+
+.item-fase.fase-entregado.fase-activa,
+.item-fase.fase-entregado.fase-completada { /* Entregado siempre se verá como "finalizado" */
+  background-color: #6c757d; /* Gris oscuro/Carbón */
+  color: white;
+  border: 1.5px solid #5a6268; /* Borde gris más oscuro */
+  font-weight: 600;
+}
+
+/* Estilos para la sección de estado general del pedido (si la mantienes) */
+.pedido-estado-general {
+  display: flex;
+  gap: 6px;
+  padding: 10px 0;
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  justify-content: center;
+}
+
+.pedido-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.pedido-total {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #27ae60;
+}
+
+.cambio-estado {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.pedidos-loading,
+.pedidos-error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2em;
+}
+
+.pedidos-error {
+  color: #e74c3c;
+}

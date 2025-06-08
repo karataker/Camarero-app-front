@@ -105,8 +105,8 @@ const Header = () => {
 
             {usuario?.tipo && (
               <>
-                {/* Mostrar icono de home admin si corresponde y no estamos ya en /admin/home */}
-                {mostrarComponentesAdmin && location.pathname !== '/admin/home' && (
+                {/* Mostrar icono de home admin si corresponde */}
+                {mostrarComponentesAdmin && (
                   <Link to="/admin/home" className="header-link home-link" title="Inicio Admin">
                     <i className="fas fa-home"></i>
                   </Link>

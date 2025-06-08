@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // Importar useEffect
 import { useNavigate } from 'react-router-dom';
 import { useBar } from '../../../context/BarContext'; 
+import { useBares } from '../../../hooks/useBares'; // Importar useBares
 import { getMockNotificationCount } from '../../../mocks/notificationMocks';
 import '../../../styles/admin/home/homeEmpleado.css'; 
 
 const HomeEmpleado = () => { 
   const navigate = useNavigate();
-  const { barSeleccionado } = useBar();
+  const { barSeleccionado, setBarSeleccionado } = useBar();
+  const { bares, cargarBares } = useBares(); // Obtener bares y la función para cargarlos
+
+  // Cargar bares cuando el componente se monta.
+  // El Header también podría hacerlo, pero esto asegura que estén disponibles aquí.
+  useEffect(() => {
+    cargarBares();
+  }, [cargarBares]);
+
+  // Efecto para seleccionar el primer bar por defecto si no hay ninguno seleccionado
+  useEffect(() => {
+    if (bares && bares.length > 0 && !barSeleccionado) {
+      setBarSeleccionado(bares[0].id);
+    }
+  }, [bares, barSeleccionado, setBarSeleccionado]);
 
   // Mantén tus opciones actuales o modifícalas según sea necesario
   const opciones = [
@@ -34,7 +49,7 @@ const HomeEmpleado = () => {
     },
     {
       id: 'pedidos',
-      nombre: 'Pedidos',
+      nombre: 'Comandas',
       icono: 'fa-receipt',
       ruta: `/admin/bar/${barSeleccionado}/pedidos`,
       color: '#e84393',
@@ -100,9 +115,15 @@ const HomeEmpleado = () => {
   };
 
   const handleNavigation = (ruta) => {
-    if (!barSeleccionado && !ruta.includes('/admin/panel')) {
+    if (!barSeleccionado && !ruta.includes('/admin/panel') && !ruta.includes('/admin/home')) {
       alert('Por favor, selecciona un bar primero');
       return;
+    }
+    // Si barSeleccionado es null/undefined, las rutas en `opciones` podrían ser como `/admin/bar/null/carta`.
+    // Aseguramos que la ruta sea válida antes de navegar si depende de barSeleccionado.
+    if (ruta.includes(`/${null}/`) || ruta.includes(`/${undefined}/`)) {
+        alert('Por favor, espera a que se seleccione un bar o selecciona uno manualmente.');
+        return;
     }
     navigate(ruta);
   };
@@ -115,12 +136,15 @@ const HomeEmpleado = () => {
       <div className="opciones-empleado-grid">
         {opciones.map(opcion => {
           const notificationCount = getNotificationCountForOption(opcion.tipoNotificacion);
+          // Construir la ruta dinámicamente aquí también para asegurar que siempre esté actualizada
+          const rutaDinamica = barSeleccionado ? `/admin/bar/${barSeleccionado}/${opcion.id === 'mesas' ? 'panel' : opcion.id}` : opcion.ruta;
+
 
           return (
             <div 
               key={opcion.id} 
               className="opcion-empleado" 
-              onClick={() => handleNavigation(opcion.ruta)}
+              onClick={() => handleNavigation(rutaDinamica)}
               style={{ backgroundColor: opcion.color }}
             >
               {notificationCount > 0 && (
