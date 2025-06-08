@@ -5,8 +5,8 @@ import '../../../styles/cliente/home/homeCliente.css';
 
 // Importar las imágenes
 import imgReservarMesa from '../../../img/reservar_mesa.png';
-import imgCartaAutopedidos from '../../../img/carta_autopedidos.png'; // Para "Ver Carta para empezar a pedir"
-import imgVerCarta from '../../../img/ver_carta.png'; // Para "Ver Carta (Solo Lectura)"
+import imgCartaAutopedidos from '../../../img/carta_autopedidos.png';
+import imgVerCarta from '../../../img/ver_carta.png';
 
 const HomeCliente = () => {
   const navigate = useNavigate();
