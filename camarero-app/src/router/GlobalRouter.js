@@ -14,7 +14,7 @@ import HomeEmpleado from '../views/admin/home/HomeEmpleado';
 import EmpleadoComandasView from '../views/admin/comandas/EmpleadoComandasView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
 import EmpleadoCocinaView from '../views/admin/cocina/EmpleadoCocinaView';
-import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
+import EmpleadoFacturacionView from '../views/admin/facturacion/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/admin/mesas/EmpleadoMapaView';
 import AdminUsuarioView from '../views/admin/usuarios/AdminUsuarioView';
 import AdminInventarioView from '../views/admin/inventario/AdminInventarioView';
@@ -22,7 +22,7 @@ import AdminCartaView from '../views/admin/carta/AdminCartaView';
 import AdminComprasView from '../views/admin/Compras/AdminComprasView';
 import PagoExitoso from '../views/cliente/pagos/PagoExitoso';
 import PagoCancelado from '../views/cliente/pagos/PagoCancelado';
-//import AdminAnaliticasView from '../views/admin/analiticas/AdminAnaliticasView';
+import AdminAnaliticasView from '../views/admin/analiticas/AdminAnaliticasView';
 
 
 const GlobalRouter = () => {
@@ -57,7 +57,7 @@ const GlobalRouter = () => {
       <Route path="/admin/bar/:barId/cocina" element={protectedRoute(EmpleadoCocinaView)} />
       <Route path="/admin/bar/:barId/facturacion" element={protectedRoute(EmpleadoFacturacionView)} />
       <Route path="/admin/bar/:barId/usuarios" element={protectedRoute(AdminUsuarioView)} />
-      {/* <Route path="/admin/bar/:barId/analiticas" element={protectedRoute(AdminAnaliticasView)} /> */}
+      <Route path="/admin/bar/:barId/analiticas" element={protectedRoute(AdminAnaliticasView)} />
 
       {/* 404 - debe ir al final */}
       <Route path="*" element={<NotFound />} />
