@@ -3,6 +3,7 @@ import { useBares } from '../../../hooks/useBares';
 import { useBar } from '../../../context/BarContext';
 import QRDownloader from '../../../components/QRDownloader';
 import ComensalesIconos from '../../../components/ComensalesIconos';
+import AdminNavigation from '../../../components/AdminNavigation'; // <-- AÑADIR IMPORT
 import '../../../styles/admin/mesas/empleadoMapaView.css';
 import { obtenerMesas } from '../../../services/barService';
 
@@ -147,6 +148,19 @@ const EmpleadoMapaView = () => {
 
   return (
     <div className="panel-empleado">
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
+      <div className="mapa-header">
+        <h1>Mapa de Mesas {barActual?.nombre && `- ${barActual.nombre}`}</h1>
+      </div>
+
+      {!barSeleccionado && (
+        <div className="seleccionar-bar-mensaje">
+          <p><i className="fas fa-info-circle"></i> Por favor, selecciona un bar desde el menú superior para gestionar sus mesas.</p>
+        </div>
+      )}
+
       {barSeleccionado && zonas.map(zona => (
         <div key={zona} className="zona-seccion">
           <h2>{zona} - {barActual?.nombre}</h2>
@@ -178,9 +192,8 @@ const EmpleadoMapaView = () => {
                 <QRDownloader
                   mesaCodigo={mesa.codigo}
                   barId={barSeleccionado}
-                  qrUrl={mesa.qrUrl} // qrUrl es añadido por el servicio obtenerMesas
+                  qrUrl={mesa.qrUrl}
                 />
-
 
                 {getFusionadasPorMaestraPorZona(zona)[mesa.codigo] && (
                   <>
@@ -189,7 +202,7 @@ const EmpleadoMapaView = () => {
                     </div>
                     <button
                       className="fusionar-con-btn desfusionar-btn"
-                      onClick={async () => { // Añadido async/await para la recarga
+                      onClick={async () => {
                         await desfusionarMesa(barSeleccionado, mesa.codigo);
                         const data = await obtenerMesas(barSeleccionado);
                         setMesas(data);
@@ -205,7 +218,7 @@ const EmpleadoMapaView = () => {
                     🔗 Fusionada con {mesa.fusionadaCon}
                   </div>
                 ) : (
-                  mesa.disponible && ( // Solo mostrar opciones de fusión si la mesa está disponible
+                  mesa.disponible && (
                     <>
                       <button
                         className="fusion-btn"
@@ -220,7 +233,7 @@ const EmpleadoMapaView = () => {
                             await fusionarMesas(barSeleccionado, mesasParaFusionar[zona], mesa.codigo);
                             const data = await obtenerMesas(barSeleccionado);
                             setMesas(data);
-                            handleSetMesaParaFusionar(zona, null); // Limpiar selección
+                            handleSetMesaParaFusionar(zona, null);
                           }}
                         >
                           🔗 Fusionar con {mesasParaFusionar[zona]}
@@ -248,7 +261,7 @@ const EmpleadoMapaView = () => {
                   className="btn-add"
                   onClick={() => {
                     setMostrarInputs(prev => ({ ...prev, [zona]: true }));
-                    setUltimosQRs(prev => ({ ...prev, [zona]: null })); // Limpiar QR anterior
+                    setUltimosQRs(prev => ({ ...prev, [zona]: null }));
                   }}
                 >
                   +
@@ -278,19 +291,18 @@ const EmpleadoMapaView = () => {
                   <button 
                     onClick={() => {
                       setMostrarInputs(prev => ({ ...prev, [zona]: false }));
-                      // Opcional: Limpiar los inputs si se cancela
                       setNuevosCodigos(prev => ({ ...prev, [zona]: { codigo: '', capacidad: '' } })); 
                     }}
-                    className="btn-cancelar-nueva-mesa" // Añade una clase para estilos si es necesario
+                    className="btn-cancelar-nueva-mesa"
                   >
                     Cancelar
                   </button>
 
-                  {ultimosQRs[zona] && ( // Mostrar QR de la última mesa añadida en esta zona
+                  {ultimosQRs[zona] && (
                     <QRDownloader
                       mesaCodigo={ultimosQRs[zona].codigo}
                       barId={barSeleccionado}
-                      qrUrl={ultimosQRs[zona].qrUrl} // Asume que mesaCreada tiene qrUrl
+                      qrUrl={ultimosQRs[zona].qrUrl}
                     />
                   )}
                 </div>

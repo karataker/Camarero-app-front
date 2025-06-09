@@ -7,6 +7,7 @@ import {
   getCategoriasByBar
 } from "../../../services/menuService";
 import ProductoModal from "./ProductoModal";
+import AdminNavigation from "../../../components/AdminNavigation";
 import "../../../styles/admin/carta/admincarta.css";
 import Plato from "../../../img/PlatoDefault.png";
 import FrutoSeco from "../../../img/IconoAlergenoFrutosSecos.png";
@@ -115,8 +116,19 @@ const AdminCartaView = () => {
     .filter((p) => categoriaSeleccionada === "all" || p.categoria?.id === categoriaSeleccionada)
     .filter((p) => p.nombre.toLowerCase().includes(busqueda.toLowerCase()));
 
+  if (cargando) {
+    return <div className="loading">Cargando carta...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
   return (
     <div className="admin-carta-view">
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
       <div className="carta-header">
         <h2>Carta del Bar</h2>
         <div className="buscador-container">

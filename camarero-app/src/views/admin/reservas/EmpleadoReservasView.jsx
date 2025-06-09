@@ -10,9 +10,10 @@ import {
   actualizarReserva,
   eliminarReserva
 } from '../../../services/reservaService.js';
-import { obtenerMesas } from '../../../services/barService.js'; // <--- IMPORTAR obtenerMesas
+import { obtenerMesas } from '../../../services/barService.js';
 import { useBar } from '../../../context/BarContext';
 import { useBares } from '../../../hooks/useBares';
+import AdminNavigation from '../../../components/AdminNavigation'; // <-- AÑADIR IMPORT
 
 // --- Funciones de Ayuda para Tiempos ---
 const horaAMinutos = (horaStr) => {
@@ -375,7 +376,7 @@ const EmpleadoReservasView = () => {
           mensaje: reservaActualFormulario.mensaje,
           // estado: reservaActualFormulario.estado || 'confirmada', // LÍNEA ANTERIOR
           estado: 'confirmada', // <--- CAMBIO: Las reservas manuales de empleados se crean como confirmadas
-          mesa: { id: reservaActualFormulario.mesa } // Enviar como objeto Mesa anidado
+          mesa: { id: reservaActualFormulario.mesa } // Enviar como objeto Mesa anidada
         };
 
         await crearReserva(datosReserva);
@@ -490,6 +491,9 @@ const EmpleadoReservasView = () => {
 
   return (
     <div className="empleado-reservas-view">
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
       <div className="reservas-header">
         <h1>Gestión de Reservas {nombreBarActual && `- ${nombreBarActual}`}</h1>
         {barSeleccionado && (
@@ -571,10 +575,8 @@ const EmpleadoReservasView = () => {
                 {Object.keys(FRANJAS_HORARIAS).map(keyFranja => {
                   const franja = FRANJAS_HORARIAS[keyFranja];
                   let textoBoton = franja.nombre;
-                  if (keyFranja !== 'todas') { // No mostrar rango para "Todas"
+                  if (keyFranja !== 'todas') {
                     const inicioHora = minutosAFormatoHora(franja.inicioMin);
-                    // Para finMin, si es el final del día (23:59), podemos mostrarlo así o ajustar.
-                    // 24 * 60 - 1 = 1439 minutos. minutosAFormatoHora(1439) -> "23:59"
                     const finHora = minutosAFormatoHora(franja.finMin);
                     textoBoton += ` (${inicioHora} - ${finHora})`;
                   }
@@ -595,11 +597,11 @@ const EmpleadoReservasView = () => {
                 <Calendar
                   onChange={setSelectedDate}
                   value={selectedDate}
-                  tileContent={({ date, view }) => { // 'date' es un objeto Date local
+                  tileContent={({ date, view }) => {
                     if (view === 'month') {
-                      const localDateString = formatearFechaA_YYYYMMDD_Local(date); // <--- CORRECCIÓN AQUÍ
+                      const localDateString = formatearFechaA_YYYYMMDD_Local(date);
                       let reservasDelTile = reservasConfirmadas.filter(r =>
-                        r.fecha === localDateString // Comparar con la fecha local formateada
+                        r.fecha === localDateString
                       );
 
                       if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
@@ -617,7 +619,6 @@ const EmpleadoReservasView = () => {
                       return (
                         <div className="calendario-reservas">
                           {reservasDelTile.slice(0, 2).map((reserva) => {
-                            // ... (lógica existente para mostrar la reserva) ...
                             let mesaDisplayString = '';
                             let mesaTitleString = 'N/A';
 
@@ -657,11 +658,11 @@ const EmpleadoReservasView = () => {
                     }
                     return null;
                   }}
-                  tileClassName={({ date, view }) => { // 'date' es un objeto Date local
+                  tileClassName={({ date, view }) => {
                     if (view === 'month') {
-                      const localDateString = formatearFechaA_YYYYMMDD_Local(date); // <--- CORRECCIÓN AQUÍ
+                      const localDateString = formatearFechaA_YYYYMMDD_Local(date);
                       let reservasDelTile = reservasConfirmadas.filter(r =>
-                        r.fecha === localDateString // Comparar con la fecha local formateada
+                        r.fecha === localDateString
                       );
                       if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
                         const franjaActual = FRANJAS_HORARIAS[filtroFranja];
@@ -687,12 +688,12 @@ const EmpleadoReservasView = () => {
                 <div className="reservas-dia">
                   {reservasFiltradasDelDiaSeleccionado.map(reserva => {
                     let nombreMesaMostrado = 'N/A';
-                    if (reserva.mesa != null) { // reserva.mesa es el ID
+                    if (reserva.mesa != null) {
                       const mesaObjeto = mesasDelBarActual.find(m => m.id === reserva.mesa);
                       if (mesaObjeto) {
                         nombreMesaMostrado = mesaObjeto.codigo || mesaObjeto.nombre || `ID ${reserva.mesa}`;
                       } else {
-                        nombreMesaMostrado = `ID ${reserva.mesa}`; // Fallback si no se encuentra el objeto mesa
+                        nombreMesaMostrado = `ID ${reserva.mesa}`;
                       }
                     }
 
@@ -726,9 +727,8 @@ const EmpleadoReservasView = () => {
                 <MiniMesasView
                   todasLasMesas={mesasDelBarActual}
                   reservasDelDia={reservasFiltradasDelDiaSeleccionado}
-                  selectedDate={selectedDate} // selectedDate es un objeto Date local
+                  selectedDate={selectedDate}
                   horaConsulta={
-                    // Comprobar si la fecha del formulario (que es YYYY-MM-DD) coincide con la fecha seleccionada (también YYYY-MM-DD)
                     mostrarModal && reservaActualFormulario.fecha === formatearFechaA_YYYYMMDD_Local(selectedDate) && reservaActualFormulario.hora
                       ? reservaActualFormulario.hora
                       : null
@@ -759,7 +759,7 @@ const EmpleadoReservasView = () => {
                 name="hora"
                 value={reservaActualFormulario.hora}
                 onChange={handleInputChangeModal}
-                className="form-control-select" // Añade una clase para estilizar si es necesario
+                className="form-control-select"
               >
                 <option value="" disabled>Selecciona una hora</option>
                 {FRANJAS_HORARIAS_MODAL.map(franja => (
@@ -788,14 +788,12 @@ const EmpleadoReservasView = () => {
             <div className="form-grupo">
               <label>Mesa Asignada:</label>
               <div className="selector-mesas-modal">
-                {mesasDelBarActual.map(mesa => { // <--- USAR mesasDelBarActual
+                {mesasDelBarActual.map(mesa => {
                   let disponible = true;
                   const inicioConsultaMin = horaAMinutos(reservaActualFormulario.hora);
                   const finConsultaMin = inicioConsultaMin + duracionReservaHoras * 60;
 
                   reservasConfirmadas.forEach(r => {
-                    // Aquí la lógica de disponibilidad de mesas usa r.mesa que debería ser el ID de la mesa
-                    // y mesa.id que viene de mesasDelBarActual. Asegúrate que los IDs coincidan en formato/tipo.
                     if (r.mesa === mesa.id && r.fecha === reservaActualFormulario.fecha) {
                       if (modoModal === 'editar' && r.id === reservaActualFormulario.id) {
                         return;
@@ -816,7 +814,7 @@ const EmpleadoReservasView = () => {
                       disabled={!disponible && reservaActualFormulario.mesa !== mesa.id}
                       title={!disponible ? `Mesa ${mesa.nombre || mesa.codigo} ocupada en este horario` : `Seleccionar Mesa ${mesa.nombre || mesa.codigo}`}
                     >
-                      {mesa.nombre || mesa.codigo} {/* Mostrar nombre o código de la mesa */}
+                      {mesa.nombre || mesa.codigo}
                     </button>
                   );
                 })}

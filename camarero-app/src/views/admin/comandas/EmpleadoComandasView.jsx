@@ -6,6 +6,7 @@ import '../../../styles/admin/comandas/empleadoComandasView.css';
 // similar al que se usa en EmpleadoReservasView.jsx o EmpleadoMapaView.jsx
 import { getComandasPorBar } from '../../../services/comandaService'; 
 import { obtenerMesas } from '../../../services/barService'; // <--- AÑADIR IMPORTACIÓN
+import AdminNavigation from '../../../components/AdminNavigation'; // <--- AÑADIR IMPORT
 
 import { MdOutlinePendingActions, MdOutlineDeliveryDining, MdDoneAll } from 'react-icons/md';
 import { GiCook } from 'react-icons/gi';
@@ -194,6 +195,9 @@ const EmpleadoComandasView = () => {
 
   return (
     <div className="empleado-pedidos-view">
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
       <div className="empleado-pedidos-header">
         <h1>Resumen de Comandas</h1>
         <Reloj formato="HH:mm:ss" />
