@@ -57,7 +57,7 @@ const HomeEmpleado = () => {
     },
     {
       id: 'cocina',
-      nombre: 'Cocina',
+      nombre: 'Cocina y Barra',
       icono: 'fa-spoon',
       ruta: `/admin/bar/${barSeleccionado}/cocina`,
       color: '#FF6B6B',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getComandasPorMesa } from '../services/comandasService';
+import { getComandasPorMesa } from '../services/comandaService';
 
 /**
  * Un hook personalizado para obtener y gestionar las comandas de una mesa.

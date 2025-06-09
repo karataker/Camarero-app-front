@@ -1,11 +1,10 @@
-import { request } from './apiClient'; // Importar la función request
-
+import { request } from './apiClient';
 /**
- * Obtiene todas las comandas de una mesa específica.
- * @param {number|string} barId - El ID del bar.
- * @param {string} mesaCodigo - El código (ID) de la mesa.
- * @returns {Promise<Array>} Lista de comandas.
- */
+@param {number|string} barId - El ID del bar.
+@param {string} mesaCodigo - El código (ID) de la mesa.
+@returns {Promise<Array>} Lista de comandas.
+*/
+
 export const getComandasPorMesa = async (barId, mesaCodigo) => {
   try {
     // El path ya no necesita API_BASE_URL
@@ -34,8 +33,6 @@ export const confirmarComanda = async (comandaDTO) => {
   try {
     const path = `/pedidos/comandas/confirmar`;
     console.log(`Requesting POST ${path}`, comandaDTO);
-    // Usar la función request del apiClient
-    // El segundo argumento es el cuerpo de la petición
     const response = await request(path, comandaDTO, 'POST');
 
     if (!response.ok) {
@@ -65,10 +62,6 @@ export const getComandasPorBar = async (barId) => {
     if (!response.ok) {
       throw new Error(`Error en GET comandas por bar: ${response.status} ${response.statusText}`);
     }
-    // El apiClient ya maneja el caso de 204 devolviendo null o un objeto vacío
-    // si se configuró así, o la respuesta cruda.
-    // Si la respuesta es 204, response.json() podría fallar si el cuerpo está realmente vacío.
-    // Es mejor verificar el status code aquí si se espera un array vacío explícitamente para 204.
     if (response.status === 204) {
         return []; // Devuelve array vacío si no hay contenido
     }
@@ -79,3 +72,29 @@ export const getComandasPorBar = async (barId) => {
   }
 };
 
+/**
+ * Actualiza el estado de un item de comanda específico.
+ * @param {number} itemId - El ID del item a actualizar.
+ * @param {string} nuevoEstado - El nuevo estado ('en_preparacion', 'listo').
+ * @returns {Promise<Object>} El objeto del item actualizado desde la API.
+ */
+export const actualizarEstadoItem = async (itemId, nuevoEstado) => {
+  try {
+
+    const path = `/pedidos/comandas/items/${itemId}?nuevoEstado=${nuevoEstado}`;
+    console.log(`Requesting PATCH ${path}`);
+    
+    const response = await request(path, {}, 'PATCH');
+
+    if (!response.ok) {
+      throw new Error(`Error al actualizar estado del item: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
+    
+  } catch (error) {
+
+    console.error('Error en actualizarEstadoItem:', error);
+    throw error;
+  }
+};

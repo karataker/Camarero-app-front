@@ -84,17 +84,34 @@
   border-radius: 15px;
   font-size: 0.85rem;
   font-weight: bold;
-  color: white;
   text-transform: capitalize;
 }
 
-/* ... (tus clases de estado existentes como .pendiente, .en-preparacion, .listo, .entregado) ... */
-/* Ejemplo de clases de estado que podrías tener */
-.estado.pendiente { background-color: #ffc107; color: #333; }
-.estado.en-preparacion { background-color: #17a2b8; }
-.estado.listo-en-barra { background-color: #28a745; }
-.estado.entregado { background-color: #6c757d; }
-.estado.cancelado { background-color: #dc3545; }
+/* Ajusta los colores de fondo y texto según el estado */
+.estado.pendiente {
+  background-color: #ffc107; /* Amarillo */
+  color: #333; /* Texto oscuro */
+}
+
+.estado.en-preparacion {
+  background-color: #17a2b8; /* Azul */
+  color: #fff; /* Texto blanco */
+}
+
+.estado.listo-en-barra {
+  background-color: #28a745; /* Verde */
+  color: #000; /* Texto negro */
+}
+
+.estado.entregado {
+  background-color: #6c757d; /* Gris */
+  color: #fff; /* Texto blanco */
+}
+
+.estado.cancelado {
+  background-color: #dc3545; /* Rojo */
+  color: #fff; /* Texto blanco */
+}
 
 
 .comanda-fecha {

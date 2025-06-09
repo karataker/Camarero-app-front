@@ -13,7 +13,7 @@ import ClienteComandasView from '../views/cliente/comandas/ClienteComandasView';
 import HomeEmpleado from '../views/admin/home/HomeEmpleado'; 
 import EmpleadoComandasView from '../views/admin/comandas/EmpleadoComandasView';
 import EmpleadoReservasView from '../views/admin/reservas/EmpleadoReservasView';
-import EmpleadoCocinaView from '../views/EmpleadoCocinaView';
+import EmpleadoCocinaView from '../views/admin/cocina/EmpleadoCocinaView';
 import EmpleadoFacturacionView from '../views/EmpleadoFacturacionView';
 import EmpleadoMapaView from '../views/admin/mesas/EmpleadoMapaView';
 import AdminUsuarioView from '../views/admin/usuarios/AdminUsuarioView';

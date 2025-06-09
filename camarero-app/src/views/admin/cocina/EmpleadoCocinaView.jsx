@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import '../../../styles/admin/comandas/empleadoComandasView.css'; 
+import '../../../styles/admin/cocina/empleadoCocinaView.css'; 
 
-// Asumiendo que tienes un servicio para obtener todas las mesas de un bar
-// similar al que se usa en EmpleadoReservasView.jsx o EmpleadoMapaView.jsx
-import { getComandasPorBar } from '../../../services/comandaService'; 
-import { obtenerMesas } from '../../../services/barService'; // <--- AÑADIR IMPORTACIÓN
+import { getComandasPorBar, actualizarEstadoItem } from '../../../services/comandaService';
+import { obtenerMesas } from '../../../services/barService';
 
 import { MdOutlinePendingActions, MdOutlineDeliveryDining, MdDoneAll } from 'react-icons/md';
 import { GiCook } from 'react-icons/gi';
 import Reloj from '../../../components/Reloj'; 
 
-const EmpleadoComandasView = () => {
+const EmpleadoCocinaView = () => {
   const { barId } = useParams();
   const [pedidos, setPedidos] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState('todos');
   const [ordenHora, setOrdenHora] = useState('asc'); 
   const [filtroMesa, setFiltroMesa] = useState('todas'); 
-  const [cargando, setCargando] = useState(true); // Carga de pedidos
-  const [error, setError] = useState(null); // Error de pedidos
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Nuevos estados para las mesas del bar
   const [todasLasMesas, setTodasLasMesas] = useState([]);
   const [cargandoMesas, setCargandoMesas] = useState(true);
   const [errorMesas, setErrorMesas] = useState(null);
@@ -55,7 +52,6 @@ const EmpleadoComandasView = () => {
         return;
       }
 
-      // Cargar pedidos
       try {
         setCargando(true);
         const comandasData = await getComandasPorBar(barId); 
@@ -68,7 +64,6 @@ const EmpleadoComandasView = () => {
         setCargando(false);
       }
 
-      // Cargar todas las mesas del bar
       try {
         setCargandoMesas(true);
         setErrorMesas(null);
@@ -86,40 +81,78 @@ const EmpleadoComandasView = () => {
     cargarDatosIniciales();
   }, [barId]);
 
-  const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
+  const handleCambiarEstadoItem = async (pedidoId, itemId, nuevoEstado) => {
     try {
-      // TODO: Implementar llamada al servicio para actualizar estado en backend
+      const itemActualizado = await actualizarEstadoItem(itemId, nuevoEstado);
+
       setPedidos(prevPedidos =>
         prevPedidos.map(pedido => {
           if (pedido.id !== pedidoId) return pedido;
-          return { ...pedido, estado: nuevoEstado }; 
+
+          const nuevosItems = pedido.items.map(item => {
+            if (item.id !== itemId) return item;
+            return { ...item, estado: itemActualizado.estado };
+          });
+
+          return { ...pedido, items: nuevosItems };
         })
       );
     } catch (err) {
-      console.error('Error al actualizar el estado:', err);
+      console.error('Error al actualizar el estado del ítem:', err);
     }
   };
 
-  if (cargando || cargandoMesas) { // Comprobar ambas cargas
+  // Función para calcular el estado general de la comanda
+  const calcularEstadoComanda = (items) => {
+    if (!items || items.length === 0) return 'pendiente';
+    
+    const estados = items.map(item => item.estado ? item.estado.toLowerCase() : 'pendiente');
+    
+    // Si todos están entregados
+    if (estados.every(estado => estado === 'entregado')) {
+      return 'entregado';
+    }
+    
+    // Si todos están listos o entregados
+    if (estados.every(estado => estado === 'listo' || estado === 'entregado')) {
+      return 'listo';
+    }
+    
+    // Si hay alguno en preparación
+    if (estados.some(estado => estado === 'en_preparacion')) {
+      return 'en_preparacion';
+    }
+    
+    // Por defecto, pendiente
+    return 'pendiente';
+  };
+
+  // Función para obtener el texto del estado
+  const obtenerTextoEstado = (estado) => {
+    const estadosTexto = {
+      'pendiente': 'Pendiente',
+      'en_preparacion': 'En Preparación',
+      'listo': 'Listo',
+      'entregado': 'Entregado'
+    };
+    return estadosTexto[estado] || 'Desconocido';
+  };
+
+  if (cargando || cargandoMesas) {
     return <div className="pedidos-loading">Cargando datos...</div>;
   }
 
-  if (error) { // Priorizar error de pedidos si existe
+  if (error) {
     return <div className="pedidos-error">{error}</div>;
   }
-  // No es necesario un error global para errorMesas aquí, se manejará en la sección del filtro
-
-  // const mesasUnicas = Array.from(new Set(pedidos.map(p => p.mesaCodigo))).sort(); // Ya no se usa para el filtro
 
   const pedidosFiltrados = pedidos
     .filter(pedido => {
       const estadoPedidoNormalizado = pedido.estado ? pedido.estado.toLowerCase() : '';
-      // filtroMesa ahora se comparará con pedido.mesaCodigo
       return (filtroEstado === 'todos' || estadoPedidoNormalizado === filtroEstado) &&
              (filtroMesa === 'todas' || pedido.mesaCodigo === filtroMesa);
     })
     .sort((a, b) => {
-      // ... (código de ordenación existente) ...
       const fechaA = a.fecha || ''; 
       const fechaB = b.fecha || ''; 
       if (ordenHora === 'asc') {
@@ -131,13 +164,12 @@ const EmpleadoComandasView = () => {
 
   return (
     <div className="empleado-pedidos-view">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="empleado-pedidos-header">
         <h1>Gestión de Pedidos</h1>
         <Reloj formato="HH:mm:ss" />
       </div>
 
       <div className="filtros-pedidos">
-        {/* Filtro de Estado con Facetas */}
         <div className="filtro-grupo">
           <span className="filtro-label">Estado:</span>
           <div className="filtro-estado-facetas">
@@ -154,13 +186,11 @@ const EmpleadoComandasView = () => {
           </div>
         </div>
 
-        {/* Filtro de Mesa con Minimapa/Facetas */}
-        {/* Movido antes de "Ordenar por" para que "Ordenar por" quede al final a la derecha */}
         <div className="filtro-grupo">
           <span className="filtro-label">Mesa:</span>
           {errorMesas && <p className="error-texto-filtro">{errorMesas}</p>}
           {!errorMesas && !cargandoMesas && (
-            <div className="filtro-mesas-minimapa"> {/* Contenedor para el minimapa */}
+            <div className="filtro-mesas-minimapa">
               <button
                 type="button"
                 className={`mini-mesa-item ${filtroMesa === 'todas' ? 'activo' : ''}`}
@@ -170,13 +200,13 @@ const EmpleadoComandasView = () => {
               </button>
               {todasLasMesas.map(mesa => (
                 <button
-                  key={mesa.id || mesa.codigo} // Usar id si existe, sino codigo
+                  key={mesa.id || mesa.codigo}
                   type="button"
                   className={`mini-mesa-item ${filtroMesa === mesa.codigo ? 'activo' : ''}`}
-                  onClick={() => setFiltroMesa(mesa.codigo)} // Filtrar por mesa.codigo
+                  onClick={() => setFiltroMesa(mesa.codigo)}
                   title={`Mesa ${mesa.codigo}${mesa.nombre ? ` (${mesa.nombre})` : ''}`}
                 >
-                  {mesa.codigo || mesa.nombre} {/* Mostrar código o nombre */}
+                  {mesa.codigo || mesa.nombre}
                 </button>
               ))}
               {todasLasMesas.length === 0 && <p className="info-texto-filtro">No hay mesas configuradas para este bar.</p>}
@@ -184,8 +214,7 @@ const EmpleadoComandasView = () => {
           )}
         </div>
         
-        {/* Filtro de Orden de Hora - Ahora con margen izquierdo automático */}
-        <div className="filtro-grupo" style={{ marginLeft: 'auto' }}>
+        <div className="filtro-grupo filtro-grupo-auto">
           <span className="filtro-label">Ordenar por:</span>
           <select
             value={ordenHora}
@@ -200,14 +229,11 @@ const EmpleadoComandasView = () => {
 
       <div className="pedidos-grid">
         {pedidosFiltrados.map(pedido => {
-          const estadoPedidoClase = pedido.estado ? pedido.estado.toLowerCase() : 'desconocido';
+          const estadoComandaCalculado = calcularEstadoComanda(pedido.items);
+          const estadoPedidoClase = estadoComandaCalculado;
           
-          // Buscar la información de la mesa actual
           const mesaDelPedido = todasLasMesas.find(m => m.codigo === pedido.mesaCodigo);
           
-          // Determinar el texto final a mostrar para la mesa:
-          // Si la mesa se encuentra en todasLasMesas y tiene un 'nombre' válido y no vacío, usar ese 'nombre'.
-          // De lo contrario, construir el texto como "Mesa " seguido del código de la mesa del pedido.
           const nombreCompletoMesa = 
             (mesaDelPedido && mesaDelPedido.nombre && mesaDelPedido.nombre.trim() !== '') 
             ? mesaDelPedido.nombre 
@@ -220,18 +246,20 @@ const EmpleadoComandasView = () => {
             >
               <div className="pedido-header">
                 <div>
-                  <h3 style={{ margin: 0, display: 'inline-block', verticalAlign: 'middle' }}>
-                    {/* Mostrar el nombre completo y final de la mesa */}
-                    {nombreCompletoMesa} 
-                  </h3>
-                  <div style={{ fontSize: '0.85em', color: '#888' }}>
-                    Código Pedido: <b>{pedido.id}</b> 
+                  <h3>{nombreCompletoMesa}</h3>
+                  <div className="pedido-codigo">
+                    Código Comanda: <b>{pedido.id}</b>
+                  </div>
+                  <div className="estado-comanda">
+                    <span className={`estado-badge estado-${estadoComandaCalculado}`}>
+                      {obtenerTextoEstado(estadoComandaCalculado)}
+                    </span>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right', fontSize: '0.95em' }}>
-                  <div>
-                    <span className="pedido-hora"><b>Pedido:</b> {formatFecha(pedido.fecha)}</span> 
-                  </div>
+                <div className="pedido-hora-container">
+                  <span className="pedido-hora">
+                    <b>Hora Comanda:</b> {formatFecha(pedido.fecha)}
+                  </span>
                 </div>
               </div>
 
@@ -243,66 +271,38 @@ const EmpleadoComandasView = () => {
                     { key: 'listo', label: 'Listo' },
                     { key: 'entregado', label: 'Entregado' }
                   ];
-                  const itemEstadoNormalizado = pedido.estado ? pedido.estado.toLowerCase() : '';
-                  const faseActual = fases.findIndex(f => f.key === itemEstadoNormalizado);
+
+                  const itemEstadoNormalizado = item.estado ? item.estado.toLowerCase() : 'pendiente';
+                  const faseActualIndex = fases.findIndex(f => f.key === itemEstadoNormalizado);
                   
                   return (
-                    <div key={item.id || `item-${pedido.id}-${index}`} className="pedido-item" style={{ alignItems: 'center' }}> 
+                    <div key={item.id || `item-${pedido.id}-${index}`} className="pedido-item"> 
                       <span className="item-cantidad">{item.cantidad}x</span> 
                       <span className="item-nombre">{item.nombre}</span> 
-                      <div className="item-fases">
-                        {fases.map((fase, i) => (
-                          <span
-                            key={fase.key}
-                            className={
-                              "item-fase fase-" + fase.key +
-                              (i === faseActual ? " fase-activa" : "") +
-                              (i < faseActual ? " fase-completada" : "")
-                            }
-                          >
-                            {fase.label}
-                          </span>
-                        ))}
+                      
+                      <div className="item-fases-container">
+                        <div className="item-fases-buttons">
+                          {fases.map((fase, i) => (
+                            <button
+                              key={fase.key}
+                              title={`Marcar como ${fase.label}`}
+                              className={
+                                "item-fase-btn " +
+                                (i === faseActualIndex ? "fase-activa" : "") +
+                                (i < faseActualIndex ? "fase-completada" : "")
+                              }
+                              disabled={i <= faseActualIndex}
+                              onClick={() => handleCambiarEstadoItem(pedido.id, item.id, fase.key)}
+                            >
+                              {fase.label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-
-              {/* Calcular importe total si no viene directamente */}
-              {(() => {
-                let importeCalculado = 0;
-                let esCalculable = false;
-                if (pedido.items && Array.isArray(pedido.items)) {
-                  esCalculable = pedido.items.every(item => typeof item.cantidad === 'number' && typeof item.precio === 'number'); // Asegúrate que 'precio' sea el nombre correcto
-                  if (esCalculable) {
-                    importeCalculado = pedido.items.reduce((sum, item) => sum + (item.cantidad * item.precio), 0);
-                  }
-                }
-                // Prioriza pedido.importeTotal si existe, sino usa el calculado
-                const importeFinal = typeof pedido.importeTotal === 'number' ? pedido.importeTotal : (esCalculable ? importeCalculado : null);
-
-                return (
-                  <div className="pedido-footer" style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    marginTop: '10px',
-                    paddingTop: '10px',
-                    borderTop: '1px solid #eee'
-                  }}>
-                    {importeFinal !== null ? (
-                      <span className="pedido-importe-total">
-                        <strong>Total:</strong> {importeFinal.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
-                      </span>
-                    ) : (
-                      <span className="pedido-importe-total">
-                        <strong>Total:</strong> -
-                      </span>
-                    )}
-                  </div>
-                );
-              })()}
             </div>
           );
         })}
@@ -311,4 +311,4 @@ const EmpleadoComandasView = () => {
   );
 };
 
-export default EmpleadoComandasView;
+export default EmpleadoCocinaView;
