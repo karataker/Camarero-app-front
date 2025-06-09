@@ -4,68 +4,50 @@
   min-height: 100vh;
 }
 
+.empleado-pedidos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empleado-pedidos-header h1 {
+  margin: 0;
+}
+
 .filtros-pedidos {
   margin: 20px 0;
   display: flex;
-  gap: 24px; /* Espacio entre grupos de filtros */
-  align-items: flex-start; /* Alinear al inicio verticalmente */
-  flex-wrap: wrap; /* Permitir que los filtros se ajusten en pantallas pequeñas */
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .filtro-grupo {
   display: flex;
-  flex-direction: column; /* Etiqueta arriba, control abajo */
-  gap: 8px; /* Espacio entre la etiqueta y el control del filtro */
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filtro-grupo-auto {
+  margin-left: auto;
 }
 
 .filtro-label {
   font-size: 0.9em;
   font-weight: 500;
   color: #555;
-  margin-bottom: 4px; /* Pequeño espacio si la etiqueta está en la misma línea */
+  margin-bottom: 4px;
 }
 
-/* Estilos uniformes para todos los filtros */
-.filtros-pedidos select {
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1em;
-  background: #fafafa;
-  color: #222;
-  outline: none;
-  transition: border 0.2s, box-shadow 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  margin: 0;
-}
-
-.filtros-pedidos select:focus {
-  border-color: #b9f6ca;
-  box-shadow: 0 0 0 2px #b9f6ca33;
-}
-
-.filtro-estado {
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.filtro-orden-hora {
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-/* Estilos para las facetas de estado */
 .filtro-estado-facetas {
   display: flex;
-  gap: 8px; /* Espacio entre botones de faceta */
-  flex-wrap: wrap; /* Permitir que los botones se ajusten */
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .boton-faceta-estado {
   padding: 8px 16px;
-  border-radius: 20px; /* Estilo píldora */
+  border-radius: 20px;
   border: 1px solid #ccc;
   background-color: #f8f9fa;
   color: #495057;
@@ -73,7 +55,7 @@
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   outline: none;
-  user-select: none; /* Evitar selección de texto al hacer clic rápido */
+  user-select: none;
 }
 
 .boton-faceta-estado:hover {
@@ -82,14 +64,13 @@
 }
 
 .boton-faceta-estado.activo {
-  background-color: #3498db; /* Azul (coincide con 'en_preparacion' activo de las fases) */
+  background-color: #3498db;
   color: white;
   border-color: #3498db;
-  font-weight: 500; /* O 600 si prefieres más énfasis */
+  font-weight: 500;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Estilos genéricos para los select restantes */
 .filtro-select {
   padding: 8px 12px;
   border-radius: 6px;
@@ -99,19 +80,19 @@
   color: #222;
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
-  min-width: 180px; /* Ancho mínimo para los selects */
+  min-width: 180px;
 }
 
 .filtro-select:focus {
-  border-color: #3498db; /* Coincidir con el color activo de las facetas */
+  border-color: #3498db;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 .filtro-mesas-minimapa {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Ajusta minmax para el tamaño deseado */
-  gap: 10px; /* Espacio entre mesas */
-  max-width: 600px; /* Opcional: limita el ancho del contenedor del minimapa */
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+  max-width: 600px;
 }
 
 .mini-mesa-item {
@@ -136,7 +117,7 @@
 }
 
 .mini-mesa-item.activo {
-  background-color: #28a745; /* Un verde para la mesa activa, puedes cambiarlo */
+  background-color: #28a745;
   color: white;
   border-color: #28a745;
   font-weight: 600;
@@ -144,101 +125,57 @@
 }
 
 .error-texto-filtro {
-  color: #d9534f; /* Rojo para errores */
+  color: #d9534f;
   font-size: 0.9em;
 }
 
 .info-texto-filtro {
   font-size: 0.9em;
   color: #555;
-  grid-column: 1 / -1; /* Para que ocupe todo el ancho si no hay mesas */
+  grid-column: 1 / -1;
   text-align: center;
 }
 
 .pedidos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px 0;
 }
 
 .pedido-card {
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  /* Se mantiene el borde izquierdo, pero su color se definirá por el estado del pedido si es necesario, o un color base */
-  border-left: 4px solid #ddd; /* Color de borde izquierdo base, puede ser sobrescrito por estado específico */
-  background: #fff !important; /* Fondo blanco por defecto para la tarjeta */
+  border-left: 4px solid #ddd;
+  background: #fff !important;
   transition: box-shadow 0.2s;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* Sombreado para pedidos abiertos y cerrados - ELIMINADO/COMENTADO */
-/*
-.pedido-card.abierto {
-  background: #fff4f4 !important;
-  border-left-color: #ffb3b3 !important;
-}
-
-.pedido-card.cerrado {
-  background: #f4fff7 !important;
-  border-left-color: #b9f6ca !important;
-}
-*/
-
-/* Estilos para el borde izquierdo según el estado general del pedido */
-/* Estos pueden mantenerse si quieres un indicador visual del estado en el borde */
 .pedido-card.estado-pendiente {
-  border-left-color: #f39c12 !important; /* Naranja/Ámbar */
+  border-left-color: #f39c12 !important;
 }
+
 .pedido-card.estado-en_preparacion {
-  border-left-color: #3498db !important; /* Azul distintivo */
+  border-left-color: #3498db !important;
 }
+
 .pedido-card.estado-listo {
-  border-left-color: #2ecc71 !important; /* Verde brillante */
+  border-left-color: #2ecc71 !important;
 }
+
 .pedido-card.estado-entregado {
-  border-left-color: #6c757d !important; /* Gris oscuro/Carbón */
-  opacity: 0.9; /* Opcional: ligera opacidad para pedidos ya entregados */
-}
-
-
-/* Quitar sombreado y color de fondo/borde del estado general del pedido */
-/* Esta sección parece redundante o conflictiva con la anterior, la comento/elimino */
-/*
-.estado-pendiente,
-.estado-preparacion,
-.estado-listo,
-.estado-entregado {
-  border-left-color: #ddd !important;
-  background-color: transparent !important;
-  opacity: 1;
-}
-*/
-
-.item-estado {
-  margin-left: auto;
-  font-size: 0.9em;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: #f0f0f0;
-}
-
-.estado-pendiente .item-estado { color: #e74c3c; background: #ffeded; }
-.estado-preparacion .item-estado { color: #f39c12; background: #fff8e1; }
-.estado-listo .item-estado { color: #2ecc71; background: #e6f9ed; }
-.estado-entregado .item-estado { color: #6c63ff; background: #ecebff; }
-
-.item-fase {
-  margin-right: 2px;
-  user-select: none;
+  border-left-color: #6c757d !important;
+  opacity: 0.9;
 }
 
 .pedido-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .pedido-header h3 {
@@ -247,112 +184,155 @@
   margin: 0;
 }
 
-.pedido-hora {
-  color: #666;
-  font-size: 0.9em;
-}
-
-.pedido-tiempo {
-  font-size: 0.9em;
+.pedido-codigo {
+  font-size: 0.85em;
   color: #888;
 }
 
+.pedido-hora-container {
+  text-align: right;
+  font-size: 0.95em;
+}
+
+.pedido-hora {
+  color: #666;
+  font-size: 0.85em;
+}
+
 .pedido-items {
-  margin-bottom: 15px;
+  margin-bottom: 0;
 }
 
 .pedido-item {
   display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  min-height: auto;
+}
+
+.pedido-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-info {
+  display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
 }
 
 .item-cantidad {
   color: #666;
   min-width: 30px;
   flex-shrink: 0;
+  font-weight: 500;
+  font-size: 0.9em;
 }
 
 .item-nombre {
-  flex: 1 1 120px;
-  min-width: 80px;
-  word-break: break-word;
+  flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.3;
+  font-size: 0.9em;
 }
 
-/* Estilos para las fases de los ítems de pedido */
+.item-fases-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.item-fases-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
 
 .item-fases {
   display: flex;
-  gap: 4px; /* Espacio entre los botones de fase */
-  margin-left: auto; /* Empuja las fases a la derecha dentro de .pedido-item */
-  flex-wrap: wrap; /* Permite que las fases pasen a la siguiente línea si no caben */
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .item-fase {
-  padding: 5px 10px;
-  border-radius: 15px; /* Más redondeado */
-  font-size: 0.8rem;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.65em;
   font-weight: 500;
+  min-width: 55px;
   text-align: center;
-  min-width: 80px; /* Ancho mínimo para el texto */
-  border: 1px solid #dcdcdc; /* Borde base sutil pero visible */
-  background-color: #f8f9fa; /* Fondo base muy claro, pero no transparente */
-  color: #5a6268;             /* Color de texto base legible */
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  white-space: nowrap; /* Evita que el texto se parta en dos líneas */
-  opacity: 1; /* Asegurar que no haya opacidad por defecto */
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* Estilo para fases completadas (anteriores a la activa) */
 .item-fase.fase-completada {
-  background-color: #e9ecef; /* Un gris claro, pero más sólido */
-  color: #495057;             /* Texto gris oscuro */
-  border-color: #ced4da;       /* Borde gris claro */
-  /* Quitar la opacidad si la tenía para mejorar legibilidad */
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
 }
 
-/* Estilos para la FASE ACTIVA específica - ¡CLARO Y MARCADO! */
-/* Se elimina el .item-fase.fase-activa genérico si no aporta valor sobre los específicos */
-
-.item-fase.fase-pendiente.fase-activa {
-  background-color: #f39c12; /* Naranja/Ámbar */
+.item-fase.fase-activa {
+  background-color: #3498db;
+  border-color: #3498db;
   color: white;
-  border: 1.5px solid #e67e22; /* Borde naranja más oscuro */
-  font-weight: 600;
+  font-weight: bold;
 }
 
-.item-fase.fase-en_preparacion.fase-activa {
-  background-color: #3498db; /* Azul distintivo */
-  color: white;
-  border: 1.5px solid #2980b9; /* Borde azul más oscuro */
-  font-weight: 600;
+.pedidos-loading,
+.pedidos-error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2em;
 }
 
-.item-fase.fase-listo.fase-activa {
-  background-color: #2ecc71; /* Verde brillante */
-  color: white;
-  border: 1.5px solid #27ae60; /* Borde verde más oscuro */
-  font-weight: 600;
+.pedidos-error {
+  color: #e74c3c;
 }
 
-.item-fase.fase-entregado.fase-activa,
-.item-fase.fase-entregado.fase-completada { /* Entregado siempre se verá como "finalizado" */
-  background-color: #6c757d; /* Gris oscuro/Carbón */
-  color: white;
-  border: 1.5px solid #5a6268; /* Borde gris más oscuro */
-  font-weight: 600;
+.estado-comanda {
+  margin-top: 6px;
 }
 
-/* Estilos para la sección de estado general del pedido (si la mantienes) */
-.pedido-estado-general {
-  display: flex;
-  gap: 6px;
-  padding: 10px 0;
-  margin-top: 10px;
-  border-top: 1px solid #eee;
-  justify-content: center;
+.estado-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estado-badge.estado-pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.estado-badge.estado-en_preparacion {
+  background-color: #cce7ff;
+  color: #0056b3;
+  border: 1px solid #99d6ff;
+}
+
+.estado-badge.estado-listo {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.estado-badge.estado-entregado {
+  background-color: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d1ecf1;
 }
 
 .pedido-footer {
@@ -370,20 +350,92 @@
   color: #27ae60;
 }
 
-.cambio-estado {
+.filtro-estado-checkboxes {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.checkbox-estado-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
   padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background: #fff;
+  border-radius: 6px;
+  transition: background-color 0.2s;
 }
 
-.pedidos-loading,
-.pedidos-error {
-  text-align: center;
-  padding: 40px;
-  font-size: 1.2em;
+.checkbox-estado-item:hover {
+  background-color: #f8f9fa;
 }
 
-.pedidos-error {
-  color: #e74c3c;
+.checkbox-estado-input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #3498db;
+}
+
+.checkbox-estado-label {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+}
+
+.checkbox-estado-item:has(.checkbox-estado-input:checked) {
+  background-color: #e3f2fd;
+  border: 1px solid #3498db;
+}
+
+.checkbox-estado-item:has(.checkbox-estado-input:checked) .checkbox-estado-label {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* Fallback para navegadores que no soportan :has() */
+@supports not selector(:has(*)) {
+  .checkbox-estado-input:checked + .checkbox-estado-label {
+    color: #1976d2;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 1400px) {
+  .pedidos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .item-fase {
+    min-width: 50px;
+    font-size: 0.6em;
+    padding: 5px 7px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .pedidos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .item-fase {
+    min-width: 45px;
+    font-size: 0.55em;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pedidos-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .item-fase {
+    min-width: 50px;
+    font-size: 0.6em;
+    padding: 5px 7px;
+  }
 }
