@@ -12,12 +12,11 @@ import Reloj from '../../../components/Reloj';
 const EmpleadoCocinaView = () => {
   const { barId } = useParams();
   const [pedidos, setPedidos] = useState([]);
-  const [filtroEstado, setFiltroEstado] = useState('todos');
+  const [filtroEstado, setFiltroEstado] = useState(['todos']);
   const [ordenHora, setOrdenHora] = useState('asc'); 
   const [filtroMesa, setFiltroMesa] = useState('todas'); 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-
   const [todasLasMesas, setTodasLasMesas] = useState([]);
   const [cargandoMesas, setCargandoMesas] = useState(true);
   const [errorMesas, setErrorMesas] = useState(null);
@@ -29,6 +28,29 @@ const EmpleadoCocinaView = () => {
     { key: 'listo', label: 'Listos' },
     { key: 'entregado', label: 'Entregados' },
   ];
+
+  // Función para manejar cambios en los checkboxes de estado
+  const handleToggleEstado = (estadoKey) => {
+    if (estadoKey === 'todos') {
+      // Si selecciona "Todos", deseleccionar todos los demás
+      setFiltroEstado(['todos']);
+    } else {
+      setFiltroEstado(prevEstados => {
+        // Quitar "todos" si está seleccionado
+        const sinTodos = prevEstados.filter(e => e !== 'todos');
+        
+        if (sinTodos.includes(estadoKey)) {
+          // Si ya está seleccionado, deseleccionarlo
+          const nuevosEstados = sinTodos.filter(e => e !== estadoKey);
+          // Si no queda ninguno seleccionado, seleccionar "todos"
+          return nuevosEstados.length === 0 ? ['todos'] : nuevosEstados;
+        } else {
+          // Si no está seleccionado, agregarlo
+          return [...sinTodos, estadoKey];
+        }
+      });
+    }
+  };
 
   const formatFecha = (fechaISO) => {
     if (!fechaISO) return '-';
@@ -148,9 +170,16 @@ const EmpleadoCocinaView = () => {
 
   const pedidosFiltrados = pedidos
     .filter(pedido => {
-      const estadoPedidoNormalizado = pedido.estado ? pedido.estado.toLowerCase() : '';
-      return (filtroEstado === 'todos' || estadoPedidoNormalizado === filtroEstado) &&
-             (filtroMesa === 'todas' || pedido.mesaCodigo === filtroMesa);
+      // Calcular el estado de la comanda para cada pedido
+      const estadoComandaCalculado = calcularEstadoComanda(pedido.items);
+      
+      // Filtrar por estado calculado de la comanda (múltiples estados)
+      const cumpleFiltroEstado = filtroEstado.includes('todos') || filtroEstado.includes(estadoComandaCalculado);
+      
+      // Filtrar por mesa
+      const cumpleFiltroMesa = filtroMesa === 'todas' || pedido.mesaCodigo === filtroMesa;
+      
+      return cumpleFiltroEstado && cumpleFiltroMesa;
     })
     .sort((a, b) => {
       const fechaA = a.fecha || ''; 
@@ -165,23 +194,25 @@ const EmpleadoCocinaView = () => {
   return (
     <div className="empleado-pedidos-view">
       <div className="empleado-pedidos-header">
-        <h1>Gestión de Pedidos</h1>
+        <h1>Gestión de Comandas</h1>
         <Reloj formato="HH:mm:ss" />
       </div>
 
       <div className="filtros-pedidos">
+        {/* Filtro de Estado con Checkboxes */}
         <div className="filtro-grupo">
           <span className="filtro-label">Estado:</span>
-          <div className="filtro-estado-facetas">
+          <div className="filtro-estado-checkboxes">
             {estadosDisponibles.map(estado => (
-              <button
-                key={estado.key}
-                type="button"
-                className={`boton-faceta-estado ${filtroEstado === estado.key ? 'activo' : ''}`}
-                onClick={() => setFiltroEstado(estado.key)}
-              >
-                {estado.label}
-              </button>
+              <label key={estado.key} className="checkbox-estado-item">
+                <input
+                  type="checkbox"
+                  checked={filtroEstado.includes(estado.key)}
+                  onChange={() => handleToggleEstado(estado.key)}
+                  className="checkbox-estado-input"
+                />
+                <span className="checkbox-estado-label">{estado.label}</span>
+              </label>
             ))}
           </div>
         </div>
@@ -277,8 +308,10 @@ const EmpleadoCocinaView = () => {
                   
                   return (
                     <div key={item.id || `item-${pedido.id}-${index}`} className="pedido-item"> 
-                      <span className="item-cantidad">{item.cantidad}x</span> 
-                      <span className="item-nombre">{item.nombre}</span> 
+                      <div className="item-info">
+                        <span className="item-cantidad">{item.cantidad}x</span> 
+                        <span className="item-nombre">{item.nombre}</span> 
+                      </div>
                       
                       <div className="item-fases-container">
                         <div className="item-fases-buttons">

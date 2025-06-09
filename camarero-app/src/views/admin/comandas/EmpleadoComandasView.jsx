@@ -195,7 +195,7 @@ const EmpleadoComandasView = () => {
   return (
     <div className="empleado-pedidos-view">
       <div className="empleado-pedidos-header">
-        <h1>Gestión de Pedidos</h1>
+        <h1>Resumen de Comandas</h1>
         <Reloj formato="HH:mm:ss" />
       </div>
 
