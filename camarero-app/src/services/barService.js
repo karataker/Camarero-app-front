@@ -23,7 +23,7 @@ export const obtenerMesas = async (barId) => {
 
   return data.map((mesa) => ({
     ...mesa,
-    qrUrl: generarQrUrl(barId, mesa.codigo) // This will now correctly use the BASE_QR_URL value
+    qrUrl: generarQrUrl(barId, mesa.codigo)
   }));
 };
 
@@ -119,4 +119,20 @@ export const obtenerBarPorId = async (barId) => {
     throw new Error(`Error al obtener la información del bar: ${errorBody}`); //
   }
   return res.json();
+};
+
+export const getMesaPorId = async (barId, mesaId) => {
+  const res = await request(`/api/bares/${barId}/mesas`, {}, 'GET');
+  if (!res.ok) throw new Error('Error al obtener la mesa');
+  const mesas = await res.json();
+  return mesas.find(m => m.id === parseInt(mesaId)); 
+};
+
+export const liberarMesa = async (barId, mesaId) => {
+  const res = await request(`/api/bares/${barId}/mesas/id/${mesaId}/liberar`, {}, 'PUT');
+  if (!res.ok) {
+    const errorBody = await res.text();
+    throw new Error(`Error al liberar la mesa: ${errorBody}`);
+  }
+  return res.json(); // retorna la mesa actualizada
 };

@@ -87,32 +87,6 @@
   text-transform: capitalize;
 }
 
-/* Ajusta los colores de fondo y texto según el estado */
-.estado.pendiente {
-  background-color: #ffc107; /* Amarillo */
-  color: #333; /* Texto oscuro */
-}
-
-.estado.en-preparacion {
-  background-color: #17a2b8; /* Azul */
-  color: #fff; /* Texto blanco */
-}
-
-.estado.listo-en-barra {
-  background-color: #28a745; /* Verde */
-  color: #000; /* Texto negro */
-}
-
-.estado.entregado {
-  background-color: #6c757d; /* Gris */
-  color: #fff; /* Texto blanco */
-}
-
-.estado.cancelado {
-  background-color: #dc3545; /* Rojo */
-  color: #fff; /* Texto blanco */
-}
-
 
 .comanda-fecha {
   font-size: 0.9rem;
@@ -147,9 +121,36 @@
   color: white;
   margin-left: 8px;
 }
-.estado-individual.pendiente { background-color: #ffc107; color: #333; }
-.estado-individual.retirable { background-color: #28a745; } /* Para "Listo en barra" */
-.estado-individual.recogido { background-color: #6c757d; }
+.pendiente {
+  background-color: #ccc;
+  color: black;
+}
+.en_preparacion {
+  background-color: #f2c94c;
+  color: black;
+}
+.listo {
+  background-color: #4da6ff;
+  color: white;
+}
+.entregado {
+  background-color: #33c756;
+  color: black;
+}
+.terminado {
+  display: none;
+}
+
+@keyframes parpadeo-suave {
+  0%, 100% { box-shadow: 0 0 5px 2px rgba(77, 166, 255, 0.6); }
+  50% { box-shadow: 0 0 10px 4px rgba(77, 166, 255, 0.9); }
+}
+
+.listo {
+  background-color: #4da6ff;
+  color: white;
+  animation: parpadeo-suave 1.5s ease-in-out infinite;
+}
 
 
 .sin-comandas {

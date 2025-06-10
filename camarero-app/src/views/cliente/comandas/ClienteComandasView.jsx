@@ -37,8 +37,23 @@ const ClienteComandasView = () => {
             <div key={comanda.id} className="comanda-card">
               <div className="comanda-header">
                 <h3>Comanda #{comanda.id}</h3>
-                <span className={`estado ${comanda.estado?.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {comanda.estado}
+                <span className={`estado ${comanda.estado?.toLowerCase()}`}>
+                 {(() => {
+                  switch (comanda.estado) {
+                    case 'pendiente':
+                      return 'Pendiente';
+                    case 'en_preparacion':
+                      return 'En preparación';
+                    case 'listo':
+                      return 'Listo';
+                    case 'entregado':
+                      return 'Entregado';
+                    case 'terminado':
+                      return 'Terminado';
+                    default:
+                      return comanda.estado;
+                  }
+                })()}
                 </span>
               </div>
               <p className="comanda-fecha">{new Date(comanda.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
@@ -46,18 +61,23 @@ const ClienteComandasView = () => {
                 {comanda.items && comanda.items.map((item, idx) => (
                   <li key={idx}>
                     {item.nombre} x{item.cantidad}
-                    <span className={`estado-individual ${
-                      item.recogido
-                        ? 'recogido'
-                        : item.disponibleEnBarra // Asumiendo que este es el campo correcto
-                        ? 'retirable'
-                        : 'pendiente'
-                    }`}>
-                      {item.recogido
-                        ? 'Recogido'
-                        : item.disponibleEnBarra
-                        ? 'Listo en barra'
-                        : 'Preparándose'}
+                    <span className={`estado-individual ${item.estado?.toLowerCase()}`}>
+                     {(() => {
+                      switch (item.estado) {
+                        case 'pendiente':
+                          return 'Pendiente';
+                        case 'en_preparacion':
+                          return 'En preparación';
+                        case 'listo':
+                          return 'Listo';
+                        case 'entregado':
+                          return 'Entregado';
+                        case 'terminado':
+                          return 'Terminado';
+                        default:
+                          return item.estado;
+                      }
+                    })()}
                     </span>
                   </li>
                 ))}

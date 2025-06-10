@@ -1,29 +1,47 @@
-import React, { useEffect } from 'react'; // Importar useEffect
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useBar } from '../../../context/BarContext'; 
-import { useBares } from '../../../hooks/useBares'; // Importar useBares
-import { getMockNotificationCount } from '../../../mocks/notificationMocks';
-import '../../../styles/admin/home/homeEmpleado.css'; 
+import { useBar } from '../../../context/BarContext';
+import { useBares } from '../../../hooks/useBares';
+import { getNotificacionesPorTipoYBar } from '../../../services/notificacionService';
+import '../../../styles/admin/home/homeEmpleado.css';
 
-const HomeEmpleado = () => { 
+const HomeEmpleado = () => {
   const navigate = useNavigate();
   const { barSeleccionado, setBarSeleccionado } = useBar();
-  const { bares, cargarBares } = useBares(); // Obtener bares y la función para cargarlos
+  const { bares, cargarBares } = useBares();
+  const [noLeidasCocina, setNoLeidasCocina] = useState(0);
+  const intervaloRef = useRef(null);
 
-  // Cargar bares cuando el componente se monta.
-  // El Header también podría hacerlo, pero esto asegura que estén disponibles aquí.
   useEffect(() => {
     cargarBares();
   }, [cargarBares]);
 
-  // Efecto para seleccionar el primer bar por defecto si no hay ninguno seleccionado
   useEffect(() => {
     if (bares && bares.length > 0 && !barSeleccionado) {
       setBarSeleccionado(bares[0].id);
     }
   }, [bares, barSeleccionado, setBarSeleccionado]);
 
-  // Mantén tus opciones actuales o modifícalas según sea necesario
+  // Obtener solo notificaciones tipo "pedido" → van a cocina
+  useEffect(() => {
+    const cargarNotificacionesCocina = async () => {
+      if (!barSeleccionado) return;
+      try {
+        const todas = await getNotificacionesPorTipoYBar('pedido', barSeleccionado);
+        const sinLeer = todas.filter(n => !n.leida).length;
+        setNoLeidasCocina(sinLeer);
+      } catch (err) {
+        console.error('Error al cargar notificaciones de cocina:', err);
+      }
+    };
+
+    cargarNotificacionesCocina();
+    clearInterval(intervaloRef.current);
+    intervaloRef.current = setInterval(cargarNotificacionesCocina, 60000); // cada 60s
+
+    return () => clearInterval(intervaloRef.current);
+  }, [barSeleccionado]);
+
   const opciones = [
     {
       id: 'carta',
@@ -38,7 +56,6 @@ const HomeEmpleado = () => {
       icono: 'fa-calendar-check',
       ruta: `/admin/bar/${barSeleccionado}/reservas`,
       color: '#e67e22',
-      tipoNotificacion: 'nueva_reserva' 
     },
     {
       id: 'mesas',
@@ -53,7 +70,6 @@ const HomeEmpleado = () => {
       icono: 'fa-receipt',
       ruta: `/admin/bar/${barSeleccionado}/pedidos`,
       color: '#e84393',
-      tipoNotificacion: 'nuevo_pedido' 
     },
     {
       id: 'cocina',
@@ -61,7 +77,7 @@ const HomeEmpleado = () => {
       icono: 'fa-spoon',
       ruta: `/admin/bar/${barSeleccionado}/cocina`,
       color: '#FF6B6B',
-      tipoNotificacion: 'pedido_listo_cocina' 
+      mostrarNotificacion: true
     },
     {
       id: 'inventario',
@@ -69,7 +85,6 @@ const HomeEmpleado = () => {
       icono: 'fa-boxes',
       ruta: `/admin/bar/${barSeleccionado}/inventario`,
       color: '#f39c12',
-      tipoNotificacion: 'bajo_stock' 
     },
     {
       id: 'facturacion',
@@ -108,22 +123,14 @@ const HomeEmpleado = () => {
     }
   ];
 
-  // Resto de funciones sin cambios
-  const getNotificationCountForOption = (tipoNotificacionOpcion) => {
-    if (!tipoNotificacionOpcion) return 0;
-    return getMockNotificationCount(tipoNotificacionOpcion);
-  };
-
   const handleNavigation = (ruta) => {
     if (!barSeleccionado && !ruta.includes('/admin/panel') && !ruta.includes('/admin/home')) {
       alert('Por favor, selecciona un bar primero');
       return;
     }
-    // Si barSeleccionado es null/undefined, las rutas en `opciones` podrían ser como `/admin/bar/null/carta`.
-    // Aseguramos que la ruta sea válida antes de navegar si depende de barSeleccionado.
     if (ruta.includes(`/${null}/`) || ruta.includes(`/${undefined}/`)) {
-        alert('Por favor, espera a que se seleccione un bar o selecciona uno manualmente.');
-        return;
+      alert('Por favor, espera a que se seleccione un bar o selecciona uno manualmente.');
+      return;
     }
     navigate(ruta);
   };
@@ -135,21 +142,22 @@ const HomeEmpleado = () => {
       
       <div className="opciones-empleado-grid">
         {opciones.map(opcion => {
-          const notificationCount = getNotificationCountForOption(opcion.tipoNotificacion);
-          // Construir la ruta dinámicamente aquí también para asegurar que siempre esté actualizada
-          const rutaDinamica = barSeleccionado ? `/admin/bar/${barSeleccionado}/${opcion.id === 'mesas' ? 'panel' : opcion.id}` : opcion.ruta;
+          const rutaDinamica = barSeleccionado
+            ? `/admin/bar/${barSeleccionado}/${opcion.id === 'mesas' ? 'panel' : opcion.id}`
+            : opcion.ruta;
 
+          const notiCount = opcion.mostrarNotificacion ? noLeidasCocina : 0;
 
           return (
-            <div 
-              key={opcion.id} 
-              className="opcion-empleado" 
+            <div
+              key={opcion.id}
+              className="opcion-empleado"
               onClick={() => handleNavigation(rutaDinamica)}
               style={{ backgroundColor: opcion.color }}
             >
-              {notificationCount > 0 && (
+              {notiCount > 0 && (
                 <span className="notification-badge-homeempleado">
-                  {notificationCount > 99 ? '99+' : notificationCount}
+                  {notiCount > 99 ? '99+' : notiCount}
                 </span>
               )}
               <div className="opcion-icono">

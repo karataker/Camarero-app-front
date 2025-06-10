@@ -9,7 +9,6 @@ export const getComandasPorMesa = async (barId, mesaCodigo) => {
   try {
     // El path ya no necesita API_BASE_URL
     const path = `/pedidos/comandas/${barId}/${mesaCodigo}`;
-    console.log(`Requesting GET ${path}`);
     // Usar la función request del apiClient
     // El tercer argumento es el método HTTP, el segundo es el cuerpo (vacío para GET)
     const response = await request(path, {}, 'GET');
@@ -97,4 +96,10 @@ export const actualizarEstadoItem = async (itemId, nuevoEstado) => {
     console.error('Error en actualizarEstadoItem:', error);
     throw error;
   }
+};
+
+export const terminarComandasPorMesa = async (barId, mesaCodigo) => {
+  const res = await request(`/pedidos/comandas/${barId}/${mesaCodigo}/terminar`, {}, 'PUT');
+  if (!res.ok) throw new Error('Error al marcar las comandas como terminadas');
+  return true;
 };
