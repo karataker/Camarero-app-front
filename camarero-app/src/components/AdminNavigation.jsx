@@ -60,13 +60,9 @@ const AdminNavigation = () => {
           )}
         </div>
 
-        {/* Indicador actual */}
-        <div className="nav-current">
-          <i className={`fas ${currentView.icono}`}></i>
-          <span>{currentView.nombre}</span>
-          <div className="nav-position">
-            {currentViewIndex + 1} de {adminViews.length}
-          </div>
+        {/* Indicador central con texto */}
+        <div className="nav-current-text">
+          <span className="current-view-name">{currentView.nombre}</span>
         </div>
 
         {/* Botón siguiente */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, LabelList, PieChart, Pie, Cell } from 'recharts';
+import AdminNavigation from '../../../components/AdminNavigation';
 import '../../../styles/admin/analiticas/adminAnaliticasView.css';
 
 const AdminAnaliticasView = () => {
@@ -251,25 +252,39 @@ const AdminAnaliticasView = () => {
 
   return (
     <div className="admin-analiticas-view">
-      <h1>Vista de Analíticas</h1>
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
+      <div className="analiticas-header">
+        <h1>Vista de Analíticas</h1>
+      </div>
 
       <div className="filtros">
         <div className="filtro-ano">
-          <label htmlFor="filtroAnoActual">Selecciona el año de análisis:</label>
+          <label htmlFor="filtroAnoActual">
+            <i className="fas fa-calendar-alt"></i>
+            Año de análisis:
+          </label>
           <select id="filtroAnoActual" value={filtroAnoActual} onChange={(e) => setFiltroAnoActual(e.target.value)}>
             <option value="2025">2025</option>
             <option value="2024">2024</option>
           </select>
         </div>
         <div className="filtro-ano">
-          <label htmlFor="filtroAnoComparacion">Selecciona el año de comparación:</label>
+          <label htmlFor="filtroAnoComparacion">
+            <i className="fas fa-calendar-check"></i>
+            Año de comparación:
+          </label>
           <select id="filtroAnoComparacion" value={filtroAnoComparacion} onChange={(e) => setFiltroAnoComparacion(e.target.value)}>
             <option value="2025">2025</option>
             <option value="2024">2024</option>
           </select>
         </div>
         <div className="filtro-acumulado">
-          <label htmlFor="switchAcumulado">Importes acumulados:</label>
+          <label htmlFor="switchAcumulado">
+            <i className="fas fa-chart-line"></i>
+            Importes acumulados:
+          </label>
           <input
             type="checkbox"
             id="switchAcumulado"
@@ -279,7 +294,10 @@ const AdminAnaliticasView = () => {
           />
         </div>
         <div className="filtro-categoria">
-          <label htmlFor="filtroCategoria">Categoría de productos:</label>
+          <label htmlFor="filtroCategoria">
+            <i className="fas fa-tags"></i>
+            Categoría de productos:
+          </label>
           <select id="filtroCategoria" value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
             <option value="todas">Todas las Categorías</option>
             <option value="Pizzas">Pizzas</option>
@@ -290,12 +308,13 @@ const AdminAnaliticasView = () => {
         </div>
       </div>
 
-      {renderBarChart("Gráfico de Ventas", datosVentas, "actual", "anterior")}
-      {renderBarChart("Gráfico de Reservas", datosReservas, "actual", "anterior")}
-      {renderBarChart("Gráfico de Pedidos", datosPedidos, "actual", "anterior")}
-      {renderLineChart("Gráfico de Carrito Medio", datosCarritoMedio, "actual", "anterior")}
-      {renderProductosChart()}
-
+      <div className="graficos-container">
+        {renderBarChart("Gráfico de Ventas", datosVentas, "actual", "anterior")}
+        {renderBarChart("Gráfico de Reservas", datosReservas, "actual", "anterior")}
+        {renderBarChart("Gráfico de Pedidos", datosPedidos, "actual", "anterior")}
+        {renderLineChart("Gráfico de Carrito Medio", datosCarritoMedio, "actual", "anterior")}
+        {renderProductosChart()}
+      </div>
     </div>
   );
 };

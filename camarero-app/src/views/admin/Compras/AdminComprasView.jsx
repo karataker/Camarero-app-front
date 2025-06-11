@@ -4,6 +4,7 @@ import {
   getPedidosByBarConDetalles,
   getProveedoresByBar
 } from "../../../services/inventarioService";
+import AdminNavigation from "../../../components/AdminNavigation";
 import "../../../styles/admin/compras/compras.css";
 import ProveedorCrud from "./ProveedorCrud";
 import CrearPedidoModal from "./CrearPedidoModal";
@@ -57,60 +58,83 @@ const AdminComprasView = () => {
 
   return (
     <div className="admin-compras-view">
-      <h2>Compras</h2>
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
+      
+      <div className="compras-header">
+        <h2>Gestión de Compras</h2>
+      </div>
 
       <div className="resumen-cards">
         <div className="card resumen-card total-historico">
-            <p>Total gastado</p>
-            <h2>{totalHistorico.toFixed(2)} €</h2>
+          <p>Total gastado</p>
+          <h2>{totalHistorico.toFixed(2)} €</h2>
         </div>
         <div className="card resumen-card total-mes">
-            <p>En el último mes</p>
-            <h2>{totalUltimoMes.toFixed(2)} €</h2>
+          <p>En el último mes</p>
+          <h2>{totalUltimoMes.toFixed(2)} €</h2>
         </div>
-    </div>
-      <h3>Pedidos a proveedores</h3>
-      <div className="crear-pedido-wrapper">
-            <button className="btn btn-primary" onClick={() => setMostrarCrearPedido(true)}>
-                + Nuevo Pedido
-            </button>
-      </div>
-      <div className="tabla-wrapper">
-        <table className="tabla-pedidos">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Proveedor</th>
-              <th>Total</th>
-              <th>Detalles</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pedidos.map(p => (
-              <tr key={p.id}>
-                <td>{new Date(p.fecha).toLocaleDateString()}</td>
-                <td>{proveedores.find(pr => pr.id === p.proveedorId)?.nombre || '-'}</td>
-                <td>{p.total.toFixed(2)} €</td>
-                <td>
-                  <ul className={`pedido-detalles ${detallesExpandido[p.id] ? "expandido" : ""}`}>
-                    {p.detalles.slice(0, detallesExpandido[p.id] ? p.detalles.length : 3).map((d, idx) => (
-                      <li key={idx}>{d.productoNombre || d.productoId}: {d.cantidad} x {d.precio.toFixed(2)} €</li>
-                    ))}
-                  </ul>
-                  {p.detalles.length > 3 && (
-                    <button onClick={() => toggleExpandido(p.id)} className="ver-mas">
-                      {detallesExpandido[p.id] ? "Ver menos" : "Ver más"}
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
 
-      <h3>Gestión de proveedores</h3>
-      <ProveedorCrud barId={parseInt(barId)} />
+      <div className="seccion-pedidos">
+        <h3>Pedidos a proveedores</h3>
+        <div className="crear-pedido-wrapper">
+          <button className="btn btn-primary" onClick={() => setMostrarCrearPedido(true)}>
+            <i className="fas fa-plus"></i> Nuevo Pedido
+          </button>
+        </div>
+
+        <div className="tabla-wrapper">
+          <table className="tabla-pedidos">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Proveedor</th>
+                <th>Total</th>
+                <th>Detalles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pedidos.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="tabla-vacia">
+                    <i className="fas fa-shopping-cart"></i>
+                    <p>No hay pedidos registrados</p>
+                  </td>
+                </tr>
+              ) : (
+                pedidos.map(p => (
+                  <tr key={p.id}>
+                    <td>{new Date(p.fecha).toLocaleDateString('es-ES')}</td>
+                    <td>{proveedores.find(pr => pr.id === p.proveedorId)?.nombre || '-'}</td>
+                    <td><strong>{p.total.toFixed(2)} €</strong></td>
+                    <td>
+                      <ul className={`pedido-detalles ${detallesExpandido[p.id] ? "expandido" : ""}`}>
+                        {p.detalles.slice(0, detallesExpandido[p.id] ? p.detalles.length : 3).map((d, idx) => (
+                          <li key={idx}>
+                            {d.productoNombre || d.productoId}: {d.cantidad} x {d.precio.toFixed(2)} €
+                          </li>
+                        ))}
+                      </ul>
+                      {p.detalles.length > 3 && (
+                        <button onClick={() => toggleExpandido(p.id)} className="ver-mas">
+                          <i className={`fas ${detallesExpandido[p.id] ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                          {detallesExpandido[p.id] ? "Ver menos" : "Ver más"}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="seccion-proveedores">
+        <h3>Gestión de proveedores</h3>
+        <ProveedorCrud barId={parseInt(barId)} />
+      </div>
 
       {mostrarCrearPedido && (
         <CrearPedidoModal

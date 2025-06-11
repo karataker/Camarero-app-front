@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   getFacturasPorBar,
   crearSesionPago
 } from '../../../services/facturacionService';
+import AdminNavigation from '../../../components/AdminNavigation';
 import '../../../styles/admin/facturacion/empleadoFacturacionView.css';
 
 const EmpleadoFacturacionView = () => {
@@ -66,11 +67,8 @@ const EmpleadoFacturacionView = () => {
 
   return (
     <div className="empleado-facturacion-view">
-      <div className="empleado-breadcrumb">
-        <Link to="/admin/home">Panel</Link><span>/</span>
-        <Link to={`/admin/bar/${barId}`}>Bar</Link><span>/</span>
-        <span>Facturación</span>
-      </div>
+      {/* Añadir navegación de admin */}
+      <AdminNavigation />
 
       <div className="facturacion-header">
         <h1>Gestión de Facturación</h1>
@@ -106,7 +104,6 @@ const EmpleadoFacturacionView = () => {
         </select>
       </div>
 
-      {/* Cambiar de grid a listado de tabla */}
       <div className="facturas-tabla">
         <div className="tabla-header">
           <div className="header-item">Nº Factura</div>
@@ -163,15 +160,12 @@ const EmpleadoFacturacionView = () => {
               </div>
               
               <div className="fila-item acciones">
-                {/* Eliminar botón de detalles */}
                 {f.estado !== 'pagada' && <button onClick={() => handlePagar(f)} className="btn-pagar">Pagar</button>}
               </div>
             </div>
           ))
         )}
       </div>
-
-      {/* Eliminar modal de detalles completo */}
     </div>
   );
 };
