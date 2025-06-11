@@ -78,6 +78,7 @@ const AdminUsuarioView = () => {
         <select name="rol_id" value={nuevoUsuario.rol.id} onChange={handleChange}>
           <option value={1}>CAMARERO</option>
           <option value={2}>ADMIN</option>
+          <option value={4}>COCINERO</option>
         </select>
         <button type="submit" onClick={handleGuardar}>Guardar Usuario</button>
       </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBar } from '../../../context/BarContext';
 import { useBares } from '../../../hooks/useBares';
+import { useUser } from '../../../hooks/useUser';
 import { getNotificacionesPorTipoYBar } from '../../../services/notificacionService';
 import '../../../styles/admin/home/homeEmpleado.css';
 
@@ -9,6 +10,9 @@ const HomeEmpleado = () => {
   const navigate = useNavigate();
   const { barSeleccionado, setBarSeleccionado } = useBar();
   const { bares, cargarBares } = useBares();
+  const { usuario } = useUser();
+  const rol = usuario?.tipo;
+
   const [noLeidasCocina, setNoLeidasCocina] = useState(0);
   const intervaloRef = useRef(null);
 
@@ -22,7 +26,6 @@ const HomeEmpleado = () => {
     }
   }, [bares, barSeleccionado, setBarSeleccionado]);
 
-  // Obtener solo notificaciones tipo "pedido" → van a cocina
   useEffect(() => {
     const cargarNotificacionesCocina = async () => {
       if (!barSeleccionado) return;
@@ -37,7 +40,7 @@ const HomeEmpleado = () => {
 
     cargarNotificacionesCocina();
     clearInterval(intervaloRef.current);
-    intervaloRef.current = setInterval(cargarNotificacionesCocina, 60000); // cada 60s
+    intervaloRef.current = setInterval(cargarNotificacionesCocina, 60000);
 
     return () => clearInterval(intervaloRef.current);
   }, [barSeleccionado]);
@@ -49,6 +52,7 @@ const HomeEmpleado = () => {
       icono: 'fa-utensils',
       ruta: `/admin/bar/${barSeleccionado}/carta`,
       color: '#2EAD63',
+      roles: ['CAMARERO', 'COCINERO', 'ADMIN'],
     },
     {
       id: 'reservas',
@@ -56,6 +60,7 @@ const HomeEmpleado = () => {
       icono: 'fa-calendar-check',
       ruta: `/admin/bar/${barSeleccionado}/reservas`,
       color: '#e67e22',
+      roles: ['CAMARERO', 'ADMIN'],
     },
     {
       id: 'mesas',
@@ -63,6 +68,7 @@ const HomeEmpleado = () => {
       icono: 'fa-table',
       ruta: `/admin/bar/${barSeleccionado}/panel`,
       color: '#3498db',
+      roles: ['CAMARERO', 'COCINERO', 'ADMIN'],
     },
     {
       id: 'pedidos',
@@ -70,6 +76,7 @@ const HomeEmpleado = () => {
       icono: 'fa-receipt',
       ruta: `/admin/bar/${barSeleccionado}/pedidos`,
       color: '#e84393',
+      roles: ['CAMARERO', 'ADMIN'],
     },
     {
       id: 'cocina',
@@ -77,7 +84,8 @@ const HomeEmpleado = () => {
       icono: 'fa-spoon',
       ruta: `/admin/bar/${barSeleccionado}/cocina`,
       color: '#FF6B6B',
-      mostrarNotificacion: true
+      roles: ['COCINERO', 'ADMIN'],
+      mostrarNotificacion: true,
     },
     {
       id: 'inventario',
@@ -85,6 +93,7 @@ const HomeEmpleado = () => {
       icono: 'fa-boxes',
       ruta: `/admin/bar/${barSeleccionado}/inventario`,
       color: '#f39c12',
+      roles: ['COCINERO', 'ADMIN'],
     },
     {
       id: 'facturacion',
@@ -92,6 +101,7 @@ const HomeEmpleado = () => {
       icono: 'fa-file-invoice-dollar',
       ruta: `/admin/bar/${barSeleccionado}/facturacion`,
       color: '#1abc9c',
+      roles: ['ADMIN'],
     },
     {
       id: 'compras',
@@ -99,6 +109,7 @@ const HomeEmpleado = () => {
       icono: 'fa-shopping-cart',
       ruta: `/admin/bar/${barSeleccionado}/compras`,
       color: '#16a085',
+      roles: ['ADMIN'],
     },
     {
       id: 'analiticas',
@@ -106,6 +117,7 @@ const HomeEmpleado = () => {
       icono: 'fa-chart-line',
       ruta: `/admin/bar/${barSeleccionado}/analiticas`,
       color: '#9b59b6',
+      roles: ['ADMIN'],
     },
     {
       id: 'usuarios',
@@ -113,13 +125,15 @@ const HomeEmpleado = () => {
       icono: 'fa-users',
       ruta: `/admin/bar/${barSeleccionado}/usuarios`,
       color: '#e74c3c',
+      roles: ['ADMIN'],
     },
     {
       id: 'configuracion',
       nombre: 'Configuración',
       icono: 'fa-cog',
       ruta: `/admin/bar/${barSeleccionado}/configuracion`,
-      color: '#34495e'
+      color: '#34495e',
+      roles: ['ADMIN'],
     }
   ];
 
@@ -128,7 +142,7 @@ const HomeEmpleado = () => {
       alert('Por favor, selecciona un bar primero');
       return;
     }
-    if (ruta.includes(`/${null}/`) || ruta.includes(`/${undefined}/`)) {
+    if (!ruta || ruta.includes('${null}') || ruta.includes('${undefined}')) {
       alert('Por favor, espera a que se seleccione un bar o selecciona uno manualmente.');
       return;
     }
@@ -139,34 +153,32 @@ const HomeEmpleado = () => {
     <div className="home-empleado-container">
       <h1>Panel de Administración</h1>
       <p className="empleado-subtitle">Selecciona una opción para gestionar tu negocio</p>
-      
+
       <div className="opciones-empleado-grid">
-        {opciones.map(opcion => {
-          const rutaDinamica = barSeleccionado
-            ? `/admin/bar/${barSeleccionado}/${opcion.id === 'mesas' ? 'panel' : opcion.id}`
-            : opcion.ruta;
+        {opciones
+          .filter(op => op.roles.includes(rol))
+          .map(opcion => {
+            const notiCount = opcion.mostrarNotificacion ? noLeidasCocina : 0;
 
-          const notiCount = opcion.mostrarNotificacion ? noLeidasCocina : 0;
-
-          return (
-            <div
-              key={opcion.id}
-              className="opcion-empleado"
-              onClick={() => handleNavigation(rutaDinamica)}
-              style={{ backgroundColor: opcion.color }}
-            >
-              {notiCount > 0 && (
-                <span className="notification-badge-homeempleado">
-                  {notiCount > 99 ? '99+' : notiCount}
-                </span>
-              )}
-              <div className="opcion-icono">
-                <i className={`fas ${opcion.icono}`}></i>
+            return (
+              <div
+                key={opcion.id}
+                className="opcion-empleado"
+                onClick={() => handleNavigation(opcion.ruta)}
+                style={{ backgroundColor: opcion.color }}
+              >
+                {notiCount > 0 && (
+                  <span className="notification-badge-homeempleado">
+                    {notiCount > 99 ? '99+' : notiCount}
+                  </span>
+                )}
+                <div className="opcion-icono">
+                  <i className={`fas ${opcion.icono}`}></i>
+                </div>
+                <p>{opcion.nombre}</p>
               </div>
-              <p>{opcion.nombre}</p>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );

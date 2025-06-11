@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import '../../../styles/admin/cocina/empleadoCocinaView.css'; 
+import '../../../styles/admin/cocina/empleadoCocinaView.css';
 
 import { getComandasPorBar, actualizarEstadoItem } from '../../../services/comandaService';
-import { obtenerMesas, getMesaPorId } from '../../../services/barService';
 import AdminNavigation from '../../../components/AdminNavigation';
-
-import { MdOutlinePendingActions, MdOutlineDeliveryDining, MdDoneAll } from 'react-icons/md';
-import { GiCook } from 'react-icons/gi';
-import Reloj from '../../../components/Reloj'; 
+import Reloj from '../../../components/Reloj';
 
 const EmpleadoCocinaView = () => {
   const { barId } = useParams();
   const [pedidos, setPedidos] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState(['todos']);
-  const [ordenHora, setOrdenHora] = useState('asc'); 
-  const [filtroMesa, setFiltroMesa] = useState('todas'); 
+  const [ordenHora, setOrdenHora] = useState('asc');
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [todasLasMesas, setTodasLasMesas] = useState([]);
-  const [cargandoMesas, setCargandoMesas] = useState(true);
-  const [errorMesas, setErrorMesas] = useState(null);
-  const [nombresMesas, setNombresMesas] = useState({});
 
   const estadosDisponibles = [
     { key: 'todos', label: 'Todos' },
@@ -53,138 +44,94 @@ const EmpleadoCocinaView = () => {
       const fechaObj = new Date(fechaISO);
       return fechaObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
     } catch (e) {
-      console.error("Error formateando fecha:", fechaISO, e);
-      return fechaISO; 
+      return fechaISO;
     }
   };
 
   useEffect(() => {
-    const cargarDatosIniciales = async () => {
+    const cargarDatos = async () => {
       if (!barId) {
         setError('No se ha especificado un bar.');
-        setCargando(false);
-        setCargandoMesas(false);
         setPedidos([]);
-        setTodasLasMesas([]);
+        setCargando(false);
         return;
       }
 
       try {
         setCargando(true);
-        const comandasData = await getComandasPorBar(barId); 
+        const comandasData = await getComandasPorBar(barId);
         setPedidos(comandasData || []);
-
-        const nombres = {};
-        for (const pedido of comandasData) {
-          if (pedido.mesaCodigo && !nombres[pedido.mesaCodigo]) {
-            const mesa = await getMesaPorId(barId, pedido.mesaCodigo);
-            nombres[pedido.mesaCodigo] = mesa?.codigo || pedido.mesaCodigo;
-          }
-        }
-        setNombresMesas(nombres);
-
       } catch (err) {
-        setError('Error al cargar los pedidos desde el servicio');
+        setError('Error al cargar las comandas');
         console.error("Error en getComandasPorBar:", err);
-        setPedidos([]); 
+        setPedidos([]);
       } finally {
         setCargando(false);
       }
-
-      try {
-        setCargandoMesas(true);
-        setErrorMesas(null);
-        const mesasData = await obtenerMesas(barId);
-        setTodasLasMesas(mesasData || []);
-      } catch (err) {
-        console.error("Error cargando todas las mesas:", err);
-        setErrorMesas("Error al cargar la configuración de mesas.");
-        setTodasLasMesas([]);
-      } finally {
-        setCargandoMesas(false);
-      }
     };
 
-    cargarDatosIniciales();
+    cargarDatos();
   }, [barId]);
 
   const handleCambiarEstadoItem = async (pedidoId, itemId, nuevoEstado) => {
     try {
       const itemActualizado = await actualizarEstadoItem(itemId, nuevoEstado);
-      setPedidos(prevPedidos =>
-        prevPedidos.map(pedido => {
-          if (pedido.id !== pedidoId) return pedido;
-          const nuevosItems = pedido.items.map(item => {
-            if (item.id !== itemId) return item;
-            return { ...item, estado: itemActualizado.estado };
-          });
-          return { ...pedido, items: nuevosItems };
-        })
+      setPedidos(prev =>
+        prev.map(pedido =>
+          pedido.id !== pedidoId
+            ? pedido
+            : {
+                ...pedido,
+                items: pedido.items.map(item =>
+                  item.id !== itemId ? item : { ...item, estado: itemActualizado.estado }
+                )
+              }
+        )
       );
     } catch (err) {
-      console.error('Error al actualizar el estado del ítem:', err);
+      console.error('Error al actualizar estado:', err);
     }
   };
 
   const calcularEstadoComanda = (items) => {
-    if (!items || items.length === 0) return 'pendiente';
-    const estados = items.map(item => (item.estado || 'pendiente').toLowerCase());
+    const estados = items?.map(i => (i.estado || 'pendiente').toLowerCase()) || [];
     const allAre = (estado) => estados.every(e => e === estado);
     const someAre = (estado) => estados.some(e => e === estado);
     const allIn = (grupo) => estados.every(e => grupo.includes(e));
     switch (true) {
-      case allAre('terminado'):
-        return 'terminado';
-      case allAre('entregado'):
-        return 'entregado';
-      case allIn(['listo', 'entregado']):
-        return 'listo';
-      case someAre('en_preparacion'):
-        return 'en_preparacion';
-      default:
-        return 'pendiente';
+      case allAre('terminado'): return 'terminado';
+      case allAre('entregado'): return 'entregado';
+      case allIn(['listo', 'entregado']): return 'listo';
+      case someAre('en_preparacion'): return 'en_preparacion';
+      default: return 'pendiente';
     }
   };
 
   const obtenerTextoEstado = (estado) => {
-    const estadosTexto = {
-      'pendiente': 'Pendiente',
-      'en_preparacion': 'En Preparación',
-      'listo': 'Listo',
-      'entregado': 'Entregado',
-      'terminado': 'Terminado'
+    const map = {
+      pendiente: 'Pendiente',
+      en_preparacion: 'En Preparación',
+      listo: 'Listo',
+      entregado: 'Entregado',
+      terminado: 'Terminado'
     };
-    return estadosTexto[estado] || 'Desconocido';
+    return map[estado] || 'Desconocido';
   };
-
-  if (cargando || cargandoMesas) {
-    return <div className="pedidos-loading">Cargando datos...</div>;
-  }
-
-  if (error) {
-    return <div className="pedidos-error">{error}</div>;
-  }
 
   const pedidosFiltrados = pedidos
     .filter(pedido => {
-      const estadoComandaCalculado = calcularEstadoComanda(pedido.items);
-
-      if (estadoComandaCalculado === 'terminado') return false; // 👈 excluir
-
-      const cumpleFiltroEstado = filtroEstado.includes('todos') || filtroEstado.includes(estadoComandaCalculado);
-      const cumpleFiltroMesa = filtroMesa === 'todas' || pedido.mesaCodigo === filtroMesa;
-
-      return cumpleFiltroEstado && cumpleFiltroMesa;
+      const estado = calcularEstadoComanda(pedido.items);
+      if (estado === 'terminado') return false;
+      return filtroEstado.includes('todos') || filtroEstado.includes(estado);
     })
     .sort((a, b) => {
-      const fechaA = a.fecha || ''; 
-      const fechaB = b.fecha || ''; 
-      if (ordenHora === 'asc') {
-        return new Date(fechaA).getTime() - new Date(fechaB).getTime();
-      } else {
-        return new Date(fechaB).getTime() - new Date(fechaA).getTime();
-      }
+      const fa = new Date(a.fecha).getTime();
+      const fb = new Date(b.fecha).getTime();
+      return ordenHora === 'asc' ? fa - fb : fb - fa;
     });
+
+  if (cargando) return <div className="pedidos-loading">Cargando...</div>;
+  if (error) return <div className="pedidos-error">{error}</div>;
 
   return (
     <div className="empleado-pedidos-view">
@@ -212,40 +159,12 @@ const EmpleadoCocinaView = () => {
           </div>
         </div>
 
-        <div className="filtro-grupo">
-          <span className="filtro-label">Mesa:</span>
-          {errorMesas && <p className="error-texto-filtro">{errorMesas}</p>}
-          {!errorMesas && !cargandoMesas && (
-            <div className="filtro-mesas-minimapa">
-              <button
-                type="button"
-                className={`mini-mesa-item ${filtroMesa === 'todas' ? 'activo' : ''}`}
-                onClick={() => setFiltroMesa('todas')}
-              >
-                Todas
-              </button>
-              {todasLasMesas.map(mesa => (
-                <button
-                  key={mesa.id || mesa.codigo}
-                  type="button"
-                  className={`mini-mesa-item ${filtroMesa === mesa.codigo ? 'activo' : ''}`}
-                  onClick={() => setFiltroMesa(mesa.codigo)}
-                  title={`Mesa ${mesa.codigo}${mesa.nombre ? ` (${mesa.nombre})` : ''}`}
-                >
-                  {mesa.codigo || mesa.nombre}
-                </button>
-              ))}
-              {todasLasMesas.length === 0 && <p className="info-texto-filtro">No hay mesas configuradas para este bar.</p>}
-            </div>
-          )}
-        </div>
-
         <div className="filtro-grupo filtro-grupo-auto">
           <span className="filtro-label">Ordenar por:</span>
           <select
             value={ordenHora}
             onChange={e => setOrdenHora(e.target.value)}
-            className="filtro-select" 
+            className="filtro-select"
           >
             <option value="asc">Más antiguos primero</option>
             <option value="desc">Más recientes primero</option>
@@ -255,21 +174,19 @@ const EmpleadoCocinaView = () => {
 
       <div className="pedidos-grid">
         {pedidosFiltrados.map(pedido => {
-          const estadoComandaCalculado = calcularEstadoComanda(pedido.items);
-          const estadoPedidoClase = estadoComandaCalculado;
-          const nombreMesa = nombresMesas[pedido.mesaCodigo] || `Mesa ${pedido.mesaCodigo}`;
+          const estado = calcularEstadoComanda(pedido.items);
 
           return (
-            <div key={pedido.id} className={`pedido-card estado-${estadoPedidoClase}`}>
+            <div key={pedido.id} className={`pedido-card estado-${estado}`}>
               <div className="pedido-header">
                 <div>
-                  <h3>{nombreMesa}</h3>
+                  <h3>Mesa {pedido.mesaCodigo}</h3>
                   <div className="pedido-codigo">
                     Código Comanda: <b>{pedido.id}</b>
                   </div>
                   <div className="estado-comanda">
-                    <span className={`estado-badge estado-${estadoComandaCalculado}`}>
-                      {obtenerTextoEstado(estadoComandaCalculado)}
+                    <span className={`estado-badge estado-${estado}`}>
+                      {obtenerTextoEstado(estado)}
                     </span>
                   </div>
                 </div>
@@ -281,18 +198,12 @@ const EmpleadoCocinaView = () => {
               </div>
 
               <div className="pedido-items">
-                {pedido.items && pedido.items.map((item, index) => {
-                  const fases = [
-                    { key: 'pendiente', label: 'Pendiente' },
-                    { key: 'en_preparacion', label: 'En preparación' },
-                    { key: 'listo', label: 'Listo' },
-                    { key: 'entregado', label: 'Entregado' }
-                  ];
-                  const itemEstadoNormalizado = item.estado ? item.estado.toLowerCase() : 'pendiente';
-                  const faseActualIndex = fases.findIndex(f => f.key === itemEstadoNormalizado);
+                {pedido.items?.map((item, index) => {
+                  const fases = ['pendiente', 'en_preparacion', 'listo', 'entregado'];
+                  const actual = fases.findIndex(f => f === item.estado?.toLowerCase());
 
                   return (
-                    <div key={item.id || `item-${pedido.id}-${index}`} className="pedido-item">
+                    <div key={item.id || `item-${index}`} className="pedido-item">
                       <div className="item-info">
                         <span className="item-cantidad">{item.cantidad}x</span>
                         <span className="item-nombre">{item.nombre}</span>
@@ -301,17 +212,16 @@ const EmpleadoCocinaView = () => {
                         <div className="item-fases-buttons">
                           {fases.map((fase, i) => (
                             <button
-                              key={fase.key}
-                              title={`Marcar como ${fase.label}`}
+                              key={fase}
                               className={
                                 "item-fase-btn " +
-                                (i === faseActualIndex ? "fase-activa" : "") +
-                                (i < faseActualIndex ? "fase-completada" : "")
+                                (i === actual ? "fase-activa" : "") +
+                                (i < actual ? "fase-completada" : "")
                               }
-                              disabled={i <= faseActualIndex}
-                              onClick={() => handleCambiarEstadoItem(pedido.id, item.id, fase.key)}
+                              disabled={i <= actual}
+                              onClick={() => handleCambiarEstadoItem(pedido.id, item.id, fase)}
                             >
-                              {fase.label}
+                              {fase.charAt(0).toUpperCase() + fase.slice(1).replace('_', ' ')}
                             </button>
                           ))}
                         </div>
