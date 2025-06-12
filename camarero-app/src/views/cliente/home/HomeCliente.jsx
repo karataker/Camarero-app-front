@@ -2,8 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../../services//apiClient';
 import '../../../styles/cliente/home/homeCliente.css';
-
-// Importar las imágenes
 import imgReservarMesa from '../../../img/reservar_mesa.png';
 import imgCartaAutopedidos from '../../../img/carta_autopedidos.png';
 import imgVerCarta from '../../../img/ver_carta.png';
@@ -13,7 +11,6 @@ const HomeCliente = () => {
 
   const handleLoginAndNavigate = async (rutaDestino) => {
     try {
-      // Este login es para las opciones que sí requieren interacción de cliente autenticado
       await login("9999", "clientetfm"); 
       navigate(rutaDestino);
     } catch (error) {

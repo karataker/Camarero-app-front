@@ -3,7 +3,7 @@ import { useUser } from '../hooks/useUser';
 import { useBares } from '../hooks/useBares';
 import { useBar } from '../context/BarContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import BellDropdown from './BellDropdown'; // ✅ nuevo
+import BellDropdown from './BellDropdown';
 import logo from '../img/CamareroApp.png';
 import '../styles/header.css';
 

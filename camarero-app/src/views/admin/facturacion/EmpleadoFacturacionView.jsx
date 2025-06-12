@@ -67,7 +67,7 @@ const EmpleadoFacturacionView = () => {
 
   return (
     <div className="empleado-facturacion-view">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
 
       <div className="facturacion-header">

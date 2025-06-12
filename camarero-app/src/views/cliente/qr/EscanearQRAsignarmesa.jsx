@@ -29,7 +29,7 @@ const EscanearQR = () => {
   const [showComensalesInput, setShowComensalesInput] = useState(false);
   const [numeroComensales, setNumeroComensales] = useState('');
   const [scannedUrl, setScannedUrl] = useState(null);
-  const [mesaInfo, setMesaInfo] = useState(null); // Nuevo estado
+  const [mesaInfo, setMesaInfo] = useState(null);
 
   const stopReader = () => {
     try {

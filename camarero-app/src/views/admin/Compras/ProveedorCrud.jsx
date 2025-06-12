@@ -1,5 +1,3 @@
-// src/views/admin/compras/ProveedorCrud.jsx
-
 import React, { useEffect, useState } from "react";
 import {
   getProveedoresByBar,

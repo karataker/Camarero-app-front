@@ -2,11 +2,13 @@ import { request } from "./apiClient";
 
 const BASE_PATH = "/inventario";
 
+
 export const getInventario = async () => {
   const res = await request(`${BASE_PATH}`, {}, "GET");
   if (!res.ok) throw new Error("Error al obtener el inventario");
   return res.json();
 };
+
 
 export const getInventarioByBar = async (barId) => {
   const res = await request(`${BASE_PATH}/bar/${barId}`, {}, "GET");
@@ -14,11 +16,13 @@ export const getInventarioByBar = async (barId) => {
   return res.json();
 };
 
+
 export const getProductoInventario = async (id) => {
   const res = await request(`${BASE_PATH}/${id}`, {}, "GET");
   if (!res.ok) throw new Error("Producto no encontrado");
   return res.json();
 };
+
 
 export const getStockProducto = async (id) => {
   const res = await request(`${BASE_PATH}/${id}/stock`, {}, "GET");
@@ -26,11 +30,13 @@ export const getStockProducto = async (id) => {
   return res.json();
 };
 
+
 export const getBajoMinimo = async () => {
   const res = await request(`${BASE_PATH}/bajo-minimo`, {}, "GET");
   if (!res.ok) throw new Error("Error al cargar productos críticos");
   return res.json();
 };
+
 
 export const createProductoInventario = async (data) => {
   const res = await request(`${BASE_PATH}`, data, "POST");
@@ -38,22 +44,26 @@ export const createProductoInventario = async (data) => {
   return res.json();
 };
 
+
 export const updateProductoInventario = async (id, data) => {
   const res = await request(`${BASE_PATH}/${id}`, data, "PUT");
   if (!res.ok) throw new Error("Error al actualizar producto");
   return res.json();
 };
 
+
 export const deleteProductoInventario = async (id) => {
   const res = await request(`${BASE_PATH}/${id}`, {}, "DELETE");
   if (!res.ok) throw new Error("Error al eliminar producto");
 };
+
 
 export const ajustarEntrada = async (id, cantidad) => {
   const res = await request(`${BASE_PATH}/${id}/ajustar/entrada`, { cantidad }, "POST");
   if (!res.ok) throw new Error("Error al ajustar entrada");
   return res.json();
 };
+
 
 export const ajustarSalida = async (id, cantidad) => {
   const res = await request(`${BASE_PATH}/${id}/ajustar/salida`, { cantidad }, "POST");
@@ -67,11 +77,13 @@ export const getCategoriasByBar = async (barId) => {
   return res.json();
 };
 
+
 export const createCategoria = async (data) => {
   const res = await request(`${BASE_PATH}/categorias`, data, "POST");
   if (!res.ok) throw new Error("Error al crear categoría");
   return res.json();
 };
+
 
 export const getPedidosByProveedor = async (proveedorId) => {
   const res = await request(`${BASE_PATH}/pedidos/proveedor/${proveedorId}`, {}, "GET");

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Añadir useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import '../../../styles/cliente/carta/clienteCartaDigital.css';
 import '../../../styles/cliente/carta/carritoView.css';
 import { getProductosByBar, getCategoriasByBar, getRacionesDisponibles } from '../../../services/menuService';
@@ -56,8 +56,8 @@ const ClienteCartaDigitalView = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const { barId, mesaId } = useParams();
-  const navigate = useNavigate(); // Inicializar useNavigate
-  const { carrito, agregarProducto, quitarProducto, vaciarCarrito, calcularTotal } = useCarrito(); // Asegúrate de tener calcularTotal o similar
+  const navigate = useNavigate();
+  const { carrito, agregarProducto, quitarProducto, vaciarCarrito, calcularTotal } = useCarrito();
 
   useEffect(() => {
     const cargarCartaYBar = async () => {
@@ -202,7 +202,6 @@ const ClienteCartaDigitalView = () => {
           <button className="abrir-carrito" onClick={() => setCarritoAbierto(!carritoAbierto)}>
             <i className="fas fa-shopping-cart"></i> <span>{carrito.length}</span>
           </button>
-          {/* El botón "Confirmar Pedido" se ha movido de aquí */}
         </div>
         <div className="carta-busqueda">
           <input
@@ -243,7 +242,6 @@ const ClienteCartaDigitalView = () => {
                 <span>Total:</span>
                 <strong>{carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0).toFixed(2)}€</strong>
               </div>
-              {/* Botón "Confirmar Pedido" movido aquí DENTRO del carrito-drawer */}
               <div className="carrito-acciones-footer">
                 <button className="btn-vaciar-carrito-drawer" onClick={vaciarCarrito}>
                   Vaciar Carrito

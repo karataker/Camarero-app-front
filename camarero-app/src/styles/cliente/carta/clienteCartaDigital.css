@@ -1,4 +1,4 @@
-/* === Carta Digital === */
+
 .carta-digital {
   max-width: 1200px;
   margin: 0 auto;
@@ -49,7 +49,6 @@
   color: #666;
 }
 
-/* === Categorías === */
 .categorias-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -80,7 +79,6 @@
   color: white;
 }
 
-/* === Productos === */
 .productos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -95,7 +93,7 @@
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.3s ease;
-  position: relative; /* Necesario para el posicionamiento absoluto del overlay */
+  position: relative;
 }
 
 .producto-card:hover {
@@ -104,34 +102,33 @@
 
 .producto-imagen {
   width: 100%;
-  height: 200px; /* Ajusta según tus imágenes */
+  height: 200px;
   overflow: hidden;
-  position: relative; /* Para el overlay de "No disponible" */
+  position: relative;
 }
 
 .producto-imagen img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Para que la imagen cubra el área sin distorsionarse */
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
 .producto-card:hover .producto-imagen img {
-  transform: scale(1.05); /* Ligero zoom al pasar el ratón */
+  transform: scale(1.05);
 }
 
-/* Estilos para el overlay "No disponible" */
 .producto-no-disponible {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(220, 53, 69, 0.8); /* Rojo con opacidad (Bootstrap danger color con alfa) */
+  background-color: rgba(220, 53, 69, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1; /* Para que esté por encima de la imagen */
+  z-index: 1;
 }
 
 .producto-no-disponible span {
@@ -211,7 +208,6 @@
   transform: scale(1.1);
 }
 
-/* === Alergenos === */
 .producto-alergenos {
   display: flex;
   gap: 6px;
@@ -256,7 +252,6 @@
   opacity: 1;
 }
 
-/* === Estados === */
 .carta-cargando, .carta-error, .no-productos {
   display: flex;
   flex-direction: column;
@@ -281,7 +276,6 @@
   margin-bottom: 12px;
 }
 
-/* === Responsive === */
 @media (max-width: 768px) {
   .carta-header {
     flex-direction: column;
@@ -342,38 +336,37 @@
   background-color: #218838;
 }
 
-/* === Botón Mis Pedidos === */
 .btn-mis-pedidos {
-  background-color: #17a2b8; /* Un teal vibrante (Bootstrap info color) */
+  background-color: #17a2b8;
   color: white;
-  padding: 10px 18px; /* Ligeramente más padding horizontal */
+  padding: 10px 18px;
   border: none;
-  border-radius: 6px; /* Un poco más redondeado */
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.95rem; /* Un poco más grande */
-  font-weight: 600; /* Más bold */
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s ease-in-out; /* Transición para todos los cambios */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn-mis-pedidos:hover {
-  background-color: #117a8b; /* Teal más oscuro para hover */
-  transform: translateY(-2px) scale(1.03); /* Efecto de elevación y ligero zoom */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  background-color: #117a8b;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-mis-pedidos:active {
-  background-color: #0f6674; /* Teal aún más oscuro para active */
+  background-color: #0f6674;
   transform: translateY(0) scale(1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-mis-pedidos i {
-  font-size: 1.05em; /* Icono ligeramente más grande */
+  font-size: 1.05em;
 }
 
 .abrir-carrito {

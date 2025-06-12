@@ -1,4 +1,4 @@
-/* Layout general de la vista de carta */
+
 .admin-carta-view {
   padding: 2rem;
   background-color: #f7f9fb;
@@ -11,7 +11,7 @@
   color: #1c3b57;
 }
 
-/* Botones de categorías */
+
 .carta-categorias {
   display: flex;
   gap: 1rem;
@@ -39,15 +39,14 @@
   color: white;
 }
 
-/* Grid para las tarjetas de producto */
+
 .carta-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, auto));
-  justify-content: start; /* opcional: alinea las tarjetas a la izquierda */
+  justify-content: start;
   gap: 1.5rem;
 }
 
-/* Tarjeta base de producto */
 .carta-item {
   display: flex;
   flex-direction: column;
@@ -103,7 +102,6 @@
   margin-bottom: 0.3rem;
 }
 
-/* Contenedor de acciones */
 .carta-item .acciones {
   margin-top: 1rem;
   display: flex;
@@ -232,11 +230,11 @@
 /* Buscador de productos */
 .carta-header {
   display: flex;
-  justify-content: space-between; /* Esto separa los elementos */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   padding: 0 10px;
-  width: 100%; /* Asegura que ocupe todo el ancho */
+  width: 100%;
 }
 
 .carta-header h2 {
@@ -244,7 +242,7 @@
   font-size: 1.8rem;
   color: #333;
   font-weight: 600;
-  flex: 0 0 auto; /* No crece ni se encoge */
+  flex: 0 0 auto;
 }
 
 .buscador-container {
@@ -252,8 +250,8 @@
   display: flex;
   align-items: center;
   max-width: 300px;
-  min-width: 250px; /* Ancho mínimo para el buscador */
-  flex: 0 0 auto; /* No crece ni se encoge */
+  min-width: 250px;
+  flex: 0 0 auto;
 }
 
 .buscador-container i {
@@ -261,7 +259,7 @@
   left: 12px;
   color: #6c757d;
   z-index: 1;
-  pointer-events: none; /* Para que no interfiera con el input */
+  pointer-events: none;
 }
 
 .buscador-input {
@@ -272,7 +270,7 @@
   font-size: 0.9rem;
   outline: none;
   transition: all 0.3s ease;
-  box-sizing: border-box; /* Incluye padding en el ancho */
+  box-sizing: border-box;
 }
 
 .buscador-input:focus {

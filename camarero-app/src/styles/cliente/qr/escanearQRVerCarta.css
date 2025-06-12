@@ -2,20 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Alinea al inicio para el botón de volver */
+  justify-content: flex-start;
   min-height: 100vh;
   padding: 20px;
-  background-color: #f0f2f5; /* Un fondo ligeramente diferente para distinguirlo si es necesario */
+  background-color: #f0f2f5;
   text-align: center;
   box-sizing: border-box;
-  position: relative; /* Para posicionar el botón de volver */
+  position: relative;
 }
 
 .escanear-container-ver-carta .volver-btn-ver-carta {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: #6c757d; /* Un color diferente para el botón de volver */
+  background-color: #6c757d;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -38,7 +38,7 @@
 
 .escanear-container-ver-carta h2 {
   color: #333;
-  margin-top: 60px; /* Más margen superior para dejar espacio al botón de volver */
+  margin-top: 60px;
   margin-bottom: 10px;
   font-size: 1.8rem;
 }
@@ -52,24 +52,24 @@
 
 .escanear-container-ver-carta .qr-video-wrapper-ver-carta {
   width: 100%;
-  max-width: 400px; /* Limita el ancho máximo del video */
+  max-width: 400px;
   height: auto;
-  border: 5px solid #007bff; /* Un borde azul para destacar el área de escaneo */
+  border: 5px solid #007bff;
   border-radius: 10px;
-  overflow: hidden; /* Para que el video no se salga del borde redondeado */
+  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 20px;
-  position: relative; /* Para posibles overlays o guías de escaneo en el futuro */
+  position: relative;
 }
 
 .escanear-container-ver-carta .qr-video-ver-carta {
   width: 100%;
-  height: auto; /* Mantiene la proporción del video */
-  display: block; /* Elimina espacio extra debajo del video */
+  height: auto;
+  display: block;
 }
 
 .escanear-container-ver-carta .error-mensaje-ver-carta {
-  color: #d9534f; /* Rojo para errores */
+  color: #d9534f;
   background-color: #f8d7da;
   border: 1px solid #f5c6cb;
   padding: 10px 15px;
@@ -79,7 +79,7 @@
   max-width: 400px;
 }
 
-/* Puedes añadir un indicador de escaneo si lo deseas */
+
 .escanear-container-ver-carta .scan-indicator {
   position: absolute;
   top: 50%;
@@ -88,5 +88,5 @@
   height: 60%;
   border: 2px dashed rgba(255, 255, 255, 0.7);
   transform: translate(-50%, -50%);
-  pointer-events: none; /* Para que no interfiera con el video */
+  pointer-events: none;
 }

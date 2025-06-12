@@ -59,7 +59,6 @@
     margin-bottom: 10px;
 }
 
-/* Estilos para el formulario */
 .form-grupo {
     margin-bottom: 15px;
     display: flex;
@@ -88,7 +87,6 @@
     resize: vertical;
 }
 
-/* Botones de mesa */
 .selector-mesas-modal {
     display: flex;
     flex-wrap: wrap;
@@ -127,12 +125,10 @@
     box-shadow: 0 2px 8px #007bff22;
 }
 
-/* Ajuste para que los botones no se peguen a los bordes del modal */
 .selector-mesas-modal > .btn-mesa-modal {
     margin-bottom: 6px;
 }
 
-/* Botones de acción */
 .modal-acciones {
     display: flex;
     gap: 15px;

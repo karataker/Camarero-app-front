@@ -126,7 +126,7 @@ const AdminCartaView = () => {
 
   return (
     <div className="admin-carta-view">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
       
       <div className="carta-header">

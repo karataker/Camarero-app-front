@@ -1,4 +1,4 @@
-/* === Cliente Comandas View === */
+
 .cliente-comandas-view {
   padding: 20px;
   max-width: 900px;
@@ -8,7 +8,7 @@
 
 .titulo-y-acciones-header {
   display: flex;
-  justify-content: space-between; /* Esto empuja el título a la izquierda y el botón a la derecha */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
   border-bottom: 1px solid #e0e0e0;
@@ -18,11 +18,11 @@
 .titulo-y-acciones-header h2 {
   color: #333;
   font-size: 1.8rem;
-  margin: 0; /* Quitamos margen para mejor alineación */
+  margin: 0;
 }
 
 .btn-volver-carta {
-  background-color: #8e44ad; /* Un tono púrpura suave (Wisteria) */
+  background-color: #8e44ad;
   color: white;
   padding: 12px 24px; 
   border: none;
@@ -39,21 +39,20 @@
 }
 
 .btn-volver-carta:hover {
-  background-color: #732d91; /* Un tono más oscuro de púrpura para el hover */
+  background-color: #732d91;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
   transform: translateY(-1px); 
 }
 
 .btn-volver-carta i {
-  font-size: 1em; /* Ajusta si es necesario */
+  font-size: 1em;
 }
 
 
-/* Estilos para la lista de comandas en grid */
 .comandas-listado {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
-  gap: 20px; /* Espacio entre las tarjetas de comanda */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
 .comanda-card {
@@ -98,7 +97,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  flex-grow: 1; /* Para que ocupe el espacio disponible si las tarjetas tienen alturas variables */
+  flex-grow: 1;
 }
 
 .comanda-items li {
@@ -158,52 +157,51 @@
   font-size: 1.1rem;
   color: #777;
   padding: 30px;
-  grid-column: 1 / -1; /* Para que ocupe ambas columnas si no hay comandas */
+  grid-column: 1 / -1;
 }
 
 .acciones-comandas {
   margin-top: 30px;
   display: flex;
-  justify-content: center; /* Centra el botón restante */
+  justify-content: center;
   gap: 15px;
 }
 
 .btn-principal {
-  background-color: #dc3545; /* Rojo para "Me marcho" */
+  background-color: #dc3545;
   color: white;
-  padding: 15px 30px; /* Aumentamos el padding para hacerlo más grande */
+  padding: 15px 30px;
   border: none;
-  border-radius: 8px; /* Un poco más redondeado */
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem; /* Fuente ligeramente más grande */
+  font-size: 1.1rem;
   font-weight: bold;
-  text-transform: uppercase; /* Para darle más énfasis */
-  letter-spacing: 0.5px; /* Ligero espaciado entre letras */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra para destacar */
-  transition: all 0.2s ease-in-out; /* Transición suave para hover */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-principal:hover {
-  background-color: #c82333; /* Un rojo un poco más oscuro al pasar el ratón */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada en hover */
-  transform: translateY(-2px); /* Ligero movimiento hacia arriba */
+  background-color: #c82333;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .btn-principal:active {
-  background-color: #b0212e; /* Color cuando está presionado */
+  background-color: #b0212e;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transform: translateY(0);
 }
 
-/* Media query para hacer el grid de una columna en pantallas pequeñas */
 @media (max-width: 768px) {
   .comandas-listado {
-    grid-template-columns: 1fr; /* Una columna */
+    grid-template-columns: 1fr;
   }
 
   .titulo-y-acciones-header {
-    flex-direction: column; /* Apila título y botón */
-    align-items: flex-start; /* Alinea a la izquierda */
+    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
 
@@ -212,7 +210,7 @@
   }
 
   .btn-volver-carta {
-    align-self: flex-end; /* Mueve el botón a la derecha en modo columna */
+    align-self: flex-end;
   }
 }
 

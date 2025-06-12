@@ -25,13 +25,13 @@
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 16px;
-  background-color: black; /* útil si la cámara tarda en mostrar */
+  background-color: black;
 }
 
 .qr-video {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* rellena bien el contenedor sin deformar */
+  object-fit: cover;
 }
 
 .comensales-input-container {

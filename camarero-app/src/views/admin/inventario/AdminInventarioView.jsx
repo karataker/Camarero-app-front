@@ -3,7 +3,7 @@ import { useInventario } from "../../../hooks/useInventario";
 import { useParams } from "react-router-dom";
 import AjustarStockModal from "./AjustarStockModal";
 import InventarioModal from "./InventarioModal";
-import AdminNavigation from "../../../components/AdminNavigation"; // <-- AÑADIR IMPORT
+import AdminNavigation from "../../../components/AdminNavigation";
 import "../../../styles/admin/inventario/inventario.css";
 import ProveedorPedidosModal from "./ProveedorPedidosModal";
 
@@ -63,7 +63,7 @@ const AdminInventarioView = () => {
 
   return (
     <div className="admin-inventario-view">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
       
       <div className="inventario-header-main">

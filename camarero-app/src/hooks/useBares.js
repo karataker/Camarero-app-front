@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import {
   obtenerBares,
-  obtenerMesas, // ✅ AÑADIR obtenerMesas a la importación
+  obtenerMesas,
   crearMesa as crearMesaApi,
   desfusionarMesa as desfusionarMesaApi,
   fusionarMesas as fusionarMesasApi,
-  eliminarMesa as eliminarMesaApi // ✅ AÑADIDO
+  eliminarMesa as eliminarMesaApi
 } from '../services/barService.js';
 
 export const useBares = () => {
@@ -13,17 +13,16 @@ export const useBares = () => {
 
   const cargarBares = useCallback(async () => {
     try {
-      const listaDeBares = await obtenerBares(); // Llama al servicio
+      const listaDeBares = await obtenerBares();
       if (listaDeBares && listaDeBares.length > 0) {
         const baresConMesas = await Promise.all(
           listaDeBares.map(async (bar) => {
             try {
-              // ✅ LLAMAR directamente a obtenerMesas
               const mesasDelBar = await obtenerMesas(bar.id); 
-              return { ...bar, mesas: mesasDelBar || [] }; // Adjunta las mesas al bar
+              return { ...bar, mesas: mesasDelBar || [] };
             } catch (errorMesas) {
               console.error(`Error al cargar mesas para el bar ${bar.id}:`, errorMesas);
-              return { ...bar, mesas: [] }; // Continuar con mesas vacías en caso de error
+              return { ...bar, mesas: [] };
             }
           })
         );
@@ -41,7 +40,7 @@ export const useBares = () => {
     const bar = bares.find(b => b.id === barId);
     if (!bar) return null;
 
-    const yaExiste = bar.mesas.some(m => m.codigo === nuevaMesa.codigo); // usa "codigo"
+    const yaExiste = bar.mesas.some(m => m.codigo === nuevaMesa.codigo);
     if (yaExiste) {
       console.warn(`Ya existe una mesa con el código ${nuevaMesa.codigo}`);
       return null;
@@ -95,10 +94,7 @@ export const useBares = () => {
 
   const eliminarMesa = async (barId, mesaCodigo) => {
     try {
-      // ✅ Hacemos la petición real al backend
       await eliminarMesaApi(barId, mesaCodigo);
-
-      // ✅ Y luego actualizamos el estado local
       setBares(prev =>
         prev.map(bar =>
           bar.id === barId

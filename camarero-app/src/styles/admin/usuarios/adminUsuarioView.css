@@ -15,8 +15,6 @@
   text-align: center;
 }
 
-/* FORMULARIO CREACIÓN */
-
 .usuario-formulario {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -50,8 +48,6 @@
 .usuario-formulario button:hover {
   background-color: #218838;
 }
-
-/* TABLA DE USUARIOS */
 
 .tabla-usuarios {
   width: 100%;
@@ -92,8 +88,6 @@
 .tabla-usuarios td:last-child {
   text-align: right;
 }
-
-/* BOTÓN ELIMINAR */
 
 .boton-eliminar {
   background-color: #dc3545;

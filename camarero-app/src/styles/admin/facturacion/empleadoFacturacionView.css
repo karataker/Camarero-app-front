@@ -373,7 +373,6 @@
   font-style: italic;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .filtros-facturacion {
     flex-direction: column;

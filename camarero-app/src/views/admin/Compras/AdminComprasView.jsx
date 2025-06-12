@@ -58,7 +58,7 @@ const AdminComprasView = () => {
 
   return (
     <div className="admin-compras-view">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
       
       <div className="compras-header">

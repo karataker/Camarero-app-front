@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useUser } from '../hooks/useUser'; // Ajusta si es necesario
+import { useUser } from '../hooks/useUser';
 import '../styles/adminNavigation.css';
 
 const AdminNavigation = () => {

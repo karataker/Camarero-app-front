@@ -13,9 +13,8 @@ import {
 import { obtenerMesas } from '../../../services/barService.js';
 import { useBar } from '../../../context/BarContext';
 import { useBares } from '../../../hooks/useBares';
-import AdminNavigation from '../../../components/AdminNavigation'; // <-- AÑADIR IMPORT
+import AdminNavigation from '../../../components/AdminNavigation';
 
-// --- Funciones de Ayuda para Tiempos ---
 const horaAMinutos = (horaStr) => {
   if (!horaStr || typeof horaStr !== 'string' || !horaStr.includes(':')) return 0;
   const [horas, minutos] = horaStr.split(':').map(Number);
@@ -35,7 +34,6 @@ const haySolapamiento = (inicio1, fin1, inicio2, fin2) => {
 
 const DURACION_RESERVA_EXISTENTE_HORAS = 2;
 
-// Helper para generar franjas horarias
 const generarFranjasHorarias = (intervaloMinutos) => {
   const franjas = [];
   for (let horas = 0; horas < 24; horas++) {
@@ -48,7 +46,7 @@ const generarFranjasHorarias = (intervaloMinutos) => {
   return franjas;
 };
 
-const FRANJAS_HORARIAS_MODAL = generarFranjasHorarias(15); // Genera ["00:00", "00:15", ..., "23:45"]
+const FRANJAS_HORARIAS_MODAL = generarFranjasHorarias(15);
 
 const FRANJAS_HORARIAS = {
   todas: { nombre: 'Todas', inicioMin: 0, finMin: 24 * 60 - 1 },
@@ -64,7 +62,6 @@ const MiniMesasView = ({
   horaConsulta,
   duracionHorasConsulta = 2,
   filtroFranjaActual,
-  // franjasHorariasDefinidas, // Descomentar si se usa la configuración dinámica de franjas
   reservaEnEdicionId = null
 }) => {
   if (!selectedDate) {
@@ -89,7 +86,6 @@ const MiniMesasView = ({
     } else {
       if (reservasParaEstaMesa.length > 0) {
         const horariosOcupados = reservasParaEstaMesa.map(r => `${r.hora} (Mesa ${r.mesa})`).join(', ');
-        // Asegúrate que FRANJAS_HORARIAS esté accesible aquí o se pase como prop (franjasHorariasDefinidas)
         let textoFranja = filtroFranjaActual !== 'todas' ? ` en ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}` : ' hoy';
         return { estado: 'ocupada_dia', textoTooltip: `Ocupada${textoFranja} en horarios: ${horariosOcupados}` };
       }
@@ -102,30 +98,23 @@ const MiniMesasView = ({
   if (horaConsulta) {
     titulo += ` a las ${horaConsulta} (aprox. ${duracionHorasConsulta}h)`;
   } else if (filtroFranjaActual && filtroFranjaActual !== 'todas') {
-    // Asegúrate que FRANJAS_HORARIAS esté accesible aquí o se pase como prop (franjasHorariasDefinidas)
     titulo += ` para ${FRANJAS_HORARIAS[filtroFranjaActual].nombre.toLowerCase()}`;
   }
-
-  // Ya NO filtramos las mesas por la propiedad 'disponible' aquí.
-  // const mesasDisponiblesParaMostrar = todasLasMesas.filter(mesa => mesa.disponible === true);
 
   return (
     <div className="mini-mesas-container">
       <h4>{titulo}</h4>
-      {/* Mapear directamente sobre todasLasMesas */}
       {todasLasMesas.length === 0 ? (
         <p>No hay mesas configuradas para este bar.</p>
       ) : (
         <div className="mini-mesas-grid">
-          {todasLasMesas.map(mesa => { // Mapear sobre todasLasMesas
+          {todasLasMesas.map(mesa => {
             const { estado, textoTooltip } = getEstadoMesa(mesa.id);
             let claseCss = '';
             if (estado === 'ocupada_horario' || estado === 'ocupada_dia') claseCss = 'ocupada';
             else if (estado === 'libre_horario' || estado === 'libre_dia') claseCss = 'libre';
-
-            // Adicionalmente, podrías querer una clase si la mesa está marcada como no disponible globalmente
-            if (mesa.disponible === false) { // O !mesa.disponible si es booleano
-              claseCss += ' mesa-no-disponible-globalmente'; // Añade una clase específica
+            if (mesa.disponible === false) {
+              claseCss += ' mesa-no-disponible-globalmente';
             }
 
             return (
@@ -135,7 +124,6 @@ const MiniMesasView = ({
                 title={textoTooltip || `Mesa ${mesa.nombre || mesa.codigo} - Capacidad: ${mesa.capacidad || 'N/A'}${mesa.disponible === false ? ' (No disponible)' : ''}`}
               >
                 {mesa.nombre || mesa.codigo}
-                {/* Opcional: Añadir un indicador visual si la mesa no está disponible globalmente */}
                 {mesa.disponible === false && <span className="indicador-no-disponible-global" title="Mesa no disponible actualmente"> (ND)</span>}
               </div>
             );
@@ -147,7 +135,7 @@ const MiniMesasView = ({
   );
 };
 
-// Helper para formatear un objeto Date a YYYY-MM-DD local
+
 const formatearFechaA_YYYYMMDD_Local = (dateObj) => {
   if (!dateObj) return '';
   const year = dateObj.getFullYear();
@@ -162,15 +150,15 @@ const EmpleadoReservasView = () => {
   const [nombreBarActual, setNombreBarActual] = useState('');
 
   const [reservas, setReservas] = useState([]);
-  const [cargandoReservas, setCargandoReservas] = useState(true); // Renombrado para claridad
-  const [errorReservas, setErrorReservas] = useState(null); // Renombrado para claridad
+  const [cargandoReservas, setCargandoReservas] = useState(true);
+  const [errorReservas, setErrorReservas] = useState(null);
   
-  const [mesasDelBarActual, setMesasDelBarActual] = useState([]); // <--- NUEVO ESTADO para mesas
-  const [cargandoMesas, setCargandoMesas] = useState(false); // <--- NUEVO ESTADO para carga de mesas
-  const [errorMesas, setErrorMesas] = useState(null); // <--- NUEVO ESTADO para error de mesas
+  const [mesasDelBarActual, setMesasDelBarActual] = useState([]);
+  const [cargandoMesas, setCargandoMesas] = useState(false);
+  const [errorMesas, setErrorMesas] = useState(null);
 
 
-  const [selectedDate, setSelectedDate] = useState(new Date()); // selectedDate es un objeto Date local
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [filtroFranja, setFiltroFranja] = useState('todas');
   
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -190,12 +178,10 @@ const EmpleadoReservasView = () => {
 
   const [duracionReservaHoras] = useState(2);
 
-  // Cargar la lista de todos los bares una vez
   useEffect(() => {
     cargarBaresHook();
   }, [cargarBaresHook]);
 
-  // Establecer el nombre del bar actual cuando barSeleccionado o la lista de bares cambie
   useEffect(() => {
     if (barSeleccionado && bares.length > 0) {
       const barIdNum = parseInt(barSeleccionado, 10);
@@ -211,7 +197,6 @@ const EmpleadoReservasView = () => {
     }
   }, [barSeleccionado, bares]);
 
-  // Envuelve cargarReservas en useCallback y haz que dependa de barSeleccionado (del contexto)
   const cargarReservas = useCallback(async () => {
     if (!barSeleccionado) {
       setReservas([]);
@@ -222,7 +207,7 @@ const EmpleadoReservasView = () => {
       setCargandoReservas(true);
       setErrorReservas(null);
       const data = await obtenerReservas(barSeleccionado);
-      console.log('Datos CRUDOS de reservas del backend:', data); // <--- LOG 1
+      console.log('Datos CRUDOS de reservas del backend:', data);
 
       const reservasFormateadas = data.map(res => {
         let fecha = '';
@@ -239,20 +224,20 @@ const EmpleadoReservasView = () => {
 
         return {
           id: res.id,
-          fecha, // <--- Verifica este formato
-          hora,  // <--- Verifica este formato
+          fecha,
+          hora,
           nombre: res.nombreCliente || res.nombre || '', 
           personas: res.numeroComensales || res.comensales || res.personas || 1, 
           telefono: res.telefono || '',
           email: res.correoElectronico || res.email || '', 
           mensaje: res.mensaje || '',
           mesa: res.mesaId || (res.mesa ? (typeof res.mesa === 'object' ? res.mesa.id : res.mesa) : null), 
-          estado: res.estado || 'pendiente', // <--- Verifica este valor
+          estado: res.estado || 'pendiente',
           fechaSolicitud: res.fechaSolicitud || res.createdAt || new Date().toISOString(), 
           zona: res.zonaPreferida || res.zona || '' 
         };
       });
-      console.log('Reservas FORMATEADAS:', reservasFormateadas); // <--- LOG 2
+      console.log('Reservas FORMATEADAS:', reservasFormateadas);
 
       const reservasOrdenadas = reservasFormateadas.sort((a, b) =>
         new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)
@@ -267,13 +252,10 @@ const EmpleadoReservasView = () => {
     }
   }, [barSeleccionado]);
 
-  // El useEffect ahora depende de la función cargarReservas memoizada.
-  // Se ejecutará cuando cargarReservas cambie (es decir, cuando barSeleccionado cambie).
   useEffect(() => {
     cargarReservas();
   }, [cargarReservas]);
 
-  // NUEVO useEffect para cargar las mesas del bar seleccionado
   useEffect(() => {
     const fetchMesasDelBar = async () => {
       if (!barSeleccionado) {
@@ -285,7 +267,7 @@ const EmpleadoReservasView = () => {
       try {
         setCargandoMesas(true);
         setErrorMesas(null);
-        const dataMesas = await obtenerMesas(barSeleccionado); // Llamada al servicio real
+        const dataMesas = await obtenerMesas(barSeleccionado);
         setMesasDelBarActual(dataMesas || []);
       } catch (err) {
         console.error('Error cargando mesas del bar:', err);
@@ -297,20 +279,18 @@ const EmpleadoReservasView = () => {
     };
 
     fetchMesasDelBar();
-  }, [barSeleccionado]); // Depende de barSeleccionado
+  }, [barSeleccionado]);
 
   const abrirModalParaCrear = (fechaSeleccionada, horaSugerida = '') => {
     setModoModal('crear');
     let horaInicial = horaSugerida;
     if (!horaSugerida && FRANJAS_HORARIAS_MODAL.length > 0) {
-      // Podrías buscar la hora más cercana o simplemente la primera/una por defecto
-      // Por ahora, si no hay sugerencia, y hay franjas, dejamos que el usuario elija
-      // o podrías poner la primera franja: FRANJAS_HORARIAS_MODAL[0]
-    }
+      //posibilidad de que no haya franjas horarias definidas
+      }
 
     setReservaActualFormulario({
       id: null,
-      fecha: formatearFechaA_YYYYMMDD_Local(fechaSeleccionada), // <--- CORRECCIÓN AQUÍ
+      fecha: formatearFechaA_YYYYMMDD_Local(fechaSeleccionada),
       hora: horaInicial,
       nombre: '',
       personas: 1,
@@ -318,7 +298,7 @@ const EmpleadoReservasView = () => {
       email: '',
       mensaje: '',
       mesa: null,
-      estado: 'pendiente', // Por defecto para nueva reserva manual
+      estado: 'pendiente',
     });
     setMostrarModal(true);
   };
@@ -339,7 +319,6 @@ const EmpleadoReservasView = () => {
 
   const handleInputChangeModal = (e) => {
     const { name, value } = e.target;
-    // Si el campo es 'personas', asegúrate de que se guarda como número
     if (name === 'personas') {
       setReservaActualFormulario(prev => ({ ...prev, [name]: parseInt(value, 10) || 1 }));
     } else {
@@ -357,7 +336,6 @@ const EmpleadoReservasView = () => {
       return;
     }
 
-    // Usar barSeleccionado del contexto
     const barIdNumerico = parseInt(barSeleccionado, 10);
     if (isNaN(barIdNumerico)) {
         alert('Error: ID del bar no válido.');
@@ -367,16 +345,15 @@ const EmpleadoReservasView = () => {
     try {
       if (modoModal === 'crear') {
         const datosReserva = {
-          bar: { id: barIdNumerico }, // Enviar como objeto Bar anidado
+          bar: { id: barIdNumerico },
           nombreCliente: reservaActualFormulario.nombre,
           correoElectronico: reservaActualFormulario.email,
           telefono: reservaActualFormulario.telefono,
           numeroComensales: parseInt(reservaActualFormulario.personas, 10),
           fechaHora: `${reservaActualFormulario.fecha}T${reservaActualFormulario.hora}:00`,
           mensaje: reservaActualFormulario.mensaje,
-          // estado: reservaActualFormulario.estado || 'confirmada', // LÍNEA ANTERIOR
-          estado: 'confirmada', // <--- CAMBIO: Las reservas manuales de empleados se crean como confirmadas
-          mesa: { id: reservaActualFormulario.mesa } // Enviar como objeto Mesa anidada
+          estado: 'confirmada',
+          mesa: { id: reservaActualFormulario.mesa }
         };
 
         await crearReserva(datosReserva);
@@ -384,14 +361,14 @@ const EmpleadoReservasView = () => {
         
       } else if (modoModal === 'editar') { 
         const datosActualizados = {
-          bar: { id: barIdNumerico }, // Enviar como objeto Bar anidado
+          bar: { id: barIdNumerico },
           nombreCliente: reservaActualFormulario.nombre,
           correoElectronico: reservaActualFormulario.email,
           telefono: reservaActualFormulario.telefono,
           numeroComensales: parseInt(reservaActualFormulario.personas, 10),
           fechaHora: `${reservaActualFormulario.fecha}T${reservaActualFormulario.hora}:00`,
           mensaje: reservaActualFormulario.mensaje,
-          mesa: { id: reservaActualFormulario.mesa }, // Enviar como objeto Mesa anidada
+          mesa: { id: reservaActualFormulario.mesa },
           estado: reservaActualFormulario.estado, 
         };
         await actualizarReserva(reservaActualFormulario.id, datosActualizados); 
@@ -412,30 +389,23 @@ const EmpleadoReservasView = () => {
       return;
     }
 
-    // Abrir el modal en modo 'editar', pre-llenado con los datos de la reserva pendiente.
-    // El estado se pre-establece a 'confirmada'. El usuario asignará una mesa.
     setModoModal('editar'); 
     setReservaActualFormulario({
-      ...reservaAConfirmar, // Carga todos los datos existentes de la reserva
-      estado: 'confirmada',   // Establece el estado a 'confirmada'
-      // Asegúrate que 'personas' (usado en el form) esté seteado si el campo original es otro
+      ...reservaAConfirmar,
+      estado: 'confirmada',
       personas: reservaAConfirmar.personas || reservaAConfirmar.numeroComensales || reservaAConfirmar.comensales || 1,
-      // La mesa (reservaAConfirmar.mesa) será null o el valor anterior, el usuario la seleccionará/confirmará en el modal.
-      // Si la reserva pendiente ya tenía una zona preferida, puedes mantenerla o dejar que se derive de la mesa.
     });
-    // Sincronizar el calendario con la fecha de la reserva que se está confirmando
-    setSelectedDate(new Date(reservaAConfirmar.fecha + 'T00:00:00Z')); // Añadir 'Z' para UTC si es necesario
+    setSelectedDate(new Date(reservaAConfirmar.fecha + 'T00:00:00Z'));
     setMostrarModal(true);
   };
 
   const handleRechazarReserva = async (reservaId) => {
-    // ✅ CAMBIAR: Confirmar antes de eliminar
     if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud de reserva? Esta acción no se puede deshacer.')) {
       try {
         console.log('🔄 Eliminando reserva:', reservaId);
-        await eliminarReserva(reservaId); // ✅ USAR eliminarReserva
+        await eliminarReserva(reservaId);
         console.log('✅ Reserva eliminada');
-        await cargarReservas(); // Recargar todas las reservas
+        await cargarReservas();
         alert('La solicitud de reserva ha sido eliminada.');
       } catch (error) {
         console.error('❌ Error al eliminar reserva:', error);
@@ -444,21 +414,13 @@ const EmpleadoReservasView = () => {
     }
   };
 
-  // Ya no se necesita esta función, las mesas se cargan en el estado mesasDelBarActual
-  // const obtenerTodasLasMesasDelBar = (currentBarId) => {
-  //   return obtenerMesasDelBar(currentBarId); // Esto era el mock
-  // };
-
-  // Usar mesasDelBarActual del estado
-  // const todasLasMesasDelBar = obtenerTodasLasMesasDelBar(barSeleccionado); // Ya no se usa así
-
   const reservasPendientes = reservas.filter(r => r.estado === 'pendiente');
   const reservasConfirmadas = reservas.filter(r => r.estado === 'confirmada');
 
   const reservasFiltradasDelDiaSeleccionado = React.useMemo(() => {
-    const fechaSeleccionadaFormateada = formatearFechaA_YYYYMMDD_Local(selectedDate); // <--- CORRECCIÓN AQUÍ
+    const fechaSeleccionadaFormateada = formatearFechaA_YYYYMMDD_Local(selectedDate);
     let reservasDelDia = reservasConfirmadas.filter(r =>
-      r.fecha === fechaSeleccionadaFormateada // Comparar con la fecha local formateada
+      r.fecha === fechaSeleccionadaFormateada
     );
 
     if (filtroFranja !== 'todas' && FRANJAS_HORARIAS[filtroFranja]) {
@@ -477,21 +439,21 @@ const EmpleadoReservasView = () => {
     return <div className="reservas-loading">Selecciona un bar para ver las reservas.</div>;
   }
   
-  if (cargandoReservas || cargandoMesas) { // Considerar también cargandoMesas
+  if (cargandoReservas || cargandoMesas) {
     return <div className="reservas-loading">Cargando datos...</div>;
   }
 
   if (errorReservas) {
     return <div className="reservas-error">{errorReservas}</div>;
   }
-  if (errorMesas) { // Mostrar error si falla la carga de mesas
+  if (errorMesas) {
     return <div className="reservas-error">{errorMesas}</div>;
   }
 
 
   return (
     <div className="empleado-reservas-view">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
       
       <div className="reservas-header">

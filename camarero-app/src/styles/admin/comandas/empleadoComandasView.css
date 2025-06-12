@@ -396,7 +396,6 @@
   font-weight: 600;
 }
 
-/* Fallback para navegadores que no soportan :has() */
 @supports not selector(:has(*)) {
   .checkbox-estado-input:checked + .checkbox-estado-label {
     color: #1976d2;

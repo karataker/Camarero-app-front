@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/relojCocina.css'; // Asegúrate de importar este CSS
+import '../styles/relojCocina.css';
 
 const Reloj = ({ formato = 'HH:mm:ss' }) => {
   const [hora, setHora] = useState(new Date());

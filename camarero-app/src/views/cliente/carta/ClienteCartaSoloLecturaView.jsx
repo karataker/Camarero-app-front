@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import '../../../styles/cliente/carta/clienteCartaDigital.css'; // Reutilizamos estilos
-// --- SERVICIOS ---
+import '../../../styles/cliente/carta/clienteCartaDigital.css';
 import { getProductosByBar, getCategoriasByBar, getRacionesDisponibles } from '../../../services/menuService';
 import { obtenerBarPorId } from '../../../services/barService';
 
 import Plato from "../../../img/PlatoDefault.png";
-// No se necesita useCarrito ni loadStripe ni Modal para confirmación
 
 import FrutoSeco from "../../../img/IconoAlergenoFrutosSecos.png";
 import Sulfitos from "../../../img/IconoAlergenoDioxidoAzufre.png";
@@ -47,7 +45,7 @@ const VerCartaSoloLecturaView = () => {
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
 
-  const { barId } = useParams(); // Solo necesitamos barId
+  const { barId } = useParams();
 
   useEffect(() => {
     const cargarCartaYBar = async () => {
@@ -122,11 +120,9 @@ const VerCartaSoloLecturaView = () => {
 
   return (
     <>
-      {/* No hay Modal de confirmación de pedido */}
 
       <div className="carta-header">
         <h2>Carta Digital{nombreBar && ` - ${nombreBar}`}</h2>
-        {/* No hay botones de carrito ni confirmar pedido */}
         <div className="carta-busqueda">
           <input
             type="text"
@@ -137,8 +133,6 @@ const VerCartaSoloLecturaView = () => {
           <i className="fas fa-search"></i>
         </div>
       </div>
-
-      {/* No hay drawer de carrito */}
 
       <div className="carta-digital">
         <div className="categorias-tabs">
@@ -179,10 +173,8 @@ const VerCartaSoloLecturaView = () => {
                   <div className="producto-footer">
                     <div className="producto-precio">
                       {producto.precio.toFixed(2)} €
-                      {/* No hay indicador de "Añadido" */}
                     </div>
                     {renderAlergenos(producto)}
-                    {/* No hay botón de "Añadir al pedido" */}
                   </div>
                 </div>
               </div>

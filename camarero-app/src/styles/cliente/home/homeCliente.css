@@ -34,9 +34,9 @@
   }
   
   .imagen-opcion {
-    width: 80px; /* Ajusta el tamaño según necesites */
-    height: 80px; /* Ajusta el tamaño según necesites */
-    object-fit: contain; /* Para asegurar que la imagen se vea bien sin distorsionarse */
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
     margin-bottom: 10px;
   }
   

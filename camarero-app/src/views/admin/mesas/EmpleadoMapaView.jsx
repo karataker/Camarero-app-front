@@ -3,11 +3,10 @@ import { useBares } from '../../../hooks/useBares';
 import { useBar } from '../../../context/BarContext';
 import QRDownloader from '../../../components/QRDownloader';
 import ComensalesIconos from '../../../components/ComensalesIconos';
-import AdminNavigation from '../../../components/AdminNavigation'; // <-- AÑADIR IMPORT
+import AdminNavigation from '../../../components/AdminNavigation';
 import '../../../styles/admin/mesas/empleadoMapaView.css';
 import { obtenerMesas } from '../../../services/barService';
 
-// Usa exactamente los valores que envía el back:
 const zonas = ['Interior', 'Terraza', 'Barra'];
 
 const EmpleadoMapaView = () => {
@@ -29,7 +28,6 @@ const EmpleadoMapaView = () => {
   const [ultimosQRs, setUltimosQRs] = useState({});
   const [mesasParaFusionar, setMesasParaFusionar] = useState({});
 
-  // Carga los bares una vez
   useEffect(() => {
     cargarBares();
     const estadosIniciales = {};
@@ -42,7 +40,7 @@ const EmpleadoMapaView = () => {
     setMesasParaFusionar({});
   }, [cargarBares]);
 
-  // Cuando cambia el bar seleccionado, carga sus mesas
+
   useEffect(() => {
     if (!barSeleccionado) {
       setMesas([]);
@@ -78,8 +76,6 @@ const EmpleadoMapaView = () => {
   const handleAñadirMesa = async zona => {
     const entrada = nuevosCodigos[zona] || {};
     const codigo = entrada.codigo?.trim();
-    // Asegúrate de que 'capacidad' se maneje como número desde el input.
-    // El input type="number" devuelve un string, así que hay que parsearlo.
     const capacidad = parseInt(entrada.capacidad, 10); 
 
     if (!codigo || !capacidad || isNaN(capacidad) || capacidad <= 0 || !barSeleccionado) {
@@ -87,36 +83,27 @@ const EmpleadoMapaView = () => {
       return;
     }
 
-    // Prepara los datos de la mesa SIN el 'bar' anidado.
-    // 'zona' viene del parámetro de la función, que es 'Interior', 'Terraza', o 'Barra'.
-    // Asegúrate que este formato coincida con lo que espera el backend para el campo 'zona'.
     const nuevaMesaData = {
       codigo,
-      capacidad, // Ya es un número
+      capacidad,
       disponible: true,
       comensales: 0,
       pedidoEnviado: false,
-      zona, // ej. 'Interior', 'Terraza', 'Barra'
+      zona,
       fusionadaCon: null
-      // NO incluyas 'bar: { id: barSeleccionado }' aquí
     };
 
     try {
-      // Llama a añadirMesa con barSeleccionado (como barId) y nuevaMesaData por separado
       const mesaCreada = await añadirMesa(barSeleccionado, nuevaMesaData); 
       
       if (mesaCreada) {
-        // Asumiendo que mesaCreada tiene qrUrl si la creación fue exitosa y el servicio la añade
         setUltimosQRs(prev => ({ ...prev, [zona]: mesaCreada }));
         setNuevosCodigos(prev => ({ ...prev, [zona]: { codigo: '', capacidad: '' } }));
         setMostrarInputs(prev => ({ ...prev, [zona]: false }));
         
-        // Recargar mesas para reflejar el cambio
         const data = await obtenerMesas(barSeleccionado);
         setMesas(data);
       } else {
-        // Esto puede ocurrir si el backend, por ejemplo, no crea la mesa (ej. código duplicado)
-        // y el servicio/hook retorna null o undefined.
         console.warn('La mesa no pudo ser creada. Respuesta del servidor:', mesaCreada);
         alert('No se pudo crear la mesa. Es posible que el código ya exista o haya ocurrido un error.');
       }
@@ -148,7 +135,7 @@ const EmpleadoMapaView = () => {
 
   return (
     <div className="panel-empleado">
-      {/* Añadir navegación de admin */}
+      {/* Navegación de admin */}
       <AdminNavigation />
       
       <div className="mapa-header">
@@ -168,7 +155,6 @@ const EmpleadoMapaView = () => {
             {getMesasPorZona(zona).map((mesa) => (
               <div key={mesa.codigo} className={`mesa-box ${mesa.disponible ? 'disponible' : 'ocupada'}`}>
                 <span className="mesa-numero">{mesa.codigo}</span>
-                {/* Mostrar la capacidad de la mesa */}
                 {typeof mesa.capacidad === 'number' && (
                   <div className="mesa-info-item mesa-capacidad">
                     Capacidad: {mesa.capacidad}

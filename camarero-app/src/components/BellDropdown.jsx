@@ -28,7 +28,6 @@ const BellDropdown = ({ barId }) => {
     return () => clearInterval(interval);
   }, [barId]);
 
-  // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {

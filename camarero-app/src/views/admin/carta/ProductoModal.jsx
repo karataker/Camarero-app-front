@@ -83,7 +83,7 @@ const ProductoModal = ({ isOpen, onClose, producto, barId, onSave }) => {
     onClose();
   };
 
-// Filtrar inventario para productos simples e ingredientes
+// Filtrado inventario para productos simples e ingredientes
  const inventarioParaProductoSimple = inventario.filter(
   (item) =>
     item.categoria?.nombre !== "Limpieza" &&

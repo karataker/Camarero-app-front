@@ -220,7 +220,7 @@
 }
 
 .confirmar-pedido-drawer {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745;
   color: white;
 }
 
@@ -234,7 +234,7 @@
 }
 
 .btn-vaciar-carrito-drawer {
-  background-color: #dc3545; /* Rojo */
+  background-color: #dc3545;
   color: white;
 }
 

@@ -1,16 +1,13 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../../styles/cliente/comandas/clienteComandasView.css';
-// Importamos nuestro nuevo hook
 import { useComandas } from '../../../hooks/useComandas';
 
 const ClienteComandasView = () => {
   const { barId, mesaId } = useParams();
   const navigate = useNavigate();
-  // Se elimina nuevaComanda de la desestructuración
   const { comandas, comensales, nombreMesa, marcharse, loading, error } = useComandas(barId, mesaId);
 
-  // Manejo de estados de carga y error
   if (loading) {
     return <div className="loading-view">Cargando comandas...</div>;
   }
@@ -82,13 +79,11 @@ const ClienteComandasView = () => {
                   </li>
                 ))}
               </ul>
-              {/* Tiempo estimado eliminado */}
             </div>
           ))
         )}
       </div>
       <div className="acciones-comandas">
-        {/* Botón "Solicitar nueva comanda" eliminado */}
         <button className="btn-principal" onClick={marcharse}>Me marcho, dejar libre la mesa</button>
       </div>
     </div>

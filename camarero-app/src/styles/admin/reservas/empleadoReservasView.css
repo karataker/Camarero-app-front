@@ -158,7 +158,6 @@
   color: #e74c3c;
 }
 
-/* Change grid layout to vertical stack */
 .reservas-container {
   display: flex;
   flex-direction: column;
@@ -185,7 +184,6 @@
   gap: 8px;
 }
 
-/* Make calendar container full width */
 .calendario-container {
   flex: 1;
   padding: 20px;
@@ -195,32 +193,31 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;       /* ✅ Añadido */
-  max-height: 70vh;       /* ✅ Limitamos altura para que no desborde */
+  overflow-y: auto;       
+  max-height: 70vh;
 }
 
-/* Hacer que el calendario se expanda completamente */
+
 .react-calendar {
   width: 100% !important;
-  height: 100% !important; /* Añadir altura completa */
+  height: 100% !important;
   border: none !important;
   padding: 10px;
   max-width: none !important;
-  flex-grow: 1; /* Hacer que crezca para llenar el espacio */
+  flex-grow: 1; 
   display: flex;
-  flex-direction: column; /* Organizar en columna */
+  flex-direction: column; 
 }
 
-/* Hacer que el contenedor de la vista ocupe todo el espacio disponible */
+
 .react-calendar__viewContainer {
   width: 100% !important;
   max-width: none !important;
-  flex-grow: 1; /* Permitir crecer */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Asegurar que la vista de mes ocupe todo el espacio */
 .react-calendar__month-view {
   width: 100% !important;
   max-width: none !important;
@@ -238,19 +235,18 @@
   flex-direction: column;
 }
 
-/* Hacer que la cuadrícula de días ocupe todo el espacio disponible */
+
 .react-calendar__month-view__days {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
   width: 100% !important;
   flex-grow: 1 !important;
-  height: auto !important; /* Permitir que se ajuste automáticamente */
+  height: auto !important;
 }
 
-/* Ajustar altura de los cuadros de día */
 .react-calendar__tile {
-  height: 150px !important; /* Aumentar la altura para mostrar más contenido */
-  min-height: 120px !important; /* Asegurar una altura mínima */
+  height: 150px !important;
+  min-height: 120px !important;
   position: relative !important;
   display: flex !important;
   flex-direction: column !important;
@@ -258,10 +254,9 @@
   justify-content: flex-start !important;
   padding: 10px !important;
   max-width: none !important;
-  flex: 1 0 14.285% !important; /* 1/7th of width */
+  flex: 1 0 14.285% !important;
 }
 
-/* Calendar customization */
 .react-calendar {
   width: 100%;
   border: none !important;
@@ -269,7 +264,6 @@
   max-width: none !important;
 }
 
-/* Fix day name headers display */
 .react-calendar__month-view__weekdays {
   display: flex !important;
   justify-content: space-around !important;
@@ -284,14 +278,13 @@
   text-decoration: none !important;
 }
 
-/* Ensure week row displays properly */
+
 .react-calendar__month-view__days {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
   width: 100% !important;
 }
 
-/* Increase tile size and adjust layout */
 .react-calendar__tile {
   height: 120px !important;
   position: relative !important;
@@ -301,10 +294,9 @@
   justify-content: flex-start !important;
   padding: 10px !important;
   max-width: none !important;
-  flex: 1 0 14.285% !important; /* 1/7th of width */
+  flex: 1 0 14.285% !important;
 }
 
-/* Make month view container wider and use scrolling if needed */
 .react-calendar__viewContainer,
 .react-calendar__month-view,
 .react-calendar__month-view > div,
@@ -313,14 +305,12 @@
   max-width: none !important;
 }
 
-/* Position calendar day numbers */
 .react-calendar__tile abbr {
   position: absolute;
   top: 5px;
   left: 10px;
 }
 
-/* Style mini reservation container */
 .calendario-reservas {
   position: absolute;
   top: 30px;
@@ -332,7 +322,6 @@
   width: calc(100% - 10px);
 }
 
-/* Make mini reservations fit better */
 .mini-reserva {
   background-color: #e8f5e9;
   color: #2c3e50;
@@ -340,14 +329,13 @@
   border-radius: 3px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
-  font-size: 0.75em; /* Ajustar si es necesario para que quepa más info */
+  text-overflow: ellipsis;
+  font-size: 0.75em;
   text-align: left;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Style "more" indicator */
 .mini-reserva-count {
   text-align: center;
   color: #666;
@@ -355,12 +343,11 @@
   margin-top: 2px;
 }
 
-/* Style tiles with reservations */
+
 .tiene-reservas {
   background-color: #f8f9fa !important;
 }
 
-/* Ensure calendar fits container */
 .calendario-container {
   flex: 1;
   padding: 20px;
@@ -369,20 +356,18 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Layout for Calendar and Daily Reservations Side-by-Side */
 .calendario-layout {
   display: flex;
   flex-direction: row;
   gap: 20px;
   width: 100%;
-  max-height: 70vh;       /* Mantiene límite general */
-  overflow: hidden;       /* Evita que el layout completo haga scroll */
+  max-height: 70vh;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
-/* Container for the Daily Reservations List (Right Half) */
 .reservas-dia-container {
-  flex: 1; /* Takes up 50% of the space */
+  flex: 1;
   padding: 20px;
   background: white;
   border-radius: 8px;
@@ -399,22 +384,21 @@
   color: #333;
 }
 
-@media (max-width: 992px) { /* Adjust breakpoint as needed */
+@media (max-width: 992px) {
   .calendario-layout {
     flex-direction: column;
   }
 
   .calendario-container,
   .reservas-dia-container {
-    flex: none; /* Reset flex property */
-    width: 100%; /* Full width when stacked */
+    flex: none;
+    width: 100%;
   }
   .reservas-dia {
-    max-height: 300px; /* Adjust height for stacked view */
+    max-height: 300px;
   }
 }
 
-/* Mini Mesas View Styles */
 .mini-mesas-container {
   margin-top: 25px;
   padding-top: 20px;
@@ -425,23 +409,23 @@
   margin-top: 0;
   margin-bottom: 15px;
   color: #333;
-  font-size: 1.05em; /* Un poco más grande que el texto normal */
+  font-size: 1.05em;
 }
 
 .mini-mesas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); /* Ajusta minmax para el tamaño deseado */
-  gap: 12px; /* Espacio entre mesas */
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  gap: 12px;
 }
 
 .mini-mesa-item {
-  padding: 12px 5px; /* Más padding vertical */
+  padding: 12px 5px;
   border-radius: 5px;
   text-align: center;
-  font-weight: 600; /* Semi-bold */
+  font-weight: 600;
   font-size: 0.85em;
   cursor: default;
-  border: 1px solid transparent; /* Borde transparente por defecto */
+  border: 1px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
@@ -452,37 +436,36 @@
 }
 
 .mini-mesa-item.libre {
-  background-color: #e8f5e9; /* Verde claro para libre */
-  color: #388e3c; /* Verde oscuro */
+  background-color: #e8f5e9;
+  color: #388e3c;
   border-color: #c8e6c9;
 }
 
 .mini-mesa-item.ocupada {
-  background-color: #ffebee; /* Rojo claro para ocupada */
-  color: #d32f2f; /* Rojo oscuro */
+  background-color: #ffebee;
+  color: #d32f2f;
   border-color: #ffcdd2;
-  /* text-decoration: line-through; Opcional si quieres tachar el texto */
 }
 
-/* Calendar Header Controls */
+
 .calendario-header-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  flex-wrap: wrap; /* Para que los filtros pasen abajo en pantallas pequeñas */
+  flex-wrap: wrap;
 }
 
 .calendario-header-controls h2 {
   margin: 0;
-  margin-right: 20px; /* Espacio antes de los filtros */
+  margin-right: 20px;
 }
 
 .filtro-franja-horaria {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap; /* Para que los botones se ajusten */
+  flex-wrap: wrap;
 }
 
 .filtro-franja-horaria span {
@@ -513,7 +496,6 @@
   font-weight: bold;
 }
 
-/* Estilos para el detalle de reservas del día */
 .reservas-dia {
   margin-top: 15px;
   max-height: 250px;
@@ -571,7 +553,7 @@
 }
 
 .reserva-dia-info .personas::before {
-  content: "\f007"; /* Código FontAwesome para usuario */
+  content: "\f007";
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
 }
@@ -617,7 +599,6 @@
   font-style: italic;
 }
 
-/* Día seleccionado: sin sombreado, solo borde negro */
 .react-calendar__tile--active,
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
@@ -630,7 +611,6 @@
   box-shadow: none !important;
 }
 
-/* Asegura que el número del día siempre sea visible encima del fondo */
 .react-calendar__tile--active abbr {
   color: #222 !important;
   font-weight: bold;
@@ -638,7 +618,6 @@
   position: relative;
 }
 
-/* Si usas un sombreado personalizado para el hover, mantenlo suave */
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
   background: #fff9db !important;

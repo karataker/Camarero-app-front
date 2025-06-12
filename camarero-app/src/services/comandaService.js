@@ -1,19 +1,12 @@
 import { request } from './apiClient';
-/**
-@param {number|string} barId - El ID del bar.
-@param {string} mesaCodigo - El código (ID) de la mesa.
-@returns {Promise<Array>} Lista de comandas.
-*/
 
+// Función para obtener comandas por mesa
 export const getComandasPorMesa = async (barId, mesaCodigo) => {
   try {
-    // El path ya no necesita API_BASE_URL
     const path = `/pedidos/comandas/${barId}/${mesaCodigo}`;
-    // Usar la función request del apiClient
-    // El tercer argumento es el método HTTP, el segundo es el cuerpo (vacío para GET)
     const response = await request(path, {}, 'GET');
+    
     if (!response.ok) {
-      // El manejo de errores puede permanecer similar, o centralizarse más en apiClient si se desea
       throw new Error(`Error en GET comandas: ${response.status} ${response.statusText}`);
     }
     return await response.json();
@@ -23,15 +16,11 @@ export const getComandasPorMesa = async (barId, mesaCodigo) => {
   }
 };
 
-/**
- * Envía una comanda para procesar (confirmar) en el back-end.
- * @param {Object} comandaDTO - DTO de la comanda a enviar.
- * @returns {Promise<string>} Mensaje de éxito o error.
- */
+
+// Función para confirmar una comanda
 export const confirmarComanda = async (comandaDTO) => {
   try {
     const path = `/pedidos/comandas/confirmar`;
-    console.log(`Requesting POST ${path}`, comandaDTO);
     const response = await request(path, comandaDTO, 'POST');
 
     if (!response.ok) {
@@ -45,24 +34,17 @@ export const confirmarComanda = async (comandaDTO) => {
   }
 };
 
-// --- FUNCIÓN NUEVA AÑADIDA JM (Refactorizada para usar apiClient) ---
-/**
- * Obtiene todas las comandas de un bar específico.
- * @param {string} barId - El ID del bar.
- * @returns {Promise<Array>} Lista de todas las comandas del bar.
- */
+// Función para obtener comandas por bar
 export const getComandasPorBar = async (barId) => {
   try {
-    const path = `/pedidos/comandas/${barId}`; // Path sin API_BASE_URL
-    console.log(`Requesting GET ${path}`);
-    // Usar la función request del apiClient
+    const path = `/pedidos/comandas/${barId}`;
     const response = await request(path, {}, 'GET'); 
 
     if (!response.ok) {
       throw new Error(`Error en GET comandas por bar: ${response.status} ${response.statusText}`);
     }
     if (response.status === 204) {
-        return []; // Devuelve array vacío si no hay contenido
+        return [];
     }
     return await response.json();
   } catch (error) {
@@ -71,18 +53,12 @@ export const getComandasPorBar = async (barId) => {
   }
 };
 
-/**
- * Actualiza el estado de un item de comanda específico.
- * @param {number} itemId - El ID del item a actualizar.
- * @param {string} nuevoEstado - El nuevo estado ('en_preparacion', 'listo').
- * @returns {Promise<Object>} El objeto del item actualizado desde la API.
- */
+
+// Función para actualizar el estado de un item de comanda
 export const actualizarEstadoItem = async (itemId, nuevoEstado) => {
   try {
 
     const path = `/pedidos/comandas/items/${itemId}?nuevoEstado=${nuevoEstado}`;
-    console.log(`Requesting PATCH ${path}`);
-    
     const response = await request(path, {}, 'PATCH');
 
     if (!response.ok) {
@@ -92,12 +68,12 @@ export const actualizarEstadoItem = async (itemId, nuevoEstado) => {
     return await response.json();
     
   } catch (error) {
-
     console.error('Error en actualizarEstadoItem:', error);
     throw error;
   }
 };
 
+// Función para marcar todas las comandas de una mesa como terminadas
 export const terminarComandasPorMesa = async (barId, mesaCodigo) => {
   const res = await request(`/pedidos/comandas/${barId}/${mesaCodigo}/terminar`, {}, 'PUT');
   if (!res.ok) throw new Error('Error al marcar las comandas como terminadas');

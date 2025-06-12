@@ -5,7 +5,6 @@ import { obtenerBares } from '../../../services/barService';
 import { useNavigate } from 'react-router-dom';
 import ReservaModal from '../../../components/ReservaModal';
 
-// --- Funciones Auxiliares para Horarios ---
 const horaAMinutos = (horaStr) => {
   if (!horaStr || typeof horaStr !== 'string' || !horaStr.includes(':')) return 0;
   const [horas, minutos] = horaStr.split(':').map(Number);
@@ -18,19 +17,16 @@ const minutosAHora = (minutosTotales) => {
   return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
 };
 
-// Definición de franjas horarias permitidas para la reserva del cliente
 const FRANJAS_RESERVA_CLIENTE = [
   { id: 'almuerzos', nombreDisplay: 'Almuerzos (12:00 - 13:45)', inicio: '12:00', fin: '13:45' },
   { id: 'comidas', nombreDisplay: 'Comidas (14:00 - 16:45)', inicio: '14:00', fin: '16:45' },
   { id: 'cenas', nombreDisplay: 'Cenas (20:00 - 23:45)', inicio: '20:00', fin: '23:45' },
 ];
 
-// Genera las opciones para el selector de hora
 const generarOpcionesDeHora = () => {
-  const step = 15; // Intervalo de 15 minutos
+  const step = 15;
   let opciones = [];
   FRANJAS_RESERVA_CLIENTE.forEach(franja => {
-    // Añadir un separador visual para cada franja en el select
     opciones.push({ label: `--- ${franja.nombreDisplay} ---`, value: `sep-${franja.id}`, disabled: true, key: `sep-${franja.id}` });
     let minutosActuales = horaAMinutos(franja.inicio);
     const minutosFin = horaAMinutos(franja.fin);
@@ -68,11 +64,11 @@ const ReservarCliente = () => {
         setCargandoBares(true);
         setError('');
         const dataBares = await obtenerBares();
-        setBares(dataBares || []); // Asegurar que bares sea un array
+        setBares(dataBares || []);
       } catch (err) {
         console.error('Error al cargar bares:', err);
         setError('Error al cargar los bares disponibles: ' + err.message);
-        setBares([]); // En caso de error, inicializar como array vacío
+        setBares([]);
       } finally {
         setCargandoBares(false);
       }
@@ -98,24 +94,23 @@ const ReservarCliente = () => {
       setError('Por favor, completa todos los campos obligatorios, incluyendo fecha y hora.');
       return;
     }
-    // Validar que la hora seleccionada no sea un separador
+    
     if (horaSeleccionada.startsWith('sep-')) {
         setError('Por favor, selecciona una hora válida.');
         return;
     }
 
-    const fechaHoraISO = `${fechaSeleccionada}T${horaSeleccionada}:00`; // Asegúrate que la hora tenga segundos si el backend lo requiere
-
+    const fechaHoraISO = `${fechaSeleccionada}T${horaSeleccionada}:00`;
     const reserva = {
-      bar: { id: barSeleccionado }, // Información del bar anidada
+      bar: { id: barSeleccionado },
       zonaPreferida: zona,
       nombreCliente: nombre,
       correoElectronico: email,
       telefono: telefono,
-      numeroComensales: parseInt(comensales), // Asegurar que es un número
+      numeroComensales: parseInt(comensales),
       fechaHora: fechaHoraISO,
       mensaje: mensaje,
-      estado: 'pendiente', // O el estado inicial que defina tu backend
+      estado: 'pendiente',
       fechaSolicitud: new Date().toISOString()
     };
 
@@ -136,7 +131,6 @@ const ReservarCliente = () => {
 
   const handleCerrarModal = () => {
     setMostrarModal(false);
-    // Limpiar formulario o redirigir
     setBarSeleccionado('');
     setZona('');
     setNombre('');
@@ -146,7 +140,7 @@ const ReservarCliente = () => {
     setFechaSeleccionada('');
     setHoraSeleccionada('');
     setMensaje('');
-    navigate('/'); // O a donde sea apropiado
+    navigate('/');
   };
 
   return (
@@ -201,25 +195,23 @@ const ReservarCliente = () => {
         <label htmlFor="comensales">Número de comensales *</label>
         <input type="number" id="comensales" value={comensales} onChange={(e) => setComensales(parseInt(e.target.value))} min={1} max={20} required />
 
-        {/* Campo de Fecha */}
         <label htmlFor="fechaReserva">Fecha de la reserva *</label>
         <input
           type="date"
           id="fechaReserva"
           value={fechaSeleccionada}
           onChange={(e) => setFechaSeleccionada(e.target.value)}
-          min={new Date().toISOString().split('T')[0]} // No permitir fechas pasadas
+          min={new Date().toISOString().split('T')[0]}
           required
         />
 
-        {/* Campo de Hora */}
         <label htmlFor="horaReserva">Hora de la reserva *</label>
         <select
           id="horaReserva"
           value={horaSeleccionada}
           onChange={(e) => setHoraSeleccionada(e.target.value)}
           required
-          disabled={!fechaSeleccionada} // Opcional: deshabilitar si no se ha seleccionado fecha
+          disabled={!fechaSeleccionada}
         >
           <option value="">-- Selecciona una hora --</option>
           {opcionesDeHora.map(opt => (

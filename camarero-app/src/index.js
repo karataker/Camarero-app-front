@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './hooks/useUser';
 import { BarProvider } from './context/BarContext';
-import { ComandaProvider } from './context/useComandas';
+import { ComandaProvider } from './context/comandasContext';
 import { CarritoProvider } from './context/carritoContext';
 import App from './App';
 import './styles/index.css';

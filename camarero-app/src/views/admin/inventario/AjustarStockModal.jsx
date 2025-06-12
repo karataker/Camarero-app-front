@@ -3,7 +3,7 @@ import {
   ajustarEntrada,
   ajustarSalida,
 } from "../../../services/inventarioService";
-import "../../../styles/admin/inventario/inventarioModal.css"; // Reutiliza el estilo del modal principal
+import "../../../styles/admin/inventario/inventarioModal.css";
 
 const AjustarStockModal = ({ producto, onClose, onAjustado }) => {
   const [modo, setModo] = useState("entrada");
