@@ -127,14 +127,6 @@ const HomeEmpleado = () => {
       color: '#e74c3c',
       roles: ['ADMIN'],
     },
-    {
-      id: 'configuracion',
-      nombre: 'Configuración',
-      icono: 'fa-cog',
-      ruta: `/admin/bar/${barSeleccionado}/configuracion`,
-      color: '#34495e',
-      roles: ['ADMIN'],
-    }
   ];
 
   const handleNavigation = (ruta) => {
