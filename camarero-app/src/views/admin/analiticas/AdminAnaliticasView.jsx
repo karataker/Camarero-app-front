@@ -17,11 +17,9 @@ const AdminAnaliticasView = () => {
   const [filtroCategoria, setFiltroCategoria] = useState('todas');
   const [categoriasMenu, setCategoriasMenu] = useState([]);
 
-  const [datosVentas, setDatosVentas] = useState([]);
   const [ventasReales, setVentasReales] = useState([]);
   const [datosPedidos, setDatosPedidos] = useState([]);
   const [datosReservas, setDatosReservas] = useState([]);
-  const [carritoEstimado, setCarritoEstimado] = useState([]);
   const [carritoReal, setCarritoReal] = useState([]);
   const [datosProductos, setDatosProductos] = useState([]);
 
@@ -66,11 +64,9 @@ const AdminAnaliticasView = () => {
           categoria: p.categoria
         }));
 
-        setDatosVentas(combinarMeses(actual.ventasMensuales, comparacion.ventasMensuales));
         setVentasReales(combinarMeses(actual.ventasRealesMensuales, comparacion.ventasRealesMensuales));
         setDatosPedidos(combinarMeses(actual.pedidosMensuales, comparacion.pedidosMensuales));
         setDatosReservas(combinarMeses(actual.reservasMensuales, comparacion.reservasMensuales));
-        setCarritoEstimado(combinarMeses(actual.carritoMedioEstimado, comparacion.carritoMedioEstimado));
         setCarritoReal(combinarMeses(actual.carritoMedioReal, comparacion.carritoMedioReal));
 
         setDatosProductos(
@@ -160,11 +156,9 @@ const AdminAnaliticasView = () => {
       </div>
 
       <div className="graficos-container">
-        {renderBarChart("Ventas Estimadas (Comandas)", datosVentas, "actual", "anterior", formatearEuros)}
         {renderBarChart("Ventas Reales (Facturación)", ventasReales, "actual", "anterior", formatearEuros)}
         {renderBarChart("Pedidos", datosPedidos, "actual", "anterior")}
         {renderBarChart("Reservas", datosReservas, "actual", "anterior")}
-        {renderBarChart("Carrito Medio Estimado", carritoEstimado, "actual", "anterior", formatearEuros)}
         {renderBarChart("Carrito Medio Real", carritoReal, "actual", "anterior", formatearEuros)}
         {renderProductosChart()}
       </div>
